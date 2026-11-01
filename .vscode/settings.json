@@ -1,0 +1,7 @@
+{
+    "java.project.sourcePaths": ["POOBSoccer/src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "POOBSoccer/lib/**/*.jar"
+    ]
+}

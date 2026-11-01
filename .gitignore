@@ -1,0 +1,41 @@
+# ---------- Java: archivos compilados y empaquetados ----------
+*.class
+
+# ---------- Carpetas de salida de compilación ----------
+bin/
+
+# ---------- VS Code ----------
+.vscode/*
+!.vscode/settings.json
+
+# ---------- VS Code los genera automáticamente ----------
+.classpath
+.project
+.settings/
+.factorypath
+.metadata/
+
+# ---------- BlueJ ----------
+*.ctxt
+bluej.pkh
+
+
+# ---------- Javadoc generado ----------
+doc/
+docs/api/
+
+# ---------- Astah UML ----------
+*.asta.bak
+*.asta.lock
+*.bak
+
+# ---------- Logs y temporales ----------
+*.log
+*.tmp
+
+# ---------- Sistema operativo ----------
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
