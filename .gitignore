@@ -32,6 +32,7 @@ docs/api/
 # ---------- Logs y temporales ----------
 *.log
 *.tmp
+temp/
 
 # ---------- Sistema operativo ----------
 # Windows
