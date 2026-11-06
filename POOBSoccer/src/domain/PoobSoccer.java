@@ -1,12 +1,19 @@
 package domain;
 
+import java.util.*;
 
 /**
  * Write a description of class PoobSoccer here.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Ivan Andres Bernal Sabogal
+ * @author César Santiago Malaver Garnica
+ * @version 05/11/2026
  */
 public class PoobSoccer {
+    private Game game;
+    private HashMap<String, Character_> characters;
 
+    public PoobSoccer() throws PoobSoccerException{
+        throw new PoobSoccerException("");
+    }
 }
