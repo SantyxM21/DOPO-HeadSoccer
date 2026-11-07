@@ -46,7 +46,7 @@ public class MainPanel extends JPanel{
         loadingPage = new JPanel(new BorderLayout());
         this.add(loadingPage, "Loading Page");
 
-        JLabel gameName = new JLabel("<html><center>POOB<br>SOCCER</center></html>");
+        JLabel gameName = new JLabel("<html><center>DOPO<br>SOCCER</center></html>");
         gameName.setFont(new Font("Arial", Font.BOLD, FULL_HEIGHT/6));           // Tamaño de letra que se adapta
         gameName.setHorizontalAlignment(SwingConstants.CENTER);
         gameName.setVerticalAlignment(SwingConstants.CENTER);

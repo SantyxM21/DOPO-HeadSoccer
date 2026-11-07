@@ -6,17 +6,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * The test class PoobSoccerTest.
+ * The test class DopoSoccerTest.
  *
  * @author  (your name)
  * @version (a version number or a date)
  */
-public class PoobSoccerTest
+public class DopoSoccerTest
 {
     /**
      * Default constructor for test class temp
      */
-    public PoobSoccerTest()
+    public DopoSoccerTest()
     {
     }
 

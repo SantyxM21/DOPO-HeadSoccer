@@ -5,16 +5,16 @@ import javax.swing.*;
 
 
 /**
- * Write a description of class PoobSoccerGUI here.
+ * Write a description of class DopoSoccerGUI here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class PoobSoccerGUI extends JFrame{
+public class DopoSoccerGUI extends JFrame{
 
     private final MainPanel main = new MainPanel();
 
-    public PoobSoccerGUI(){
+    public DopoSoccerGUI(){
         this.add(main);                                     //Se añade el panel al frame
         this.setResizable(false);                           //No permite modificar el tamaño de la ventana
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -26,6 +26,6 @@ public class PoobSoccerGUI extends JFrame{
     }
 
     public static void main(String[] args) {
-        PoobSoccerGUI gui = new PoobSoccerGUI();
+        DopoSoccerGUI gui = new DopoSoccerGUI();
     }
 }
