@@ -21,7 +21,8 @@ public class MainPanel extends JPanel{
     private final CardLayout cards;
     private LoadingPanel loadingPage;
     private HomePanel homePage;
-    
+    private ModePanel modePage;
+
     public MainPanel(){
         super(new CardLayout());
         GAME_SIZE = sizeFor(1.4);
@@ -31,6 +32,7 @@ public class MainPanel extends JPanel{
 
         homePage = new HomePanel();
         loadingPage = new LoadingPanel();
+        modePage = new ModePanel();
 
         this.prepareView();
         this.prepareController();
@@ -40,12 +42,14 @@ public class MainPanel extends JPanel{
     private void prepareView(){
         this.add(loadingPage.prepareLoadingPage(), "Loading Page");
         this.add(homePage.prepareHomePage(), "Home menu");
+        this.add(modePage.prepareModePage(), "Mode menu");
     }
 
     /* This method prepares the controller for the main panel */
     private void prepareController(){
         loadingPage.prepareController(this);
-        homePage.prepareController();
+        homePage.prepareController(this);
+        modePage.prepareController(this);
     }
 
     /* This method calculates the size for a given divisor */
@@ -61,6 +65,7 @@ public class MainPanel extends JPanel{
         this.removeAll();                   // Quita todos los componentes de este container/panel
         homePage = new HomePanel();
         loadingPage = new LoadingPanel();
+        modePage = new ModePanel();
         this.prepareView();
         this.prepareController();
 
@@ -77,7 +82,7 @@ public class MainPanel extends JPanel{
     This method shows the page with the given name 
     @param name the name of the page to show
     */
-    private void showPage(String name){
+    public void showPage(String name){
         cards.show(this, name);
         currentPage = name;
     }

@@ -2,6 +2,7 @@ package presentation;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import javax.swing.*;
 
 public class HomePanel extends JPanel{
@@ -12,6 +13,7 @@ public class HomePanel extends JPanel{
     private RoundButton goalsButton;
     private RoundButton importGameButton;
 
+    private JDialog configDialog;
     private JTextField configSizeInput;
     private CustomButton playButton;
     private CustomButton cancelButton;
@@ -19,9 +21,11 @@ public class HomePanel extends JPanel{
     public HomePanel(){
         super(new BorderLayout());
         this.GAME_SIZE = MainPanel.GAME_SIZE;
-        this.timeButton = new RoundButton();
-        this.goalsButton = new RoundButton();
-        this.importGameButton = new RoundButton();
+        timeButton = new RoundButton();
+        goalsButton = new RoundButton();
+        importGameButton = new RoundButton();
+        playButton = new CustomButton("Jugar");
+        cancelButton = new CustomButton("Cancelar");
 
 
     }
@@ -59,7 +63,7 @@ public class HomePanel extends JPanel{
         return this;
     }
 
-    public void prepareController(){
+    public void prepareController(MainPanel main){
         timeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -72,10 +76,42 @@ public class HomePanel extends JPanel{
                 popUpConfig("Goles");
             }
         });
+
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                configDialog.dispose();             // Cierra el diálogo antes de cambiar de página
+                main.showPage("Mode menu");
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                configDialog.dispose();             
+            }
+        });
+
+        importGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                JFileChooser selector = new JFileChooser();
+                
+                int result = selector.showSaveDialog(null);
+
+                //0 indica que selecciono guardar/abrir
+                if (result == 0){
+                    File fileToSave = selector.getSelectedFile();
+                    JOptionPane.showMessageDialog(null, "La funcionalidad se encuentra en construccion\n" +
+                        "Nombre del archivo: " + fileToSave.getName());
+                }           
+            }
+        });
     }
 
     private void popUpConfig(String ms){
         JDialog dialog = new JDialog();
+        configDialog = dialog;                      
         dialog.setTitle("Configuración de juego");
         dialog.setSize((int)(GAME_SIZE.width/1.3), (int)(GAME_SIZE.height/1.5));
         dialog.setLayout(new BorderLayout());
@@ -103,8 +139,7 @@ public class HomePanel extends JPanel{
         form.add(configSizeInput);
 
         JPanel dialogOptions = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 10, GAME_SIZE.width / 40)); 
-        playButton = new CustomButton("Jugar");
-        cancelButton = new CustomButton("Cancelar");
+        
         dialogOptions.add(playButton);
         dialogOptions.add(cancelButton);
 

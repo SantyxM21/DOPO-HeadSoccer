@@ -51,7 +51,7 @@ public class LoadingPanel extends JPanel{
         mediumScreeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                main.changeScale(1.5);
+                main.changeScale(1.4);
             }
         });
 
