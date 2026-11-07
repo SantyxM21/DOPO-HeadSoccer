@@ -1,5 +1,4 @@
 package domain;
-import java.lang.*;
 
 public class Human extends Player {
     
