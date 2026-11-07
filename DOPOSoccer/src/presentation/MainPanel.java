@@ -45,6 +45,7 @@ public class MainPanel extends JPanel{
     /* This method prepares the controller for the main panel */
     private void prepareController(){
         loadingPage.prepareController(this);
+        homePage.prepareController();
     }
 
     /* This method calculates the size for a given divisor */
@@ -64,7 +65,10 @@ public class MainPanel extends JPanel{
         this.prepareController();
 
         Window window = SwingUtilities.getWindowAncestor(this);     // Devuelve el JFrame que contiene este panel
-        if (window != null) window.pack();
+        if (window != null) {
+            window.pack();
+            window.setLocationRelativeTo(null);     // Centra la ventana en la pantalla con el nuevo tamaño
+        }
 
         showPage("Home menu");
     }
