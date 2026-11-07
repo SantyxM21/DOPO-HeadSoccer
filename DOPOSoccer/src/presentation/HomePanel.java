@@ -28,13 +28,12 @@ public class HomePanel extends JPanel{
         buttons.setOpaque(false);   
         buttons.add(createModeButton("Tiempo"));
         buttons.add(createModeButton("Goles"));
-        buttons.add(createModeButton("Supervivencia"));
 
         RoundButton charactersButton = new RoundButton();
         int side = GAME_SIZE.height / 6;                                                // más pequeño que los botones de modo
         charactersButton.setPreferredSize(new Dimension(side, side));
-        charactersButton.setText("Personajes");
-        charactersButton.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 55));
+        charactersButton.setText("Abrir");
+        charactersButton.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 30));
 
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, GAME_SIZE.width / 40, GAME_SIZE.height / 40));
         topBar.setOpaque(false);

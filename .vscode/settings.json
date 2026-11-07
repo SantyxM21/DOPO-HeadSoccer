@@ -1,7 +1,9 @@
 {
-    "java.project.sourcePaths": ["POOBSoccer/src"],
+    "java.project.sourcePaths": [
+        "DOPOSoccer/src"
+    ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "POOBSoccer/lib/**/*.jar"
+        "DOPOSoccer/lib/**/*.jar"
     ]
 }
