@@ -5,24 +5,28 @@ public abstract class Player extends Entity {
 
     
 
-    public Player(Character_ ch){
+    public Player(Character_ ch) throws PoobSoccerException{
         this.selectedCharacter = ch;
-        throw new PoobSoccerException("PoobSoccerException.NOT_DATA");
+        throw new PoobSoccerException(PoobSoccerException.NOT_DATA);
     }
 
-    public void move(){
-        throw new PoobSoccerException("PoobSoccerException.NOT_DATA");
+    public void move() throws PoobSoccerException {
+        throw new PoobSoccerException(PoobSoccerException.NOT_DATA);
     }
 
-    public void kick(){
-        throw new PoobSoccerException("PoobSoccerException.NOT_DATA");
+    public void kick() throws PoobSoccerException{
+        throw new PoobSoccerException(PoobSoccerException.NOT_DATA);
     }
 
-    public void jump(){
-        throw new PoobSoccerException("PoobSoccerException.NOT_DATA");
+    public void jump() throws PoobSoccerException{
+        throw new PoobSoccerException(PoobSoccerException.NOT_DATA);
     }
 
-    public void dash(){
-        throw new PoobSoccerException("PoobSoccerException.NOT_DATA");
+    public void dash() throws PoobSoccerException{
+        throw new PoobSoccerException(PoobSoccerException.NOT_DATA);
+    }
+
+    public void selectCharacter() throws PoobSoccerException{
+        throw new PoobSoccerException(PoobSoccerException.NOT_DATA);
     }
 }

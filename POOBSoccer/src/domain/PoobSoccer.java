@@ -14,12 +14,14 @@ public class PoobSoccer {
     private HashMap<String, Character_> characters;
 
     public PoobSoccer() throws PoobSoccerException{
-        throw new PoobSoccerException("PoobSoccerException.NOT_DATA");
+        throw new PoobSoccerException(PoobSoccerException.NOT_DATA);
     }
 
-    public void startGame(){
-        throw new PoobSoccerException("PoobSoccerException.NOT_DATA");
+    public void startGame() throws PoobSoccerException{
+        throw new PoobSoccerException(PoobSoccerException.NOT_DATA);
     }
+
+    
 
     
 }

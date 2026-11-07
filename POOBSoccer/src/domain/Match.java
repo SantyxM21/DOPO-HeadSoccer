@@ -6,12 +6,12 @@ public class Match {
     private Field field;
     private Ball ball;
 
-    public Match(Player lfPlayer, Player rgPlayer, Field field, Ball ball){
+    public Match(Player lfPlayer, Player rgPlayer, Field field, Ball ball) throws PoobSoccerException{
         this.leftPlayer = lfPlayer;
         this.rightPlayer = rgPlayer;
         this.field = field;
         this.ball = ball;
-        throw new PoobSoccerException("PoobSoccerException.NOT_DATA");
+        throw new PoobSoccerException(PoobSoccerException.NOT_DATA);
     }
 
     public Ball getBall(){
