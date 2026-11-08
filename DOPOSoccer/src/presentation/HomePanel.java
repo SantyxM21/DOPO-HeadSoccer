@@ -36,7 +36,7 @@ public class HomePanel extends JPanel{
     */
     public JPanel prepareHomePage(){
 
-        JLabel gameName = new JLabel("<html><center>POOB<br>SOCCER</center></html>");
+        JLabel gameName = new JLabel("<html><center>DOPO<br>SOCCER</center></html>");
         gameName.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 7));          // Tamaño de letra que se adapta
         gameName.setHorizontalAlignment(SwingConstants.CENTER);
         gameName.setBorder(BorderFactory.createEmptyBorder(0, 0, GAME_SIZE.height / 10, 0));   // margen inferior: sube el texto
