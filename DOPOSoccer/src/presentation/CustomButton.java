@@ -6,7 +6,7 @@ import javax.swing.*;
 public class CustomButton extends JButton {
 
     private int radius = 30;
-    private int borderWidth = 3;
+    private int borderWidth = 2;
     private Color normal = Color.WHITE;
 
     public CustomButton(String text) {

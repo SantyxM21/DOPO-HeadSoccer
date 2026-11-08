@@ -22,6 +22,7 @@ public class MainPanel extends JPanel{
     private LoadingPanel loadingPage;
     private HomePanel homePage;
     private ModePanel modePage;
+    private SelectionPanel selectionPage;
 
     public MainPanel(){
         super(new CardLayout());
@@ -33,6 +34,7 @@ public class MainPanel extends JPanel{
         homePage = new HomePanel();
         loadingPage = new LoadingPanel();
         modePage = new ModePanel();
+        selectionPage = new SelectionPanel();
 
         this.prepareView();
         this.prepareController();
@@ -43,6 +45,7 @@ public class MainPanel extends JPanel{
         this.add(loadingPage.prepareLoadingPage(), "Loading Page");
         this.add(homePage.prepareHomePage(), "Home menu");
         this.add(modePage.prepareModePage(), "Mode menu");
+        this.add(selectionPage.prepareSelectionPage(), "Selection menu");
     }
 
     /* This method prepares the controller for the main panel */
@@ -50,6 +53,7 @@ public class MainPanel extends JPanel{
         loadingPage.prepareController(this);
         homePage.prepareController(this);
         modePage.prepareController(this);
+        selectionPage.prepareController(this);
     }
 
     /* This method calculates the size for a given divisor */
@@ -66,6 +70,7 @@ public class MainPanel extends JPanel{
         homePage = new HomePanel();
         loadingPage = new LoadingPanel();
         modePage = new ModePanel();
+        selectionPage = new SelectionPanel();
         this.prepareView();
         this.prepareController();
 

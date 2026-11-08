@@ -34,7 +34,7 @@ public class ModePanel extends JPanel {
 
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setOpaque(false);
-        topBar.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 40, GAME_SIZE.width / 40, 0, GAME_SIZE.width / 40));
+        topBar.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 30, GAME_SIZE.width / 40, 0, GAME_SIZE.width / 40));
         topBar.add(spacer, BorderLayout.WEST);
         topBar.add(title, BorderLayout.CENTER);
         topBar.add(backButton, BorderLayout.EAST);
@@ -79,13 +79,13 @@ public class ModePanel extends JPanel {
         pvpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-
+                main.showPage("Selection menu");
             }
         });
         pvmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-
+                main.showPage("Selection menu");
             }
         });
     }

@@ -20,7 +20,7 @@ public class RoundButton extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int stroke = 3;                                         // grosor del borde
+        int stroke = 2;                                         // grosor del borde
         int size = Math.min(getWidth(), getHeight()) - stroke;  
         int x = (getWidth() - size) / 2;                        // posición X para centrar el círculo
         int y = (getHeight() - size) / 2;                       // posición Y para centrar el círculo
