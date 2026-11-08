@@ -17,7 +17,7 @@ public class ModePanel extends JPanel {
         this.GAME_SIZE = MainPanel.GAME_SIZE;
         this.pvpButton = new RoundButton();
         this.pvmButton = new RoundButton();
-        this.backButton = new CustomButton("Volver");
+        this.backButton = CustomButton.createBackButton();
     }
 
     /*
@@ -37,7 +37,7 @@ public class ModePanel extends JPanel {
         topBar.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 30, GAME_SIZE.width / 40, 0, GAME_SIZE.width / 40));
         topBar.add(spacer, BorderLayout.WEST);
         topBar.add(title, BorderLayout.CENTER);
-        topBar.add(backButton, BorderLayout.EAST);
+        topBar.add(CustomButton.keepSize(backButton), BorderLayout.EAST);
 
         // Botones de modalidad en el centro
         pvpButton.setText("P vs P");

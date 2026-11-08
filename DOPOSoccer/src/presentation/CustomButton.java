@@ -14,6 +14,28 @@ public class CustomButton extends JButton {
         init();
     }
 
+    /*
+    This method creates a "Volver" button with the same height on every page
+    @return the back button
+    */
+    public static CustomButton createBackButton(){
+        CustomButton button = new CustomButton("Volver");
+        button.setPreferredSize(new Dimension(button.getPreferredSize().width, MainPanel.GAME_SIZE.height / 12));
+        return button;
+    }
+
+    /*
+    This method wraps a component so BorderLayout does not stretch it to the height of the bar
+    @param component the component to wrap
+    @return a transparent panel that keeps the component's preferred size
+    */
+    public static JPanel keepSize(JComponent component){
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        wrapper.setOpaque(false);
+        wrapper.add(component);
+        return wrapper;
+    }
+
     private void init(){
         this.setFocusPainted(false);                        // quita el recuadro de foco al hacer clic
         this.setContentAreaFilled(false);                   

@@ -22,7 +22,7 @@ public class SelectionPanel extends JPanel {
     public SelectionPanel(){
         super(new BorderLayout());
         this.GAME_SIZE = MainPanel.GAME_SIZE;
-        backButton = new CustomButton("Volver");
+        backButton = CustomButton.createBackButton();
         playButton = new CustomButton("Jugar");
         swapButton = new CustomButton("↔");           // ↔ intercambia los personajes
         player1Character = new RoundButton();
@@ -51,7 +51,7 @@ public class SelectionPanel extends JPanel {
         topBar.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 30, GAME_SIZE.width / 40, 0, GAME_SIZE.width / 40));
         topBar.add(spacer, BorderLayout.WEST);
         topBar.add(title, BorderLayout.CENTER);
-        topBar.add(backButton, BorderLayout.EAST);
+        topBar.add(CustomButton.keepSize(backButton), BorderLayout.EAST);
 
         // Tres columnas: jugador 1, centro (jugar) y jugador 2 / máquina
         JPanel body = new JPanel(new GridLayout(1, 3));
@@ -71,6 +71,13 @@ public class SelectionPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 main.showPage("Mode menu");
+            }
+        });
+
+        player1Character.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                main.showPage("Character page");
             }
         });
         // TODO: playButton, swapButton y las flechas de cada jugador
