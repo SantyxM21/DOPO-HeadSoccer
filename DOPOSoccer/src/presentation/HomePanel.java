@@ -1,5 +1,6 @@
 package presentation;
 
+import domain.DopoSoccer;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -68,20 +69,24 @@ public class HomePanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e){
                 popUpConfig("Tiempo");
+                main.setMatchMode(DopoSoccer.TIME_MODE);
             }
         });
         goalsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 popUpConfig("Goles");
+                main.setMatchMode(DopoSoccer.GOALS_MODE);
             }
         });
 
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
+                // TODO: posible error si el jugador ingresa valores no permitidos (eje: -1 minutos)
                 configDialog.dispose();             // Cierra el diálogo antes de cambiar de página
                 main.showPage("Mode menu");
+                main.setConfigMode(configSizeInput.getText().trim());
             }
         });
 
@@ -102,7 +107,7 @@ public class HomePanel extends JPanel{
                 //0 indica que selecciono guardar/abrir
                 if (result == 0){
                     File fileToSave = selector.getSelectedFile();
-                    JOptionPane.showMessageDialog(null, "La funcionalidad se encuentra en construccion\n" +
+                    MainPanel.funcUnderConstruction("La funcionalidad se encuentra en construccion\n" +
                         "Nombre del archivo: " + fileToSave.getName());
                 }           
             }

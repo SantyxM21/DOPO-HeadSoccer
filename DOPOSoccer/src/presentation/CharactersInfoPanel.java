@@ -1,6 +1,7 @@
 package presentation;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class CharactersInfoPanel extends JPanel{
@@ -57,7 +58,12 @@ public class CharactersInfoPanel extends JPanel{
     
     /*   */
     public void prepareController(MainPanel main){
-
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                main.showPage("Selection menu");
+            }
+        });
         
     }
 

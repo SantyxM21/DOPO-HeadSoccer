@@ -1,5 +1,6 @@
 package domain;
 
+import java.awt.Dimension;
 import java.util.*;
 
 /**
@@ -10,6 +11,12 @@ import java.util.*;
  * @version 05/11/2026
  */
 public class DopoSoccer {
+
+    public static final int TIME_MODE = 1;
+    public static final int GOALS_MODE = 2; 
+    public static final int PVSP_MODE = 1; 
+    public static final int PVSM_MODE = 2; 
+
     private Game game;
     private HashMap<String, Character_> characters;
 
@@ -18,14 +25,14 @@ public class DopoSoccer {
      * 
      * @param matchMode 1 time, 2 goals
      * @param playersMode 1 player vs player , 2 player vs machine
-     * @param machineType dumb, offesive, defensive or expert
+     * @param machineType dumb, offesive, defensive or expert. Null if mode PvsP
      * @param leftCharacter country of the left player
      * @param rightCharacter country of the right player
      * @param condition time or goals, depends of the match mode
      * @throws DopoSoccerException
      */
-    public DopoSoccer(int matchMode, int playersMode, String machineType, String leftCharacter, String rightCharacter, int condition,String resolution ) throws DopoSoccerException{
-        throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    public DopoSoccer(int matchMode, int playersMode, String machineType, String leftCharacter, String rightCharacter, String condition,Dimension resolution ) throws DopoSoccerException{
+        throw new DopoSoccerException(DopoSoccerException.UNDER_CONSTRUCTION);
     }
 
     public void startGame() throws DopoSoccerException{

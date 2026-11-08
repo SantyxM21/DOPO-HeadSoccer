@@ -1,5 +1,6 @@
 package presentation;
 
+import domain.DopoSoccer;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -80,12 +81,14 @@ public class ModePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 main.showPage("Selection menu");
+                main.setPlayersMode(DopoSoccer.PVSP_MODE);
             }
         });
         pvmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 main.showPage("Selection menu");
+                main.setPlayersMode(DopoSoccer.PVSM_MODE);
             }
         });
     }

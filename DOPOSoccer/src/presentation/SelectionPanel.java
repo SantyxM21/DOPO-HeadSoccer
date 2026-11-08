@@ -1,5 +1,6 @@
 package presentation;
 
+import domain.DopoSoccerException;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -78,6 +79,17 @@ public class SelectionPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 main.showPage("Character page");
+            }
+        });
+
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    main.startGame("Corea", "USA");
+                } catch(DopoSoccerException ex) {
+                    MainPanel.funcUnderConstruction(ex.getMessage());
+                }
             }
         });
         // TODO: playButton, swapButton y las flechas de cada jugador

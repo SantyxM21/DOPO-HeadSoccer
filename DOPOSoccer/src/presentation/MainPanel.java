@@ -1,5 +1,7 @@
 package presentation;
 
+import domain.DopoSoccer;
+import domain.DopoSoccerException;
 import java.awt.*;
 import javax.swing.*;
 
@@ -24,6 +26,10 @@ public class MainPanel extends JPanel{
     private ModePanel modePage;
     private SelectionPanel selectionPage;
     private CharactersInfoPanel charactersPage;
+public static final String NOT_DATA = "Aun no hay datos";
+    private int matchMode;      // 1 time, 2 goals
+    private int playersMode;    // 1 player vs player , 2 player vs machine
+    private String confingMode;
 
     public MainPanel(){
         super(new CardLayout());
@@ -88,6 +94,10 @@ public class MainPanel extends JPanel{
         showPage("Home menu");
     }
 
+    public void startGame(String playerOne, String playerTwo) throws DopoSoccerException{
+        DopoSoccer game = new DopoSoccer(matchMode, playersMode, "", playerOne, playerTwo, confingMode, GAME_SIZE);
+    }
+
     /* 
     This method shows the page with the given name 
     @param name the name of the page to show
@@ -95,5 +105,21 @@ public class MainPanel extends JPanel{
     public void showPage(String name){
         cards.show(this, name);
         currentPage = name;
+    }
+
+    public static void funcUnderConstruction(String ms){
+        JOptionPane.showMessageDialog(null, ms);
+    }
+
+    public void setMatchMode(int mode){
+        this.matchMode = mode;
+    }
+
+    public void setPlayersMode(int mode){
+        this.playersMode = mode;
+    }
+
+    public void setConfigMode(String configuration){
+        this.confingMode = configuration;
     }
 }
