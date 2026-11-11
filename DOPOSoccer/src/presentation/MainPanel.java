@@ -26,6 +26,7 @@ public class MainPanel extends JPanel{
     private ModePanel modePage;
     private SelectionPanel selectionPage;
     private CharactersInfoPanel charactersPage;
+
 public static final String NOT_DATA = "Aun no hay datos";
     private int matchMode;      // 1 time, 2 goals
     private int playersMode;    // 1 player vs player , 2 player vs machine
