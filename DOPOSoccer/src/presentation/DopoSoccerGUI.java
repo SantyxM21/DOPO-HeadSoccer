@@ -12,9 +12,11 @@ import javax.swing.*;
  */
 public class DopoSoccerGUI extends JFrame{
 
-    private final MainPanel main = new MainPanel();
+    //private final MainPanel main = new MainPanel();
+    private final PruebaSprites main = new PruebaSprites();
 
     public DopoSoccerGUI(){
+        /* 
         this.add(main);                                     //Se añade el panel al frame
         this.setResizable(false);                           //No permite modificar el tamaño de la ventana
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -23,6 +25,14 @@ public class DopoSoccerGUI extends JFrame{
         // this.setIconImage(img);
         this.setLocationRelativeTo(null);                   //Centra la ventana
         this.setVisible(true);  //Inicio h
+        */
+
+        this.add(main);
+        this.setSize(800, 600);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null); // Centra la ventana en la pantalla
+        this.setResizable(false);
+        this.setVisible(true);
     }
 
     public static void main(String[] args) {

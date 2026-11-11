@@ -2,6 +2,7 @@ package presentation;
 
 import javax.swing.JPanel;
 import javax.imageio.ImageIO;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -13,12 +14,14 @@ public class PruebaSprites extends JPanel{
     private int y = 100;
 
     public PruebaSprites(){
-        try{
-            spritePrueba = ImageIO.read(getClass().getResourceAsStream("/resources/Character01.jpg"));
-        } catch (IOException | IllegalArgumentException e){
+        setBackground(Color.DARK_GRAY);
+        try {
+            spritePrueba = ImageIO.read(getClass().getResourceAsStream("/resources/Character01.png"));
+        } catch (IOException | IllegalArgumentException e) {
             System.err.println("No se pudo cargar el sprite.");
             e.printStackTrace();
         }
+
     }
 
      @Override
@@ -29,9 +32,10 @@ public class PruebaSprites extends JPanel{
         if (spritePrueba != null) {
             // Dibuja el sprite en las coordenadas (x, y)
             g2d.drawImage(spritePrueba, x, y, null);
-            
-            //  para redimensionarlo
-            // g2d.drawImage(spritePrueba, x, y, anchoNuevo, altoNuevo, null);
+        } else {
+            // Mensaje por si acaso la imagen viniera vacía
+            g2d.setColor(Color.WHITE);
+            g2d.drawString("Imagen no disponible", 50, 50);
         }
     }
 
