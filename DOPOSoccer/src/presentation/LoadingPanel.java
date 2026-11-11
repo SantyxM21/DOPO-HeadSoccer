@@ -2,6 +2,8 @@ package presentation;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 
 public class LoadingPanel extends JPanel{
@@ -24,12 +26,10 @@ public class LoadingPanel extends JPanel{
     /* This method prepares the loading page */
     public JPanel prepareLoadingPage(){
 
-        JLabel gameName = new JLabel("<html><center>DOPO<br>SOCCER</center></html>");
-        gameName.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height/6));           // Tamaño de letra que se adapta
-        gameName.setHorizontalAlignment(SwingConstants.CENTER);
-        gameName.setVerticalAlignment(SwingConstants.CENTER);
+        JLabel gameName = createLogo();
 
         JPanel resolutionOptions = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 10, GAME_SIZE.height / 25)); 
+        resolutionOptions.setOpaque(false);
         resolutionOptions.add(fullScreenButton);
         resolutionOptions.add(mediumScreeButton);
         resolutionOptions.add(smallScreeButton);
@@ -61,5 +61,27 @@ public class LoadingPanel extends JPanel{
                 main.changeScale(1.7);
             }
         });
+    }
+
+    public JLabel createLogo(){
+        JLabel logo = new JLabel();
+        logo.setHorizontalAlignment(SwingConstants.CENTER);
+        logo.setVerticalAlignment(SwingConstants.CENTER);
+        try {
+            Image imgLogo = new ImageIcon(getClass().getResource("/resources/logo_dopo_soccer2.png")).getImage()
+                                            .getScaledInstance(-1, GAME_SIZE.height / 3, Image.SCALE_SMOOTH);
+            logo.setIcon(new ImageIcon(imgLogo));
+        } catch (Exception e) {
+            logo.setText("<html><center>DOPO<br>SOCCER</center></html>");
+            logo.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 6));
+        }
+        return logo;
+    }
+
+    @Override 
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        ImageIcon img = new ImageIcon(getClass().getResource("/resources/fondo_dopo_soccer.png"));
+        g.drawImage(img.getImage(), 0, 0, getWidth(), getHeight(), this);
     }
 }
