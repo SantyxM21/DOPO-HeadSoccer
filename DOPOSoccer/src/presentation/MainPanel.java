@@ -95,7 +95,7 @@ public static final String NOT_DATA = "Aun no hay datos";
     }
 
     public void startGame(String playerOne, String playerTwo) throws DopoSoccerException{
-        DopoSoccer game = new DopoSoccer(matchMode, playersMode, "", playerOne, playerTwo, confingMode, GAME_SIZE);
+        DopoSoccer game = new DopoSoccer();//matchMode, playersMode, "", playerOne, playerTwo, confingMode, GAME_SIZE   <- Antiguos parametros, revisar
     }
 
     /* 

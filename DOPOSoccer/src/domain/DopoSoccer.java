@@ -17,8 +17,10 @@ public class DopoSoccer {
     public static final int PVSP_MODE = 1; 
     public static final int PVSM_MODE = 2; 
 
-    private Game game;
-    private HashMap<String, Character_> characters;
+    private Profile profile1;
+    private Profile profile2;
+    private Match match;
+
 
     //condition es el time o numero de goles
     /**
@@ -31,12 +33,18 @@ public class DopoSoccer {
      * @param condition time or goals, depends of the match mode
      * @throws DopoSoccerException
      */
-    public DopoSoccer(int matchMode, int playersMode, String machineType, String leftCharacter, String rightCharacter, String condition,Dimension resolution ) throws DopoSoccerException{
+    public DopoSoccer() throws DopoSoccerException{
+        this.profile1 = new Profile("1");
+        this.profile2 = new Profile("2");
         throw new DopoSoccerException(DopoSoccerException.UNDER_CONSTRUCTION);
     }
 
-    public void startGame() throws DopoSoccerException{
+    public void newGame(String type, String conditions, Dimension resolution) throws DopoSoccerException{
         throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    }
+
+    public void addPlayer(String type){ //El type es Machine o Human
+
     }
     /**
      * 
@@ -48,7 +56,11 @@ public class DopoSoccer {
         throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
     }
 
-    public Match getMatch() throws DopoSoccerException{
-        throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    public void activatePower(){
+
+    }
+
+    public void upgradeStats(){
+        
     }
 }

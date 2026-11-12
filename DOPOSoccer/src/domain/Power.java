@@ -1,6 +1,8 @@
 package domain;
 
 public abstract class Power {
+    protected Effect effect;
+
     protected String name;
     protected double shootDamage; 
     protected double durationEfect;

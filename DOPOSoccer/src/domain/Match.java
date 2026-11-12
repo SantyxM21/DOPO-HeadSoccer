@@ -1,6 +1,6 @@
 package domain;
 
-public class Match {
+public abstract class Match {
     private Player leftPlayer;
     private Player rightPlayer;
     private Field field;

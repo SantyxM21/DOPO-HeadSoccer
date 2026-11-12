@@ -2,26 +2,15 @@ package domain;
 
 public abstract class Player extends Entity {
     protected Character_ selectedCharacter;
+    protected Profile profile;
+    protected Effect effect;
 
     protected int goals;
-    protected double hp;
+    protected double health;
     protected double powerBar;
-    protected Power power;
-    protected boolean dazed;
-    protected int speedStat;
-    protected int kickStat;
-    protected int jumpStat;
-    protected int survivalStat;
-    protected int points;
 
 
     public Player(Character_ ch) throws DopoSoccerException{
-        this.selectedCharacter = ch;
-        this.speedStat = 1;
-        this.kickStat = 1;
-        this.jumpStat = 1;
-        this.survivalStat = 1;
-        this.hp = getMaxHp();
         throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
     }
 
@@ -39,11 +28,13 @@ public abstract class Player extends Entity {
     }
 
     public double getKickMultiplier(){
-        return 1 + 0.10 * (kickStat - 1);
+        return 0.0;
+        //return 1 + 0.10 * (kickStat - 1);
     }
 
     public double getMaxHp(){
-        return  100 * (1 + 0.10 * (survivalStat - 1));
+        return 0.0;
+        //return  100 * (1 + 0.10 * (survivalStat - 1));
     } 
 
     public Character_ getSelectedCharacter(){
@@ -55,13 +46,13 @@ public abstract class Player extends Entity {
     }
 
     public double getHp(){
-        return hp;
+        return health;
     }
 
     public double getPowerBar(){
         return powerBar;
     }
-
+/* 
     public Power getPower(){
         return power; 
     }
@@ -72,5 +63,5 @@ public abstract class Player extends Entity {
 
     public int getPoints(){
         return points;
-    }
+    }*/
 }
