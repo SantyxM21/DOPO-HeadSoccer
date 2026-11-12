@@ -2,6 +2,7 @@ package presentation;
 
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.*;
 
 import domain.DopoSoccer;
 import domain.Match;
@@ -14,12 +15,14 @@ public class GamePanel extends JPanel{
     private Image background;
     private Graphics graphics;
     private DopoSoccer game;
+    private KeyHandler keyH = new KeyHandler();
 
     public GamePanel(DopoSoccer game){
         super();
         this.game = game;
         this.GAME_SIZE = MainPanel.GAME_SIZE;
         background = new ImageIcon(getClass().getResource("/resources/fondo_dopo_soccer.png")).getImage();
+        setFocusable(true);                              
     }
 
     public JPanel prepareGamePage(){
@@ -28,7 +31,29 @@ public class GamePanel extends JPanel{
     } 
 
     public void prepareController(MainPanel panel){
+        addKeyListener(keyH);     
 
+        // Game loop 60 veces por segundo se llama a update()
+        Timer gameLoop = new Timer(16, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                update();
+            }
+        });
+        gameLoop.start();
+    }
+
+    // Mueve al jugador segun las teclas que esten presionadas 
+    private void update(){
+        int direction = 0;
+        // Se usa -= y += en caso de qque ambas teclas se presionen al tiempo se "cancelen"
+        if(keyH.leftPressed) direction -= 1;
+        if(keyH.rightPressed) direction += 1;
+
+        if(direction != 0){
+            game.move(Match.LEFT_SIDE, direction);
+            repaint();                                   // Vuelve a dibujar con la nueva posicion
+        }
     }
 
     @Override

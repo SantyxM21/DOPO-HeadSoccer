@@ -37,6 +37,7 @@ public class MainPanel extends JPanel{
         this.setFocusable(true);
         this.setPreferredSize(GAME_SIZE);       // El tamaño se adapta segun la pantalla donde se ejecute
 
+        game = new DopoSoccer();                
         homePage = new HomePanel();
         loadingPage = new LoadingPanel();
         modePage = new ModePanel();
@@ -46,8 +47,6 @@ public class MainPanel extends JPanel{
 
         this.prepareView();
         this.prepareController();
-
-        game = new DopoSoccer();
     }
 
     /* This method prepares the view of the main panel */
@@ -114,6 +113,7 @@ public class MainPanel extends JPanel{
     */
     public void showPage(String name){
         cards.show(this, name);
+        if(name.equals("Game")) gamePage.requestFocusInWindow();
     }
 
     public static void funcUnderConstruction(String ms){

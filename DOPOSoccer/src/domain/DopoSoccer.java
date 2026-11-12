@@ -50,6 +50,10 @@ public class DopoSoccer {
         return match.getPlayer(player).getYPosition();
     }
 
+    public void move(int player, int direction){
+        match.getPlayer(player).move(direction);
+    }
+
     public void activatePower(){
     }
 

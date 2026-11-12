@@ -1,7 +1,8 @@
 package domain;
 
 public abstract class Player extends Entity {
-    public static final int PLAYER_SIZE = 80; 
+    public static final int PLAYER_SIZE = 80;
+    public static final double SPEED = 5.0;   
 
     protected Character_ selectedCharacter;
     protected Profile profile;
@@ -21,9 +22,8 @@ public abstract class Player extends Entity {
         if(character.equals("SouthKorea")) selectedCharacter = new SouthKorea();
     }
 
-    //1 left 2 right
-    public void move(int direction) throws DopoSoccerException {
-        throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    public void move(int direction) {
+        xPosition += direction * SPEED;
     }
 
     public void kick() throws DopoSoccerException{
