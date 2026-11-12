@@ -1,6 +1,8 @@
 package domain;
 
 public abstract class Player extends Entity {
+    public static final int PLAYER_SIZE = 80; 
+
     protected Character_ selectedCharacter;
     protected Profile profile;
     protected Effect effect;
@@ -10,8 +12,13 @@ public abstract class Player extends Entity {
     protected double powerBar;
 
 
-    public Player(Character_ ch) throws DopoSoccerException{
-        throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    public Player(String character, double x, double y) {
+        super(x, y);
+        setCharacter_(character);
+    }
+
+    private void setCharacter_(String character){
+        if(character.equals("SouthKorea")) selectedCharacter = new SouthKorea();
     }
 
     //1 left 2 right

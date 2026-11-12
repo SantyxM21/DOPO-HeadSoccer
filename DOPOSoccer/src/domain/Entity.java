@@ -4,11 +4,16 @@ public abstract class Entity {
     protected double xPosition;
     protected double yPosition;
     
-    public double getXPosition(){
-        return xPosition;
+    public Entity(double x, double y){
+        xPosition = x;
+        yPosition = y;
     }
 
-    public double getYPosition(){
-        return yPosition;
+    public int getXPosition(){
+        return (int) xPosition;
+    }
+
+    public int getYPosition(){
+        return (int) yPosition;
     }
 }

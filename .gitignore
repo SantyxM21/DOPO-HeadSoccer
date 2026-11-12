@@ -1,5 +1,6 @@
 # ---------- Java: archivos compilados y empaquetados ----------
 *.class
+Prueba.java
 
 # ---------- Carpetas de salida de compilación ----------
 bin/

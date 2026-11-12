@@ -1,7 +1,6 @@
 package presentation;
 
 import domain.DopoSoccer;
-import domain.DopoSoccerException;
 import java.awt.*;
 import javax.swing.*;
 
@@ -19,17 +18,17 @@ public class MainPanel extends JPanel{
     public static final int FULL_HEIGHT = FULL_SCREEN_SIZE.height;
     public static Dimension GAME_SIZE;   
 
-    private String currentPage = "Loading Page";
     private final CardLayout cards;
     private LoadingPanel loadingPage;
     private HomePanel homePage;
     private ModePanel modePage;
     private SelectionPanel selectionPage;
     private CharactersInfoPanel charactersPage;
-public static final String NOT_DATA = "Aun no hay datos";
+    private GamePanel gamePage;
     private int matchMode;      // 1 time, 2 goals
     private int playersMode;    // 1 player vs player , 2 player vs machine
     private String confingMode;
+    private DopoSoccer game;
 
     public MainPanel(){
         super(new CardLayout());
@@ -43,9 +42,12 @@ public static final String NOT_DATA = "Aun no hay datos";
         modePage = new ModePanel();
         selectionPage = new SelectionPanel();
         charactersPage = new CharactersInfoPanel();
+        gamePage = new GamePanel(game);
 
         this.prepareView();
         this.prepareController();
+
+        game = new DopoSoccer();
     }
 
     /* This method prepares the view of the main panel */
@@ -55,6 +57,7 @@ public static final String NOT_DATA = "Aun no hay datos";
         this.add(modePage.prepareModePage(), "Mode menu");
         this.add(selectionPage.prepareSelectionPage(), "Selection menu");
         this.add(charactersPage.prepareCharacterPage(), "Character page");
+        this.add(gamePage.prepareGamePage(), "Game");
     }
 
     /* This method prepares the controller for the main panel */
@@ -64,6 +67,7 @@ public static final String NOT_DATA = "Aun no hay datos";
         modePage.prepareController(this);
         selectionPage.prepareController(this);
         charactersPage.prepareController(this);
+        gamePage.prepareController(this);
     }
 
     /* This method calculates the size for a given divisor */
@@ -82,6 +86,7 @@ public static final String NOT_DATA = "Aun no hay datos";
         modePage = new ModePanel();
         selectionPage = new SelectionPanel();
         charactersPage = new CharactersInfoPanel();
+        gamePage = new GamePanel(game);
         this.prepareView();
         this.prepareController();
 
@@ -94,8 +99,13 @@ public static final String NOT_DATA = "Aun no hay datos";
         showPage("Home menu");
     }
 
-    public void startGame(String playerOne, String playerTwo) throws DopoSoccerException{
-        DopoSoccer game = new DopoSoccer();//matchMode, playersMode, "", playerOne, playerTwo, confingMode, GAME_SIZE   <- Antiguos parametros, revisar
+    public void startGame(String playerOne, String playerTwo) {
+        if(DopoSoccer.PVSP_MODE == playersMode){
+            game.newGame(matchMode, confingMode, GAME_SIZE);
+            game.addHuman(1, playerOne);
+            game.addHuman(2, playerTwo);
+        }
+
     }
 
     /* 
@@ -104,7 +114,6 @@ public static final String NOT_DATA = "Aun no hay datos";
     */
     public void showPage(String name){
         cards.show(this, name);
-        currentPage = name;
     }
 
     public static void funcUnderConstruction(String ms){
