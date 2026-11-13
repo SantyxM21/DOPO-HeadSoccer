@@ -2,7 +2,12 @@ package domain;
 
 public abstract class Player extends Entity {
     public static final int PLAYER_SIZE = 80;
-    public static final double SPEED = 5.0;   
+    public static final double SPEED = 5.0;
+    public static final double JUMP_FORCE = -6.5;  // negativo ya que Y disminuye hacia arriba
+    public static final double GRAVITY = 0.15;     
+    public final int GROUND_Y;
+
+    private double yVelocity = 0;
 
     protected Character_ selectedCharacter;
     protected Profile profile;
@@ -15,6 +20,7 @@ public abstract class Player extends Entity {
 
     public Player(String character, double x, double y) {
         super(x, y);
+        GROUND_Y = (int) y;
         setCharacter_(character);
     }
 
@@ -30,8 +36,20 @@ public abstract class Player extends Entity {
         throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
     }
 
-    public void jump() throws DopoSoccerException{
-        throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    public void jump() {
+        if (yPosition == GROUND_Y){     // Condición para evitar que salte en el aire
+            yVelocity = JUMP_FORCE;
+        }
+    }
+
+    public void applyGravity() {
+        yPosition += yVelocity;
+        yVelocity += GRAVITY;
+
+        if (yPosition >= GROUND_Y){   // una vez que llega al suele ya no baja mas
+            yPosition = GROUND_Y;
+            yVelocity = 0;
+        }
     }
 
     public double getKickMultiplier(){

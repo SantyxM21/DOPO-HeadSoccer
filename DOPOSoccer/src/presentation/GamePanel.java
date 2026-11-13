@@ -45,15 +45,17 @@ public class GamePanel extends JPanel{
 
     // Mueve al jugador segun las teclas que esten presionadas 
     private void update(){
+        if(!game.hasMatch()) return;                     
         int direction = 0;
         // Se usa -= y += en caso de qque ambas teclas se presionen al tiempo se "cancelen"
         if(keyH.leftPressed) direction -= 1;
         if(keyH.rightPressed) direction += 1;
+        if(keyH.jumpPressed) game.jump(Match.LEFT_SIDE);
 
-        if(direction != 0){
-            game.move(Match.LEFT_SIDE, direction);
-            repaint();                                   // Vuelve a dibujar con la nueva posicion
-        }
+        if(direction != 0) game.move(Match.LEFT_SIDE, direction);
+        game.applyGravity(Match.LEFT_SIDE);              // Siempre para que el salto se aplique aunque no se presione nada
+
+        repaint();                                       // Vuelve a dibujar con la nueva posicion
     }
 
     @Override

@@ -54,6 +54,18 @@ public class DopoSoccer {
         match.getPlayer(player).move(direction);
     }
 
+    public void jump(int player){
+        match.getPlayer(player).jump();
+    }
+
+    public boolean hasMatch(){
+        return match != null;
+    }
+
+    public void applyGravity(int player){
+        match.getPlayer(player).applyGravity();
+    }
+
     public void activatePower(){
     }
 
