@@ -12,15 +12,18 @@ import javax.swing.*;
  */
 public class DopoSoccerGUI extends JFrame{
 
+    private static final Image img = new ImageIcon(DopoSoccerGUI.class.getResource("/resources/logo_icon.png")).getImage();
+
     private final MainPanel main = new MainPanel();
 
     public DopoSoccerGUI(){
         this.add(main);                                     //Se añade el panel al frame
+        this.setTitle("DOPO Soccer");
         this.setResizable(false);                           //No permite modificar el tamaño de la ventana
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setBackground(Color.BLACK);
         this.pack();                                        // Toma las dimensiones del panel que se añadio 
-        // this.setIconImage(img);
+        this.setIconImage(img);
         this.setLocationRelativeTo(null);                   //Centra la ventana
         this.setVisible(true);  //Inicio h
     }

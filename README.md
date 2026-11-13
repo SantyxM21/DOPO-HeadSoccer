@@ -19,3 +19,7 @@ DOPOSoccer lleva Head Soccer, el juego de celular de D&D Dream, al computador. E
 - `DOPOSoccer/lib`: librerías (JUnit 5)
 - `uml`: diagramas
 - `docs`: documentación
+
+## Referencias
+
+Los videos y artículos que se consultaron para el proyecto, y en qué parte del código se usaron, están en [docs/References.md](docs/References.md).
