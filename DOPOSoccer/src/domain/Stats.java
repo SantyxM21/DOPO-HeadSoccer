@@ -1,31 +1,31 @@
 package domain;
 
 public class Stats {
-    private static final int MAX_LEVEL = 5; //revisar numero
-    private static final int INICIAL_PRICE = 0;//revisar numero
+    private static final int MIN_LEVEL = 1;
+    private static final int MAX_LEVEL = 10; 
+    private static final int INICIAL_PRICE = 500;
 
-    private static int speed;
-    private static int kick;
-    private static int jump;
-    private static int health;
+    private int speed = MIN_LEVEL;
+    private int kick = MIN_LEVEL;
+    private int jump = MIN_LEVEL;
+    private int survival = MIN_LEVEL;
 
     public Stats(){
     }
 
-    public static int getLevel(String habilitie){
-        int value = -1;
-        switch(habilitie){
+    public int getLevel(String stat) throws DopoSoccerException{
+        switch(stat.toLowerCase().trim()){
             case "speed":
-                value = speed;
+                return speed;
             case "kick":
-                value = kick;
+                return kick;
             case "jump":
-                value = jump;
-            case "health":
-                value = health;
-        //if (value == -1) break; Pensar en que exception poner aca
+                return jump;
+            case "survival":
+                return survival;
+            default:
+                throw new DopoSoccerException(DopoSoccerException.INVALIDAD_STAT);
         }
-        return value;
     }
 
     public void update(){

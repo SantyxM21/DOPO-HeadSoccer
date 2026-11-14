@@ -35,8 +35,8 @@ public class DopoSoccer {
 
     }
 
-    public void addHuman(int side, String character){
-        match.addHuman(side, character);
+    public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
+        match.addHuman(side, character, profile);
     }
 
     public void addMachine(int side, String character, String machineType){
@@ -70,5 +70,10 @@ public class DopoSoccer {
     }
 
     public void upgradeStats(){
+    }
+
+    public Profile getProfile(int side){
+        if (side == Match.LEFT_SIDE) return profile1;
+        else return profile2;
     }
 }

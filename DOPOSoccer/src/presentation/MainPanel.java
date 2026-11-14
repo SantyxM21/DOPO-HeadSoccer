@@ -1,6 +1,8 @@
 package presentation;
 
 import domain.DopoSoccer;
+import domain.DopoSoccerException;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -100,12 +102,19 @@ public class MainPanel extends JPanel{
         showPage("Home menu");
     }
 
-    public void startGame(String playerOne, String playerTwo) {
+    public boolean startGame(String playerOne, String playerTwo) {
         if(DopoSoccer.PVSP_MODE == playersMode){
-            game.newGame(matchMode, confingMode, GAME_SIZE);
-            game.addHuman(1, playerOne);
-            game.addHuman(2, playerTwo);
+            try{
+                game.newGame(matchMode, confingMode, GAME_SIZE);
+                game.addHuman(1, playerOne, game.getProfile(1));
+                game.addHuman(2, playerTwo, game.getProfile(2));
+                return true;
+            } catch (DopoSoccerException e){
+                JOptionPane.showMessageDialog(null, e.getMessage());
+                return false;
+            }
         }
+        else return false; //Aun no hay mas modos de juegos implementados
 
     }
 

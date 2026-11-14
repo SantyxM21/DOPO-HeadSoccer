@@ -9,7 +9,7 @@ public class Ball extends Entity{
     private double xSpeed;
     private double ySpeed;
 
-    public Ball(double xPositon, double yPositon) throws DopoSoccerException{
+    public Ball(double xPositon, double yPositon){
         super(xPositon, yPositon);
     }
 

@@ -19,6 +19,8 @@ public class SelectionPanel extends JPanel {
     private CustomButton player2Previous;
     private CustomButton player2Next;
 
+    private final CharacterInfoView flags;
+
     public SelectionPanel(){
         super(new BorderLayout());
         this.GAME_SIZE = MainPanel.GAME_SIZE;
@@ -31,6 +33,8 @@ public class SelectionPanel extends JPanel {
         player1Next = new CustomButton("→");          // →
         player2Previous = new CustomButton("←");
         player2Next = new CustomButton("→");
+        flags = new CharacterInfoView(GAME_SIZE.height / 8);
+
     }
 
     /*
@@ -95,8 +99,7 @@ public class SelectionPanel extends JPanel {
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                main.startGame("Corea", "Nigeria");
-                main.showPage("Game");
+                if (main.startGame("Corea", "Nigeria")) main.showPage("Game");
             }
         });
         // TODO: playButton, swapButton y las flechas de cada jugador
@@ -117,7 +120,10 @@ public class SelectionPanel extends JPanel {
         character.setPreferredSize(fixed);
         character.setMinimumSize(fixed);
         character.setMaximumSize(fixed);
-        character.setText(characterName);
+
+        Image flag = flags.getImage(characterName);
+        if (flag != null) character.setIcon(new ImageIcon(flag)); //El nombre lo pone la informacion de la bandera mostrada
+        else character.setText(characterName);  
         character.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 30));
 
         JPanel arrows = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 40, 0));

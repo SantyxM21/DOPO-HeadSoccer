@@ -16,14 +16,24 @@ public abstract class Match {
 
     public Match(String condition, Dimension resolution){
         setCondition(condition);
+
         this.RESOLUTION = resolution;
+        this.field = new Field(resolution);
+        this.ball = new Ball(resolution.getWidth() / 2, resolution.getHeight() / 4); // El balon se va a crear en el centro del campo
     }
 
     public abstract void setCondition(String condition);
 
-    public void addHuman(int side, String character){
-        if(side == LEFT_SIDE) leftPlayer = new Human(character, startX(side), startY());
-        else if(side == RIGHT_SIDE) rightPlayer = new Human(character, startX(side), startY());
+    public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
+        if(side == LEFT_SIDE) {
+            leftPlayer = new Human(character, startX(side), startY());
+            leftPlayer.setProfile(profile);
+        }
+        else if (side == RIGHT_SIDE){
+            rightPlayer = new Human(character, startX(side), startY());
+            rightPlayer.setProfile(profile);
+        }
+        else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
     }
 
     private double startX(int side){

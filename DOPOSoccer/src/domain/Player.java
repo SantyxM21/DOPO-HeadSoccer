@@ -18,14 +18,10 @@ public abstract class Player extends Entity {
     protected double powerBar;
 
 
-    public Player(String character, double x, double y) {
+    public Player(String character, double x, double y) throws DopoSoccerException{
         super(x, y);
         GROUND_Y = (int) y;
-        setCharacter_(character);
-    }
-
-    private void setCharacter_(String character){
-        if(character.equals("SouthKorea")) selectedCharacter = new SouthKorea();
+        this.selectedCharacter = createCharacter(character);
     }
 
     public void move(int direction) {
@@ -77,16 +73,27 @@ public abstract class Player extends Entity {
     public double getPowerBar(){
         return powerBar;
     }
-/* 
-    public Power getPower(){
-        return power; 
+
+    protected  Character_ createCharacter (String country) throws DopoSoccerException{
+        switch (country) {
+            case "Corea":
+                return new Corea();
+            case "Camerun":
+                return new Camerun();
+            case "Nigeria":
+                return new Nigeria();
+            case "USA":
+                return new USA();
+            default:
+                throw new DopoSoccerException(DopoSoccerException.INEXISTENT_CHARACTER);
+        }
     }
 
-    public boolean isDazed(){
-         return dazed; 
+    public void setProfile(Profile profile){
+        this.profile = profile;
     }
 
-    public int getPoints(){
-        return points;
-    }*/
+    public Profile getProfile(){
+        return profile;
+    }
 }
