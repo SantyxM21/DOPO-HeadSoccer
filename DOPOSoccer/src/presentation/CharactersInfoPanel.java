@@ -12,9 +12,12 @@ public class CharactersInfoPanel extends JPanel{
     private CustomButton previous;
     private CustomButton next;
 
+    private final CharacterInfoView charactersImages;
+
     public CharactersInfoPanel(){
         super(new BorderLayout());
         this.GAME_SIZE = MainPanel.GAME_SIZE;
+        this.charactersImages = new CharacterInfoView(GAME_SIZE.height/6);
 
         backButton = CustomButton.createBackButton();
         previous = new CustomButton("←");
@@ -103,13 +106,21 @@ public class CharactersInfoPanel extends JPanel{
                 BorderFactory.createEmptyBorder(GAME_SIZE.height / 40, GAME_SIZE.width / 40, GAME_SIZE.height / 40, GAME_SIZE.width / 40)));
 
         // Fila 1: espacio de la imagen 
-        JPanel image = new JPanel();
-        image.setBackground(Color.WHITE);
+        JLabel image = new JLabel();
+        image.setHorizontalAlignment(SwingConstants.CENTER);
+        image.setVerticalAlignment(SwingConstants.CENTER);
         image.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        JPanel imageHolder = new JPanel(new GridLayout(1, 1));
+
+        Image characterImage = charactersImages.getImage(name); //Obtiene la imagen del pais
+        if (characterImage != null) image.setIcon(new ImageIcon(characterImage)); //Agrega la imagen previamente creada
+
+            
+        JPanel imageHolder = new JPanel(new GridLayout(1, 1)); //Recuadro que va a contener la imagen
         imageHolder.setOpaque(false);
         imageHolder.setBorder(BorderFactory.createEmptyBorder(0, GAME_SIZE.width / 14, 0, GAME_SIZE.width / 14));
         imageHolder.add(image);
+        
+        
 
         // Nombre pegado debajo de la imagen
         JLabel characterName = new JLabel(name, SwingConstants.CENTER);

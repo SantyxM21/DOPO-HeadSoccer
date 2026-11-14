@@ -9,10 +9,8 @@ public class Ball extends Entity{
     private double xSpeed;
     private double ySpeed;
 
-    public Ball(int xPositon, int yPositon, int diameter) throws DopoSoccerException{
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
-        this.diameter = diameter;
+    public Ball(double xPositon, double yPositon) throws DopoSoccerException{
+        super(xPositon, yPositon);
     }
 
     public void translate() throws DopoSoccerException{
