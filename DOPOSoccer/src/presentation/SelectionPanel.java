@@ -77,9 +77,20 @@ public class SelectionPanel extends JPanel {
         player1Character.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
+                main.setInfoPlayer(1);
                 main.showPage("Character page");
             }
         });
+
+        player2Character.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                main.setInfoPlayer(2);
+                main.showPage("Character page");
+            }
+        });
+
+
 
         playButton.addActionListener(new ActionListener() {
             @Override

@@ -30,6 +30,8 @@ public class MainPanel extends JPanel{
     private String confingMode;
     private DopoSoccer game;
 
+    private int infoShownPlayer; // 1 leftPlayer 2 rightPlayer
+
     public MainPanel(){
         super(new CardLayout());
         GAME_SIZE = sizeFor(1.4);
@@ -130,5 +132,10 @@ public class MainPanel extends JPanel{
 
     public void setConfigMode(String configuration){
         this.confingMode = configuration;
+    }
+
+    public void setInfoPlayer(int player){
+        this.infoShownPlayer = player;
+        charactersPage.setSelectedInfoPlayer(player);
     }
 }

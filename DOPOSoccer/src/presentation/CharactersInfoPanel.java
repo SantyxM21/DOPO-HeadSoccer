@@ -12,6 +12,14 @@ public class CharactersInfoPanel extends JPanel{
     private CustomButton previous;
     private CustomButton next;
 
+    private static final String[] COUNTRIES = {"Corea", "Camerun", "Nigeria", "USA"};
+
+    private int showedIndex[] = {0, 1}; //la informacion que se esta mostrando los recuadros
+    private final JLabel[] imagesShowed = new JLabel[2];
+    private final JLabel[] namesShowed = new JLabel[2];
+
+    private int selectedInfoPlayer; //1 left 2 right
+
     private final CharacterInfoView charactersImages;
 
     public CharactersInfoPanel(){
@@ -37,7 +45,7 @@ public class CharactersInfoPanel extends JPanel{
         gameName.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 20));
         gameName.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JLabel playerPoints = new JLabel("Player1 :" + "1000 pts");
+        JLabel playerPoints = new JLabel("Player :" + "1000 pts");
         playerPoints.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 15));
         playerPoints.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -49,22 +57,39 @@ public class CharactersInfoPanel extends JPanel{
         JPanel body = new JPanel(new GridLayout(1, 2, GAME_SIZE.width / 20, 0));
         body.setOpaque(false);
         body.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 20, 0, GAME_SIZE.height / 20, 0));
-        body.add(characterCard("Corea"));
-        body.add(characterCard("USA"));
+        body.add(characterCard(0));
+        body.add(characterCard(1));
 
         this.add(topBar, BorderLayout.NORTH);
         this.add(centerVertically(previous), BorderLayout.WEST);
         this.add(body, BorderLayout.CENTER);
         this.add(centerVertically(next), BorderLayout.EAST);
+
+        updateCardsInfo();
         return this;
     }
     
-    /*   */
     public void prepareController(MainPanel main){
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 main.showPage("Selection menu");
+            }
+        });
+
+        previous.addActionListener(new ActionListener() {
+            @Override 
+            public void actionPerformed(ActionEvent e){
+                showedIndex[selectedInfoPlayer - 1] = (showedIndex[selectedInfoPlayer - 1] - 1 + COUNTRIES.length) % COUNTRIES.length;
+                updateCardsInfo();
+            }
+        });
+
+        next.addActionListener(new ActionListener() {
+            @Override 
+            public void actionPerformed(ActionEvent e){
+                showedIndex[selectedInfoPlayer - 1] = (showedIndex[selectedInfoPlayer - 1] + 1 + COUNTRIES.length) % COUNTRIES.length;
+                updateCardsInfo();
             }
         });
         
@@ -97,7 +122,7 @@ public class CharactersInfoPanel extends JPanel{
     @param name the name of the character
     @return the panel that contains the whole card
     */
-    private JPanel characterCard(String name){
+    private JPanel characterCard(int countryIndex){
         // la tarjeta se divide en 3 filas iguales: imagen con nombre, estadísticas y boton de poder
         JPanel card = new JPanel(new GridLayout(3, 1, 0, GAME_SIZE.height / 60));
         card.setBackground(Color.WHITE);
@@ -110,10 +135,7 @@ public class CharactersInfoPanel extends JPanel{
         image.setHorizontalAlignment(SwingConstants.CENTER);
         image.setVerticalAlignment(SwingConstants.CENTER);
         image.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-
-        Image characterImage = charactersImages.getImage(name); //Obtiene la imagen del pais
-        if (characterImage != null) image.setIcon(new ImageIcon(characterImage)); //Agrega la imagen previamente creada
-
+        imagesShowed[countryIndex] = image; //Guarda una referencia para que un metodo encargado ponga la imagen 
             
         JPanel imageHolder = new JPanel(new GridLayout(1, 1)); //Recuadro que va a contener la imagen
         imageHolder.setOpaque(false);
@@ -123,8 +145,9 @@ public class CharactersInfoPanel extends JPanel{
         
 
         // Nombre pegado debajo de la imagen
-        JLabel characterName = new JLabel(name, SwingConstants.CENTER);
+        JLabel characterName = new JLabel("", SwingConstants.CENTER); //El nombre lo poner un metodo encargado
         characterName.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 22));
+        namesShowed[countryIndex] = characterName;
 
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
@@ -176,5 +199,22 @@ public class CharactersInfoPanel extends JPanel{
         card.add(stats);
         card.add(powerHolder);
         return card;
+    }
+
+    private void updateCardsInfo(){
+        for (int i = 0; i < 2; i++){
+            String country = COUNTRIES[showedIndex[i]]; //Toma el nombre
+            namesShowed[i].setText(country);
+
+            Image characterCountryImage = charactersImages.getImage(country);
+            ImageIcon image;
+            if (characterCountryImage != null) image = new ImageIcon(characterCountryImage);
+            else image = null;
+            imagesShowed[i].setIcon(image);
+        }
+    }
+
+    public void setSelectedInfoPlayer(int card){
+        this.selectedInfoPlayer = card;
     }
 }
