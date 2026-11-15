@@ -1,5 +1,7 @@
 package presentation;
 
+import static domain.DopoSoccer.COUNTRIES;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -9,28 +11,22 @@ public class CharactersInfoPanel extends JPanel{
     private final Dimension GAME_SIZE;
 
     private CustomButton backButton;
-    private CustomButton previous;
-    private CustomButton next;
 
-    private static final String[] COUNTRIES = {"Corea", "Camerun", "Nigeria", "USA"};
+    // Personaje que muestra la tarjeta (posición en COUNTRIES)
+    private int character = 0;
 
-    private int showedIndex[] = {0, 1}; //la informacion que se esta mostrando los recuadros
-    private final JLabel[] imagesShowed = new JLabel[2];
-    private final JLabel[] namesShowed = new JLabel[2];
+    // Imagen y nombre de la tarjeta, se actualizan con showCharacter
+    private final JLabel characterImage = new JLabel();
+    private final JLabel characterName = new JLabel("", SwingConstants.CENTER);
 
     private int selectedInfoPlayer; //1 left 2 right
 
-    private final CharacterInfoView charactersImages;
 
     public CharactersInfoPanel(){
         super(new BorderLayout());
         this.GAME_SIZE = MainPanel.GAME_SIZE;
-        this.charactersImages = new CharacterInfoView(GAME_SIZE.height/6);
 
         backButton = CustomButton.createBackButton();
-        previous = new CustomButton("←");
-        next = new CustomButton("→");
-        
     }
 
     /*   */
@@ -53,19 +49,16 @@ public class CharactersInfoPanel extends JPanel{
         topBar.add(playerPoints, BorderLayout.CENTER);
         topBar.add(CustomButton.keepSize(backButton), BorderLayout.EAST);
 
-        // Dos columnas iguales, una por tarjeta, separadas por un espacio
-        JPanel body = new JPanel(new GridLayout(1, 2, GAME_SIZE.width / 20, 0));
+        // Una sola tarjeta en el centro, con margen a los lados para que no se estire de mas
+        JPanel body = new JPanel(new GridLayout(1, 1));
         body.setOpaque(false);
-        body.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 20, 0, GAME_SIZE.height / 20, 0));
-        body.add(characterCard(0));
-        body.add(characterCard(1));
+        body.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 20, GAME_SIZE.width / 3, GAME_SIZE.height / 20, GAME_SIZE.width / 3));
+        body.add(characterCard(characterImage, characterName));
 
         this.add(topBar, BorderLayout.NORTH);
-        this.add(centerVertically(previous), BorderLayout.WEST);
         this.add(body, BorderLayout.CENTER);
-        this.add(centerVertically(next), BorderLayout.EAST);
 
-        updateCardsInfo();
+        showCharacter();
         return this;
     }
     
@@ -76,53 +69,15 @@ public class CharactersInfoPanel extends JPanel{
                 main.showPage("Selection menu");
             }
         });
-
-        previous.addActionListener(new ActionListener() {
-            @Override 
-            public void actionPerformed(ActionEvent e){
-                showedIndex[selectedInfoPlayer - 1] = (showedIndex[selectedInfoPlayer - 1] - 1 + COUNTRIES.length) % COUNTRIES.length;
-                updateCardsInfo();
-            }
-        });
-
-        next.addActionListener(new ActionListener() {
-            @Override 
-            public void actionPerformed(ActionEvent e){
-                showedIndex[selectedInfoPlayer - 1] = (showedIndex[selectedInfoPlayer - 1] + 1 + COUNTRIES.length) % COUNTRIES.length;
-                updateCardsInfo();
-            }
-        });
-        
-    }
-
-    /*
-    This method wraps a component so BorderLayout does not stretch it, leaving margin on the sides
-    @param component the component to wrap
-    @return a transparent panel that keeps the component's preferred size
-    */
-    private JPanel centerVertically(JComponent component){
-        // FlowLayout respeta el tamaño preferido del botón y deja margen a los lados
-        JPanel holder = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 18, 0));
-        holder.setOpaque(false);
-        holder.add(component);
-
-        // 9 filas iguales con el botón en la del medio: así queda centrado sin importar el tamaño de la ventana
-        int rows = 9;
-        JPanel wrapper = new JPanel(new GridLayout(rows, 1));
-        wrapper.setOpaque(false);
-        for (int i = 0; i < rows; i++) {
-            if (i == rows / 2) wrapper.add(holder);
-            else wrapper.add(new JLabel());                  // fila vacía
-        }
-        return wrapper;
     }
 
     /*
     This method creates the card of a character with its image, name, stats each with a "+" button and power button
-    @param name the name of the character
+    @param image the label where the character's flag is shown
+    @param characterName the label where the character's name is shown
     @return the panel that contains the whole card
     */
-    private JPanel characterCard(int countryIndex){
+    private JPanel characterCard(JLabel image, JLabel characterName){
         // la tarjeta se divide en 3 filas iguales: imagen con nombre, estadísticas y boton de poder
         JPanel card = new JPanel(new GridLayout(3, 1, 0, GAME_SIZE.height / 60));
         card.setBackground(Color.WHITE);
@@ -131,12 +86,10 @@ public class CharactersInfoPanel extends JPanel{
                 BorderFactory.createEmptyBorder(GAME_SIZE.height / 40, GAME_SIZE.width / 40, GAME_SIZE.height / 40, GAME_SIZE.width / 40)));
 
         // Fila 1: espacio de la imagen 
-        JLabel image = new JLabel();
         image.setHorizontalAlignment(SwingConstants.CENTER);
         image.setVerticalAlignment(SwingConstants.CENTER);
         image.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        imagesShowed[countryIndex] = image; //Guarda una referencia para que un metodo encargado ponga la imagen 
-            
+
         JPanel imageHolder = new JPanel(new GridLayout(1, 1)); //Recuadro que va a contener la imagen
         imageHolder.setOpaque(false);
         imageHolder.setBorder(BorderFactory.createEmptyBorder(0, GAME_SIZE.width / 14, 0, GAME_SIZE.width / 14));
@@ -145,9 +98,7 @@ public class CharactersInfoPanel extends JPanel{
         
 
         // Nombre pegado debajo de la imagen
-        JLabel characterName = new JLabel("", SwingConstants.CENTER); //El nombre lo poner un metodo encargado
         characterName.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 22));
-        namesShowed[countryIndex] = characterName;
 
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
@@ -201,20 +152,14 @@ public class CharactersInfoPanel extends JPanel{
         return card;
     }
 
-    private void updateCardsInfo(){
-        for (int i = 0; i < 2; i++){
-            String country = COUNTRIES[showedIndex[i]]; //Toma el nombre
-            namesShowed[i].setText(country);
-
-            Image characterCountryImage = charactersImages.getImage(country);
-            ImageIcon image;
-            if (characterCountryImage != null) image = new ImageIcon(characterCountryImage);
-            else image = null;
-            imagesShowed[i].setIcon(image);
-        }
+    /* This method shows the current character's flag and name in the card */
+    private void showCharacter(){
+        String country = COUNTRIES[character];
+        characterName.setText(country);
+        characterImage.setIcon(DopoSoccerGUI.flagIcon(country, GAME_SIZE.height / 6));
     }
 
-    public void setSelectedInfoPlayer(int card){
+    public void setSelectedInfoPlayer(int card){ 
         this.selectedInfoPlayer = card;
     }
 }
