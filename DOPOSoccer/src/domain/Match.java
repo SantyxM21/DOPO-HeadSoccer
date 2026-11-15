@@ -16,7 +16,7 @@ public abstract class Match {
     private Field field;
     private Ball ball;
 
-    public Match(String condition, Dimension resolution){
+    public Match(int condition, Dimension resolution){
         setCondition(condition);
 
         this.RESOLUTION = resolution;
@@ -24,7 +24,7 @@ public abstract class Match {
         this.ball = new Ball(field); // El balon se va a crear en el centro del campo
     }
 
-    public abstract void setCondition(String condition);
+    public abstract void setCondition(int condition);
 
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
         if(side == LEFT_SIDE) {

@@ -1,6 +1,7 @@
 package presentation;
 
 import domain.DopoSoccer;
+import domain.DopoSoccerException;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -103,10 +104,16 @@ public class HomePanel extends JPanel{
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                // TODO: posible error si el jugador ingresa valores no permitidos (eje: -1 minutos)
-                configDialog.dispose();             // Cierra el diálogo antes de cambiar de página
-                main.showPage("Mode menu");
-                main.setConfigMode(configSizeInput.getText().trim());
+                try {
+                    int inputCondition = checkPositiveNum(configSizeInput.getText().trim());
+                    configDialog.dispose();             // Cierra el diálogo antes de cambiar de página
+                    main.showPage("Mode menu");
+                    main.setConfigMode(inputCondition);
+                } catch (DopoSoccerException ex) {
+                    JOptionPane.showMessageDialog(configDialog, ex.getMessage(), "Valor no válido ", JOptionPane.ERROR_MESSAGE);
+                    configSizeInput.requestFocusInWindow();
+                    configSizeInput.selectAll();
+                }
             }
         });
 
@@ -215,5 +222,17 @@ public class HomePanel extends JPanel{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         if (background != null) g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+    }
+
+    private int checkPositiveNum(String text) throws DopoSoccerException{
+        try {
+            int num = Integer.parseInt(text.trim());
+            if(num <= 0){
+                throw new DopoSoccerException(DopoSoccerException.INVALID_INPUT +" "+ text);
+            }
+            return num;
+        } catch (NumberFormatException e) {
+            throw new DopoSoccerException(DopoSoccerException.INVALID_INPUT +" "+ text);
+        }
     }
 }

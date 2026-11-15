@@ -29,7 +29,7 @@ public class MainPanel extends JPanel{
     private GamePanel gamePage;
     private int matchMode;      // 1 time, 2 goals
     private int playersMode;    // 1 player vs player , 2 player vs machine
-    private String confingMode;
+    private int confingMode;
     private DopoSoccer game;
 
     private int infoShownPlayer; // 1 leftPlayer 2 rightPlayer
@@ -139,7 +139,7 @@ public class MainPanel extends JPanel{
         this.playersMode = mode;
     }
 
-    public void setConfigMode(String configuration){
+    public void setConfigMode(int configuration){
         this.confingMode = configuration;
     }
 

@@ -28,7 +28,7 @@ public class DopoSoccer {
         this.profile2 = new Profile("2");
     }
 
-    public void newGame(int type, String conditions, Dimension resolution){
+    public void newGame(int type, int conditions, Dimension resolution){
         if(type == TIME_MODE) match = new TimeMatch(conditions, resolution);
         else if (type == GOALS_MODE) match = new GoalsMatch(conditions, resolution);
     }
