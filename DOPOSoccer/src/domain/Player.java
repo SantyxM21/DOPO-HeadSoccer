@@ -7,6 +7,12 @@ public abstract class Player extends Entity {
     public static final double GRAVITY = 0.15;     
     public final int GROUND_Y;
 
+    protected final Field field;
+    private final int size;
+    private final double speed;
+    private final double jumpForce;
+    private final double gravity;
+
     private double yVelocity = 0;
 
     protected Character_ selectedCharacter;
@@ -18,14 +24,23 @@ public abstract class Player extends Entity {
     protected double powerBar;
 
 
-    public Player(String character, double x, double y) throws DopoSoccerException{
+    public Player(String character, double x, double y, Field field) throws DopoSoccerException{
         super(x, y);
         GROUND_Y = (int) y;
         this.selectedCharacter = createCharacter(character);
+
+        this.field = field;
+        this.size = (int) field.scale(PLAYER_SIZE);
+        this.speed = field.scale(SPEED);
+        this.jumpForce = field.scale(JUMP_FORCE);
+        this.gravity = field.scale(GRAVITY);
     }
 
     public void move(int direction) {
-        xPosition += direction * SPEED;
+        xPosition += direction * speed;
+        //Verificaciones para que no se salga de la pantalla
+        if (xPosition < 0 ) xPosition = 0;
+        if(xPosition > field.getWidth() - size) xPosition = field.getWidth() - size;
     }
 
     public void kick() throws DopoSoccerException{
@@ -34,13 +49,13 @@ public abstract class Player extends Entity {
 
     public void jump() {
         if (yPosition == GROUND_Y){     // Condición para evitar que salte en el aire
-            yVelocity = JUMP_FORCE;
+            yVelocity = jumpForce;
         }
     }
 
     public void applyGravity() {
         yPosition += yVelocity;
-        yVelocity += GRAVITY;
+        yVelocity += gravity;
 
         if (yPosition >= GROUND_Y){   // una vez que llega al suele ya no baja mas
             yPosition = GROUND_Y;
@@ -95,5 +110,9 @@ public abstract class Player extends Entity {
 
     public Profile getProfile(){
         return profile;
+    }
+
+    public int getSize(){
+        return size;
     }
 }

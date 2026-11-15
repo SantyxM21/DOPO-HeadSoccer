@@ -1,20 +1,81 @@
 package domain;
 
 public class Ball extends Entity{
+    public static final int BASE_DIAMETER = 40;
+    public static final double GRAVITY = 0.15; 
+    public static final double WALL_FRICTION = 0.8;
+    public static final double AIR_FRICTION = 1;
+    public static final double FLOOR_FRICTION = 0.55;
+
     private Power chargedPower;
     private Player chargedBy;
 
     private int diameter;
+    private final Field field;
+    private final double gravity;
+    private Vector2D velocity;
 
-    private double xSpeed;
-    private double ySpeed;
-
-    public Ball(double xPositon, double yPositon){
-        super(xPositon, yPositon);
+    public Ball(Field field){
+        super(0, 0); //Valores temporales
+        this.field = field;
+        this.diameter = (int) field.scale(BASE_DIAMETER);
+        this.gravity = field.scale(GRAVITY);
+        kickOff();
     }
 
-    public void translate() throws DopoSoccerException{
-        throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    public void kickOff(){
+        xPosition = field.getWidth() / 2 - diameter / 2;
+        yPosition = field.getHeight() / 4;
+        velocity = new Vector2D(0, 0); //Valores Temporales
+    }
+
+    public void move(){
+        xPosition += velocity.getX();
+        yPosition += velocity.getY();
+
+        int fieldWidth = field.getWidth();
+        int fieldGroundY = field.getGroundY();
+
+        if(xPosition + diameter > fieldWidth){
+            xPosition = fieldWidth - diameter;
+            velocity.setX(velocity.getX() * -WALL_FRICTION);
+        }else if(xPosition < 0){
+            xPosition = 0;
+            velocity.setX(velocity.getX() * -WALL_FRICTION);
+        }else{
+            velocity.setX(velocity.getX() * AIR_FRICTION);
+
+            if (Math.abs(velocity.getX()) < 1.9) velocity.setX(0);
+        }
+
+
+        if (yPosition + diameter > fieldGroundY) {
+            yPosition = fieldGroundY - diameter;  
+                if (Math.abs(velocity.getY()) < 1) velocity.setY(0); 
+                else velocity.setY(velocity.getY() * -FLOOR_FRICTION);
+        } else if (yPosition < 0) {
+            yPosition = 0;  
+            velocity.setY(-velocity.getY());                                
+        } else {
+            velocity.setY(velocity.getY() + gravity);
+        }
+    }
+
+    public void translate(double dx, double dy){
+        xPosition += dx;
+        yPosition += dy;
+    }
+
+    public Vector2D center(){
+        return new Vector2D(xPosition + diameter / 2, yPosition + diameter / 2);
+    }
+
+    public Vector2D getVelocity(){
+        return velocity;
+    }
+
+    public void setVelocity(Vector2D v){
+        this.velocity = v;
     }
 
     public int getDiameter(){

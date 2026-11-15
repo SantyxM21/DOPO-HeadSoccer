@@ -19,39 +19,56 @@ public abstract class Match {
 
         this.RESOLUTION = resolution;
         this.field = new Field(resolution);
-        this.ball = new Ball(resolution.getWidth() / 2, resolution.getHeight() / 4); // El balon se va a crear en el centro del campo
+        this.ball = new Ball(field); // El balon se va a crear en el centro del campo
     }
 
     public abstract void setCondition(String condition);
 
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
         if(side == LEFT_SIDE) {
-            leftPlayer = new Human(character, startX(side), startY());
+            leftPlayer = new Human(character, startX(side), startY(), field);
             leftPlayer.setProfile(profile);
         }
         else if (side == RIGHT_SIDE){
-            rightPlayer = new Human(character, startX(side), startY());
+            rightPlayer = new Human(character, startX(side), startY(), field);
             rightPlayer.setProfile(profile);
         }
         else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
     }
 
     private double startX(int side){
-        double margin = RESOLUTION.getWidth() * START_X_RATIO;
+        double margin = field.getWidth() * START_X_RATIO;
         if(side == LEFT_SIDE) return margin;
-        return RESOLUTION.getWidth() - margin - Player.PLAYER_SIZE;
+        return field.getWidth() - margin - playerSize();
     }
 
     private double startY(){
-        double groundMargin = RESOLUTION.getHeight() * GROUND_MARGIN_RATIO;
-        return RESOLUTION.getHeight() - groundMargin - Player.PLAYER_SIZE;
+        return field.getGroundY() - playerSize();
+    }
+
+    public void update(){
+        leftPlayer.applyGravity();
+        rightPlayer.applyGravity();
+        ball.move();
     }
 
     public Player getPlayer(int side){
         if(side == LEFT_SIDE) return leftPlayer;
         else if(side == RIGHT_SIDE) return rightPlayer;
 
-        return null; // TODO: Manejar como expecion no retornar null
+        else throw new IllegalArgumentException("Lado inválido: " + side);
+    }
+
+    private int playerSize(){
+        return (int) field.scale(Player.PLAYER_SIZE);
+    }
+
+    public Field getField(){
+        return field;
+    }
+
+    public Ball getBall(){
+        return ball;
     }
 
 

@@ -31,8 +31,10 @@ public class DopoSoccer {
     public void newGame(int type, String conditions, Dimension resolution){
         if(type == TIME_MODE) match = new TimeMatch(conditions, resolution);
         else if (type == GOALS_MODE) match = new GoalsMatch(conditions, resolution);
+    }
 
-
+    public void update(){
+        match.update();
     }
 
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
@@ -40,14 +42,6 @@ public class DopoSoccer {
     }
 
     public void addMachine(int side, String character, String machineType){
-    }
-
-    public int getPlayerX(int player){
-        return match.getPlayer(player).getXPosition();
-    }
-
-    public int getPlayerY(int player){
-        return match.getPlayer(player).getYPosition();
     }
 
     public void move(int player, int direction){
@@ -75,5 +69,49 @@ public class DopoSoccer {
     public Profile getProfile(int side){
         if (side == Match.LEFT_SIDE) return profile1;
         else return profile2;
+    }
+
+    public int getPlayerSize(int player){
+        return match.getPlayer(player).getSize();
+    }
+
+    public int getGroundY(){
+        return match.getField().getGroundY();
+    }
+
+    public int getGoalFrameX(int side){
+        return match.getField().getGoalFrame(side).getXPosition();
+    }
+
+    public int getGoalFrameY(){
+        return match.getField().getGoalFrame(Match.LEFT_SIDE).getYPosition();
+    }
+
+    public int getPlayerX(int player){
+        return match.getPlayer(player).getXPosition();
+    }
+
+    public int getPlayerY(int player){
+        return match.getPlayer(player).getYPosition();
+    }
+
+    public int getGoalFrameWidth(){
+        return match.getField().getGoalFrame(Match.LEFT_SIDE).getWidth();
+    }
+
+    public int getGoalFrameHeight(){
+        return match.getField().getGoalFrame(Match.LEFT_SIDE).getHeight();
+    }
+
+    public int getBallX(){
+        return match.getBall().getXPosition();
+    }
+
+    public int getBallY(){
+        return match.getBall().getYPosition();
+    }
+
+    public int getBallDiameter(){
+        return match.getBall().getDiameter();
     }
 }

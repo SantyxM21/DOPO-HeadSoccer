@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.event.*;
 
 import domain.DopoSoccer;
+import domain.DopoSoccerException;
 import domain.Match;
 import domain.Player;
 
@@ -51,12 +52,18 @@ public class GamePanel extends JPanel{
         if(keyH.leftPressed) direction -= 1;
         if(keyH.rightPressed) direction += 1;
         if(keyH.jumpPressed) game.jump(Match.LEFT_SIDE);
-
         if(direction != 0) game.move(Match.LEFT_SIDE, direction);
-        game.applyGravity(Match.LEFT_SIDE);              // Siempre para que el salto se aplique aunque no se presione nada
 
-        repaint();                                       // Vuelve a dibujar con la nueva posicion
-    }
+
+        int direction2 = 0;
+        if(keyH.leftPressedR) direction2 -= 1;
+        if(keyH.rightPressedR) direction2 += 1;
+        if(keyH.jumpPressedR) game.jump(Match.RIGHT_SIDE);
+        if(direction2 != 0) game.move(Match.RIGHT_SIDE, direction2);
+ 
+        game.update();
+        repaint();
+   }
 
     @Override
     // Este metodo es llamado por setVisible(true) o tambien por repaint(), y muchos mas.
@@ -68,9 +75,12 @@ public class GamePanel extends JPanel{
     }
 
     public void draw(Graphics g){
-        drawBackground(g);                               // Primero el fondo para que quede detras de todo
+        drawBackground(g);
+        if(!game.hasMatch()) return;   
+        drawField(g);                             // Primero el fondo para que quede detras de todo
         drawPlayer(g, 1);
         drawPlayer(g, 2);
+        drawBall(g);
     }
 
     public void drawBackground(Graphics g){
@@ -78,7 +88,24 @@ public class GamePanel extends JPanel{
     }
 
     public void drawPlayer(Graphics g, int player){
+        int size = game.getPlayerSize(player);
         g.setColor(Color.WHITE);
-        g.fillOval(game.getPlayerX(player), game.getPlayerY(player), Player.PLAYER_SIZE, Player.PLAYER_SIZE);
+        g.fillOval(game.getPlayerX(player), game.getPlayerY(player), size, size);
+    }
+
+    public void drawField(Graphics g){
+        g.setColor(Color.WHITE);
+        for(int side = Match.LEFT_SIDE; side <= Match.RIGHT_SIDE; side++){
+            g.drawRect(game.getGoalFrameX(side), game.getGoalFrameY(), game.getGoalFrameWidth(), game.getGoalFrameHeight());
+        }
+    }
+
+    public void drawBall(Graphics g){
+        int diameter = game.getBallDiameter();
+
+        g.setColor(Color.ORANGE);
+        g.fillOval(game.getBallX(), game.getBallY(), diameter, diameter);
+        g.setColor(Color.BLACK);
+        g.drawOval(game.getBallX(), game.getBallY(), diameter, diameter);
     }
 }
