@@ -21,6 +21,7 @@ public abstract class Match {
 
     private boolean isFinished;
     private int winnerSide = 0;
+    private int fps = 0;
     private int matchTimeSec = 0;
 
     public Match(String condition, Dimension resolution) throws DopoSoccerException{
@@ -73,7 +74,7 @@ public abstract class Match {
 
         checkGoal();
         checkFinished();
-        matchTimeSec++;
+        updateTime();
     }
 
     public void kick(int side){
@@ -187,5 +188,13 @@ public abstract class Match {
 
     public int getTime(){
         return matchTimeSec;
+    }
+
+    public void updateTime(){
+        fps++;
+        if(fps >= 120){
+            fps = 0;
+            matchTimeSec++;
+        }
     }
 }

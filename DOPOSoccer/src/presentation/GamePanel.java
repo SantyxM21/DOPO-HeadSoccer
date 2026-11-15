@@ -83,7 +83,7 @@ public class GamePanel extends JPanel{
         if(direction2 != 0) game.move(Match.RIGHT_SIDE, direction2);
 
         game.update();
-        gameTimeSecs = game.getTime();
+        updateTimer(game.getTime());
         repaint();
     }
 
@@ -200,6 +200,12 @@ public class GamePanel extends JPanel{
         panel.add(top, BorderLayout.CENTER);
         panel.add(bottom, BorderLayout.SOUTH);
         return panel;
+    }
+        
+    private void updateTimer(int time){
+        int minutes = time / 60;     
+        int seconds = time % 60;    
+        timeLabel.setText(String.format("%d:%02d", minutes, seconds));   
     }
 
     public void drawBackground(Graphics g){
