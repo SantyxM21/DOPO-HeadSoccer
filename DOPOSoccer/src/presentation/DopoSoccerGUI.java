@@ -41,6 +41,24 @@ public class DopoSoccerGUI extends JFrame{
         }
     }
 
+    public static ImageIcon flagIcon(String country, int height){
+        Image flag = loadImage("/resources/" + country + ".png");
+        if (flag == null) return null;
+        return new ImageIcon(flag.getScaledInstance(-1, height, Image.SCALE_SMOOTH));   // ancho -1 mantiene la proporcion
+    }
+
+    public static void showFlag(JLabel label, String country, int height){
+        ImageIcon icon = flagIcon(country, height);
+        label.setIcon(icon);
+        label.setText(icon == null ? country : null);      // texto solo si no hay bandera
+    }
+
+    public static void showFlag(AbstractButton button, String country, int height){
+        ImageIcon icon = flagIcon(country, height);
+        button.setIcon(icon);
+        button.setText(icon == null ? country : null);     // texto solo si no hay bandera
+    }
+
     public static JLabel createLogo(int heightRate){
         JLabel logo = new JLabel();
         logo.setHorizontalAlignment(SwingConstants.CENTER);

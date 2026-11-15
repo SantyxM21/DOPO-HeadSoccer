@@ -16,7 +16,8 @@ public class DopoSoccer {
 
     public static final int PVSP_MODE = 1; 
     public static final int PVSM_MODE = 2; 
-    
+
+    public static final String[] COUNTRIES = {"Corea del Sur", "Camerún", "Nigeria", "Estados Unidos"};
 
     private Profile profile1;
     private Profile profile2;
