@@ -151,6 +151,6 @@ public class MainPanel extends JPanel{
     }
 
     public void upgradeStat(int player, String stat){
-        System.out.println(stat+player);
+        game.upgradeStats(player, stat);
     }
 }

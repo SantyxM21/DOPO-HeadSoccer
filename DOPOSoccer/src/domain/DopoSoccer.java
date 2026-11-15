@@ -68,8 +68,6 @@ public class DopoSoccer {
     public void activatePower(){
     }
 
-    public void upgradeStats(){
-    }
 
     public Profile getProfile(int side){
         if (side == Match.LEFT_SIDE) return profile1;
@@ -85,8 +83,11 @@ public class DopoSoccer {
     }
 
     public int[] getPlayerStats(int side){
+        return getProfile(side).getStats();
+    }
 
-        return new int[]{};
+    public void upgradeStats(int player, String stat){
+        getProfile(player).upgradeStat(stat);
     }
 
     public int getPlayerSize(int player){

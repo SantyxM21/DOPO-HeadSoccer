@@ -63,9 +63,9 @@ public class SelectionPanel extends JPanel {
         // Tres columnas: jugador 1, centro (jugar) y jugador 2 / máquina
         JPanel body = new JPanel(new GridLayout(1, 3));
         body.setOpaque(false);
-        body.add(createCharacterColumn(player1Character, DopoSoccer.COUNTRIES[optionP1], player1Previous, player1Next, "Player 1"));
+        body.add(createCharacterColumn(player1Character, DopoSoccer.COUNTRIES[optionP1], player1Previous, player1Next, "Ivan"));
         body.add(createCenterColumn());
-        body.add(createCharacterColumn(player2Character, DopoSoccer.COUNTRIES[optionP2], player2Previous, player2Next, "Machine"));
+        body.add(createCharacterColumn(player2Character, DopoSoccer.COUNTRIES[optionP2], player2Previous, player2Next, "Cesar"));
 
         this.add(topBar, BorderLayout.NORTH);
         this.add(body, BorderLayout.CENTER);
