@@ -103,7 +103,7 @@ public class MainPanel extends JPanel{
     public boolean startGame(String playerOne, String playerTwo) {
         if(DopoSoccer.PVSP_MODE == playersMode){
             try{
-                game.newGame(matchMode, confingMode, GAME_SIZE);
+                game.newGame(matchMode, String.valueOf(confingMode), GAME_SIZE);   // el dominio recibe la condicion como String y la valida
                 game.addHuman(1, playerOne, game.getProfile(1));
                 game.addHuman(2, playerTwo, game.getProfile(2));
                 return true;
