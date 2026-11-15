@@ -16,6 +16,7 @@ public class GoalsMatch extends Match{
         } catch (NumberFormatException e) {
             throw new DopoSoccerException(DopoSoccerException.INVALID_GOALS);
         }
+         if (numGoals <= 0) throw new DopoSoccerException(DopoSoccerException.INVALID_GOALS);
     }
 
     @Override 
@@ -29,6 +30,11 @@ public class GoalsMatch extends Match{
 
     public int getNumGoals(){
         return numGoals;
+    }
+
+    @Override 
+    public String textUnderScore(){
+        return "Goles para ganar " + numGoals;
     }
 
 }

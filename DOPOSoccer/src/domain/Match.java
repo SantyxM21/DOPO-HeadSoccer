@@ -6,7 +6,6 @@ public abstract class Match {
     public static final int LEFT_SIDE = 1;
     public static final int RIGHT_SIDE = 2;
     private static final double START_X_RATIO = 0.2;       
-    private static final double GROUND_MARGIN_RATIO = 0.15;  
     public final Dimension RESOLUTION;
 
     public static final int WINNER_POINTS = 100;
@@ -22,7 +21,6 @@ public abstract class Match {
 
     private boolean isFinished;
     private int winnerSide = 0;
-
 
     public Match(String condition, Dimension resolution) throws DopoSoccerException{
         setCondition(condition);
@@ -76,6 +74,7 @@ public abstract class Match {
     }
 
     public void kick(int side){
+        if (isFinished) return;
         int direction;
         if(side == LEFT_SIDE) direction = 1;
         else direction = -1;
@@ -171,5 +170,15 @@ public abstract class Match {
 
     public int getWinner(){
         return winnerSide;
+    }
+
+    public abstract String textUnderScore();
+
+    public int getPointsEarned(int side){
+        if (!isFinished) return 0;
+        else{
+            if(side == winnerSide) return WINNER_POINTS;
+            else return LOSER_POINTS;
+        }
     }
 }

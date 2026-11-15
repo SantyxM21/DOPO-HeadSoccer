@@ -3,6 +3,8 @@ package domain;
 import java.awt.Dimension;
 
 public class TimeMatch extends Match{
+    private static final double MAX_FRAME_SECONDS = 0.25;
+
     private double secondsLeft;
     private long lastUpdatedFrame;
     
@@ -25,7 +27,10 @@ public class TimeMatch extends Match{
     @Override
     protected void checkFinished(){
         long now = System.currentTimeMillis();
-        if (lastUpdatedFrame != 0) advanceTime((now - lastUpdatedFrame) / 1000.0); //conversion a sdegundos
+        if (lastUpdatedFrame != 0){
+            double timeElapsed = (now - lastUpdatedFrame) / 1000.0;
+            advanceTime(Math.min(timeElapsed, MAX_FRAME_SECONDS)); //conversion a sdegundos
+        } 
         lastUpdatedFrame = now;
     }
 
@@ -48,4 +53,13 @@ public class TimeMatch extends Match{
     public boolean isSuddenDeath(){
         return secondsLeft == 0 && !isFinished();
     }
+
+    @Override 
+    public String textUnderScore(){
+        if (isSuddenDeath()) return "MUERTE SUBITA";
+        else{
+            int seconds = getSecondsLeft();
+            return String.format("%d:%02d", seconds / 60, seconds % 60); //Formato 1:10 
+        }
+    } 
 }
