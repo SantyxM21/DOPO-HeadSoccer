@@ -22,7 +22,7 @@ public class GamePanel extends JPanel{
         super();
         this.game = game;
         this.GAME_SIZE = MainPanel.GAME_SIZE;
-        background = new ImageIcon(getClass().getResource("/resources/fondo_dopo_soccer.png")).getImage();
+        background = DopoSoccerGUI.loadImage("/resources/fondo_dopo_soccer.png");
         setFocusable(true);                              
     }
 

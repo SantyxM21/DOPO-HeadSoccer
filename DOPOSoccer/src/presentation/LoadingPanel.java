@@ -13,6 +13,7 @@ public class LoadingPanel extends JPanel{
     private CustomButton fullScreenButton;
     private CustomButton mediumScreeButton;
     private CustomButton smallScreeButton;
+    private final Image background = DopoSoccerGUI.loadImage("/resources/fondo_dopo_soccer.png");
 
     public LoadingPanel(){
         super(new BorderLayout());
@@ -67,11 +68,10 @@ public class LoadingPanel extends JPanel{
         JLabel logo = new JLabel();
         logo.setHorizontalAlignment(SwingConstants.CENTER);
         logo.setVerticalAlignment(SwingConstants.CENTER);
-        try {
-            Image imgLogo = new ImageIcon(getClass().getResource("/resources/logo_dopo_soccer2.png")).getImage()
-                                            .getScaledInstance(-1, GAME_SIZE.height / 3, Image.SCALE_SMOOTH);
-            logo.setIcon(new ImageIcon(imgLogo));
-        } catch (Exception e) {
+        Image imgLogo = DopoSoccerGUI.loadImage("/resources/logo_dopo_soccer2.png");
+        if (imgLogo != null) {
+            logo.setIcon(new ImageIcon(imgLogo.getScaledInstance(-1, GAME_SIZE.height / 3, Image.SCALE_SMOOTH)));
+        } else {
             logo.setText("<html><center>DOPO<br>SOCCER</center></html>");
             logo.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 6));
         }
@@ -81,7 +81,6 @@ public class LoadingPanel extends JPanel{
     @Override 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        ImageIcon img = new ImageIcon(getClass().getResource("/resources/fondo_dopo_soccer.png"));
-        g.drawImage(img.getImage(), 0, 0, getWidth(), getHeight(), this);
+        if (background != null) g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
     }
 }

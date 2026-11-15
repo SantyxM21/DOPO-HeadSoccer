@@ -13,6 +13,8 @@ public class HomePanel extends JPanel{
     private RoundButton timeButton;
     private RoundButton goalsButton;
     private RoundButton importGameButton;
+    private CustomButton backButton;
+    private final Image background = DopoSoccerGUI.loadImage("/resources/fondo_paneles_dopo_soccer.png");
 
     private JDialog configDialog;
     private JTextField configSizeInput;
@@ -25,6 +27,7 @@ public class HomePanel extends JPanel{
         timeButton = new RoundButton();
         goalsButton = new RoundButton();
         importGameButton = new RoundButton();
+        backButton = CustomButton.createBackButton();
         playButton = new CustomButton("Jugar");
         cancelButton = new CustomButton("Cancelar");
 
@@ -53,9 +56,15 @@ public class HomePanel extends JPanel{
         importGameButton.setText("Abrir");
         importGameButton.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 30));
 
-        JPanel topBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, GAME_SIZE.width / 40, GAME_SIZE.height / 40));
+        JPanel importWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));      // evita que BorderLayout lo estire
+        importWrapper.setOpaque(false);
+        importWrapper.add(importGameButton);
+
+        JPanel topBar = new JPanel(new BorderLayout());
         topBar.setOpaque(false);
-        topBar.add(importGameButton);                                                   // esquina superior derecha
+        topBar.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 30, GAME_SIZE.width / 40, 0, GAME_SIZE.width / 40));
+        topBar.add(importWrapper, BorderLayout.WEST);                                  // esquina superior izquierda
+        topBar.add(CustomButton.keepSize(backButton), BorderLayout.EAST);              // esquina superior derecha
 
         this.add(topBar, BorderLayout.NORTH);
         this.add(gameName, BorderLayout.CENTER);
@@ -65,6 +74,13 @@ public class HomePanel extends JPanel{
     }
 
     public void prepareController(MainPanel main){
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                main.showPage("Loading Page");
+            }
+        });
+
         timeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -168,12 +184,18 @@ public class HomePanel extends JPanel{
 
         JLabel label = new JLabel(text, SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 35));
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         label.setOpaque(true);
         label.setBackground(Color.WHITE);
 
         panel.add(button, BorderLayout.CENTER);  // Se añade el botón redondo al panel en el centro
         panel.add(label, BorderLayout.SOUTH);               // Se añade la etiqueta debajo del botón
         return panel;
+    }
+
+    @Override 
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        if (background != null) g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
     }
 }

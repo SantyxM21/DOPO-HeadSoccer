@@ -1,6 +1,8 @@
 package presentation;
 
 import java.awt.*;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 
@@ -12,7 +14,7 @@ import javax.swing.*;
  */
 public class DopoSoccerGUI extends JFrame{
 
-    private static final Image img = new ImageIcon(DopoSoccerGUI.class.getResource("/resources/logo_icon.png")).getImage();
+    private static final Image img = loadImage("/resources/logo_icon.png");
 
     private final MainPanel main = new MainPanel();
 
@@ -26,6 +28,14 @@ public class DopoSoccerGUI extends JFrame{
         this.setIconImage(img);
         this.setLocationRelativeTo(null);                   //Centra la ventana
         this.setVisible(true);  //Inicio h
+    }
+
+    public static Image loadImage(String path){
+        try {
+            return ImageIO.read(DopoSoccerGUI.class.getResource(path));
+        } catch (IOException | IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public static void main(String[] args) {

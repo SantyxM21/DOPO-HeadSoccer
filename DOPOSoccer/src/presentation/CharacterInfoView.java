@@ -19,12 +19,8 @@ public class CharacterInfoView {
     }
 
     private void addImage(String country, String path, int height){
-        try {
-            Image image = new ImageIcon(getClass().getResource(path)).getImage();
-            images.put(country, image.getScaledInstance(-1, height, Image.SCALE_SMOOTH)); //Ancho -1 para ajustar en llamado
-        } catch (Exception e) {
-            System.err.println("La imagen de " + country + ": " + path + " no se pudo cargar");
-        }
+        Image image = DopoSoccerGUI.loadImage(path);
+        if (image != null) images.put(country, image.getScaledInstance(-1, height, Image.SCALE_SMOOTH)); //Ancho -1 para ajustar en llamado
     }
 
     public Image getImage(String country){
