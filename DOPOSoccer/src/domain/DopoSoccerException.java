@@ -1,6 +1,7 @@
 package domain;
 
 public class DopoSoccerException extends Exception {
+    public static final String INVALID_INPUT = "El número debe ser un entero postivo";
     public static final String NOT_DATA = "Aun no hay datos";
     public static final String UNDER_CONSTRUCTION = "La funcionalidad esta bajo construcción";
     public static final String INEXISTENT_CHARACTER = "El personaje no existe";

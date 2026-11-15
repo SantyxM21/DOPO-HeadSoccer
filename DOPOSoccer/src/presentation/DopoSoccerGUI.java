@@ -1,6 +1,8 @@
 package presentation;
 
 import java.awt.*;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 
@@ -12,7 +14,10 @@ import javax.swing.*;
  */
 public class DopoSoccerGUI extends JFrame{
 
-    private static final Image img = new ImageIcon(DopoSoccerGUI.class.getResource("/resources/logo_icon.png")).getImage();
+    private static final Image img = loadImage("/resources/logo_icon.png");
+
+    public static final Image PANEL_BACKGROUND = loadImage("/resources/fondo_paneles_dopo_soccer.png");
+    public static final Image GAME_BACKGROUND = loadImage("/resources/fondo_dopo_soccer.png");
 
     private final MainPanel main = new MainPanel();
 
@@ -26,6 +31,46 @@ public class DopoSoccerGUI extends JFrame{
         this.setIconImage(img);
         this.setLocationRelativeTo(null);                   //Centra la ventana
         this.setVisible(true);  //Inicio h
+    }
+
+    public static Image loadImage(String path){
+        try {
+            return ImageIO.read(DopoSoccerGUI.class.getResource(path));
+        } catch (IOException | IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    public static ImageIcon flagIcon(String country, int height){
+        Image flag = loadImage("/resources/" + country + ".png");
+        if (flag == null) return null;
+        return new ImageIcon(flag.getScaledInstance(-1, height, Image.SCALE_SMOOTH));   // ancho -1 mantiene la proporcion
+    }
+
+    public static void showFlag(JLabel label, String country, int height){
+        ImageIcon icon = flagIcon(country, height);
+        label.setIcon(icon);
+        label.setText(icon == null ? country : null);      // texto solo si no hay bandera
+    }
+
+    public static void showFlag(AbstractButton button, String country, int height){
+        ImageIcon icon = flagIcon(country, height);
+        button.setIcon(icon);
+        button.setText(icon == null ? country : null);     // texto solo si no hay bandera
+    }
+
+    public static JLabel createLogo(int heightRate){
+        JLabel logo = new JLabel();
+        logo.setHorizontalAlignment(SwingConstants.CENTER);
+        logo.setVerticalAlignment(SwingConstants.CENTER);
+        Image imgLogo = DopoSoccerGUI.loadImage("/resources/logo_dopo_soccer2.png");
+        if (imgLogo != null) {
+            logo.setIcon(new ImageIcon(imgLogo.getScaledInstance(-1, MainPanel.GAME_SIZE.height / (heightRate/2), Image.SCALE_SMOOTH)));
+        } else {
+            logo.setText("<html><center>DOPO<br>SOCCER</center></html>");
+            logo.setFont(new Font("Arial", Font.BOLD, MainPanel.GAME_SIZE.height / heightRate));
+        }
+        return logo;
     }
 
     public static void main(String[] args) {

@@ -13,7 +13,6 @@ public class GamePanel extends JPanel{
     private final Dimension GAME_SIZE;
 
     private Image image;
-    private Image background;
     private Graphics graphics;
     private DopoSoccer game;
     private KeyHandler keyH = new KeyHandler();
@@ -22,7 +21,6 @@ public class GamePanel extends JPanel{
         super();
         this.game = game;
         this.GAME_SIZE = MainPanel.GAME_SIZE;
-        background = new ImageIcon(getClass().getResource("/resources/fondo_dopo_soccer.png")).getImage();
         setFocusable(true);                              
     }
 
@@ -62,10 +60,10 @@ public class GamePanel extends JPanel{
         if(keyH.rightPressedR) direction2 += 1;
         if(keyH.jumpPressedR) game.jump(Match.RIGHT_SIDE);
         if(direction2 != 0) game.move(Match.RIGHT_SIDE, direction2);
- 
+
         game.update();
         repaint();
-   }
+    }
 
     @Override
     // Este metodo es llamado por setVisible(true) o tambien por repaint(), y muchos mas.
@@ -88,7 +86,7 @@ public class GamePanel extends JPanel{
     }
 
     public void drawBackground(Graphics g){
-        if(background != null) g.drawImage(background, 0, 0, getWidth(), getHeight(), this);   // Escalada al tamaño del panel
+        if(DopoSoccerGUI.GAME_BACKGROUND != null) g.drawImage(DopoSoccerGUI.GAME_BACKGROUND, 0, 0, getWidth(), getHeight(), this);   // Escalada al tamaño del panel
     }
 
     public void drawPlayer(Graphics g, int player){

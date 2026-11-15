@@ -16,7 +16,8 @@ public class DopoSoccer {
 
     public static final int PVSP_MODE = 1; 
     public static final int PVSM_MODE = 2; 
-    
+
+    public static final String[] COUNTRIES = {"Corea del Sur", "Camerún", "Nigeria", "Estados Unidos"};
 
     private Profile profile1;
     private Profile profile2;
@@ -69,12 +70,26 @@ public class DopoSoccer {
     public void activatePower(){
     }
 
-    public void upgradeStats(){
-    }
 
     public Profile getProfile(int side){
         if (side == Match.LEFT_SIDE) return profile1;
         else return profile2;
+    }
+
+    public int getPlayerPoints(int side){
+        return getProfile(side).getPoints();
+    }
+
+    public String getPlayerName(int side){
+        return getProfile(side).getName();
+    }
+
+    public int[] getPlayerStats(int side){
+        return getProfile(side).getStats();
+    }
+
+    public void upgradeStats(int player, String stat){
+        getProfile(player).upgradeStat(stat);
     }
 
     public int getPlayerSize(int player){

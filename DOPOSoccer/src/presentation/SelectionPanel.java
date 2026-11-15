@@ -1,5 +1,6 @@
 package presentation;
 
+import domain.DopoSoccer;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -19,7 +20,9 @@ public class SelectionPanel extends JPanel {
     private CustomButton player2Previous;
     private CustomButton player2Next;
 
-    private final CharacterInfoView flags;
+    private int optionP1 = 0;
+    private int optionP2 = 0;
+
 
     public SelectionPanel(){
         super(new BorderLayout());
@@ -33,7 +36,6 @@ public class SelectionPanel extends JPanel {
         player1Next = new CustomButton("→");          // →
         player2Previous = new CustomButton("←");
         player2Next = new CustomButton("→");
-        flags = new CharacterInfoView(GAME_SIZE.height / 8);
 
     }
 
@@ -46,6 +48,7 @@ public class SelectionPanel extends JPanel {
         JLabel title = new JLabel("SELECCIÓN PERSONAJE");
         title.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 11));
         title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setForeground(new Color(247, 254, 255));   
         
 
         Component spacer = Box.createRigidArea(backButton.getPreferredSize());
@@ -60,9 +63,9 @@ public class SelectionPanel extends JPanel {
         // Tres columnas: jugador 1, centro (jugar) y jugador 2 / máquina
         JPanel body = new JPanel(new GridLayout(1, 3));
         body.setOpaque(false);
-        body.add(createCharacterColumn(player1Character, "Corea", player1Previous, player1Next, "Player 1"));
+        body.add(createCharacterColumn(player1Character, DopoSoccer.COUNTRIES[optionP1], player1Previous, player1Next, "Ivan"));
         body.add(createCenterColumn());
-        body.add(createCharacterColumn(player2Character, "USA", player2Previous, player2Next, "Machine"));
+        body.add(createCharacterColumn(player2Character, DopoSoccer.COUNTRIES[optionP2], player2Previous, player2Next, "Cesar"));
 
         this.add(topBar, BorderLayout.NORTH);
         this.add(body, BorderLayout.CENTER);
@@ -81,7 +84,7 @@ public class SelectionPanel extends JPanel {
         player1Character.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                main.setInfoPlayer(1);
+                main.updateInfoPlayer(1, DopoSoccer.COUNTRIES[optionP1]);
                 main.showPage("Character page");
             }
         });
@@ -89,12 +92,10 @@ public class SelectionPanel extends JPanel {
         player2Character.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                main.setInfoPlayer(2);
+                main.updateInfoPlayer(2, DopoSoccer.COUNTRIES[optionP2]);
                 main.showPage("Character page");
             }
         });
-
-
 
         playButton.addActionListener(new ActionListener() {
             @Override
@@ -102,7 +103,39 @@ public class SelectionPanel extends JPanel {
                 if (main.startGame("Corea", "Nigeria")) main.showPage("Game");
             }
         });
-        // TODO: playButton, swapButton y las flechas de cada jugador
+
+        player1Next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCharacter(1, 1);
+            }
+        });
+        player1Previous.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCharacter(-1, 1);
+            }
+        });
+
+        player2Next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCharacter(1, 2);
+            }
+        });
+        player2Previous.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCharacter(-1, 2);
+            }
+        });
+        
+        swapButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainPanel.funcUnderConstruction("En construccion");
+            }
+        });         
     }
 
     /*
@@ -121,9 +154,7 @@ public class SelectionPanel extends JPanel {
         character.setMinimumSize(fixed);
         character.setMaximumSize(fixed);
 
-        Image flag = flags.getImage(characterName);
-        if (flag != null) character.setIcon(new ImageIcon(flag)); //El nombre lo pone la informacion de la bandera mostrada
-        else character.setText(characterName);  
+        DopoSoccerGUI.showFlag(character, characterName, GAME_SIZE.height / 8);
         character.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 30));
 
         JPanel arrows = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 40, 0));
@@ -134,7 +165,7 @@ public class SelectionPanel extends JPanel {
         JLabel name = new JLabel(playerName, SwingConstants.CENTER);
         name.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 35));
         name.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.BLACK, 3),
+                BorderFactory.createLineBorder(Color.BLACK, 2),
                 BorderFactory.createEmptyBorder(0, GAME_SIZE.width / 30, 0, GAME_SIZE.width / 30)));
         name.setOpaque(true);
         name.setBackground(Color.WHITE);
@@ -147,10 +178,7 @@ public class SelectionPanel extends JPanel {
     @return the panel that contains the center column
     */
     private JPanel createCenterColumn(){
-        JLabel gameName = new JLabel("<html><center>DOPO<br>SOCCER</center></html>");
-        gameName.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 14));
-        gameName.setHorizontalAlignment(SwingConstants.CENTER);
-
+        JLabel gameName = DopoSoccerGUI.createLogo(14);
         return stackCentered(GAME_SIZE.height / 25, gameName, playButton, swapButton);
     }
 
@@ -175,5 +203,27 @@ public class SelectionPanel extends JPanel {
 
         column.add(stack);
         return column;
+    }
+
+    private void changeCharacter(int step, int player){
+        int numCharacter = DopoSoccer.COUNTRIES.length;
+        RoundButton character;
+        String country;
+        if (player == 1) {
+            optionP1 = Math.floorMod(optionP1 + step, numCharacter);   // floorMod evita indices negativos al ir hacia atras con previous
+            character = player1Character;
+            country = DopoSoccer.COUNTRIES[optionP1];
+        } else {
+            optionP2 = Math.floorMod(optionP2 + step, numCharacter);
+            character = player2Character;
+            country = DopoSoccer.COUNTRIES[optionP2];
+        }
+        DopoSoccerGUI.showFlag(character, country, GAME_SIZE.height / 8);
+    }
+
+    @Override 
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        if (DopoSoccerGUI.PANEL_BACKGROUND != null) g.drawImage(DopoSoccerGUI.PANEL_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
     }
 }

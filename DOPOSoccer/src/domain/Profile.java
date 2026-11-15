@@ -8,12 +8,13 @@ public class Profile {
 
     public Profile(String profileNumber){
         this.name = "Profile #" + profileNumber;
-        this.points = 0;
+        this.points = 100000;
         this.stats = new Stats();
     }
 
-    public void upgrade(){
-
+    public void upgradeStat(String stat){
+        int discountedPoints =  stats.upgradeStat(stat, points);
+        this.points -= discountedPoints;
     }
 
     public void addPoints(int points){
@@ -24,7 +25,11 @@ public class Profile {
         return points;
     }
 
-    public Stats getStats(){
-        return stats;
+    public int[] getStats(){
+        return stats.getStats();
+    }
+
+    public String getName(){
+        return name;
     }
 }
