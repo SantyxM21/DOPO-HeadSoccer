@@ -90,6 +90,11 @@ public class Ball extends Entity{
         yPosition += dy;
     }
 
+    public void keepInsideField(){
+        xPosition = Math.max(0, Math.min(xPosition, field.getWidth() - diameter));
+        yPosition = Math.max(0, Math.min(yPosition, field.getGroundY() - diameter));
+    }
+
     public Vector2D center(){
         return new Vector2D(xPosition + diameter / 2.0, yPosition + diameter / 2.0);
     }

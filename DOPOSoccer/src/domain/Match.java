@@ -56,6 +56,8 @@ public abstract class Match {
         collision(leftPlayer);
         collision(rightPlayer);
 
+        ball.keepInsideField();
+
         leftPlayer.endFrame();
         rightPlayer.endFrame();
 
@@ -135,6 +137,4 @@ public abstract class Match {
 
         ball.kickOff();
     }
-
-
 }
