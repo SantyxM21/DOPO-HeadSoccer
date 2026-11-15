@@ -118,4 +118,8 @@ public class DopoSoccer {
     public int getBallDiameter(){
         return match.getBall().getDiameter();
     }
+
+    public int getGoals(int side){
+        return match.getPlayer(side).getGoals();
+    }
 }

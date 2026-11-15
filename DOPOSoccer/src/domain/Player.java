@@ -149,5 +149,17 @@ public abstract class Player extends Entity {
         xVelocity = 0;
     }
 
+    public void scoredGoal(){
+        goals++;
+    }
+
+    public void kickOffPosition(double x, double y){
+        xPosition = x;
+        yPosition = y;
+
+        xVelocity = 0;
+        yVelocity = 0;
+    }
+
 
 }

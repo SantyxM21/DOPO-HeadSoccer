@@ -5,8 +5,8 @@ import java.awt.Dimension;
 public class Field {
     public static final double GROUND_MARGIN = 0.15; //Margen que se le va a dejar al pasto
     private static final double REFERENCE_HEIGHT = 720; //Altura base
-    private static final double GOAL_WIDTH_RANGE = 0.0; //Por definir
-    private static final double GOAL_HEIGHT_RANGE = 0.0; //Por definir
+    private static final double GOAL_WIDTH_RANGE = 0.1; //Por definir
+    private static final double GOAL_HEIGHT_RANGE = 0.3; //Por definir
 
     private GoalFrame leftGoalFrame;
     private GoalFrame rightGoalFrame;
@@ -50,5 +50,16 @@ public class Field {
     public GoalFrame getGoalFrame(int side){
         if (side == Match.LEFT_SIDE) return leftGoalFrame;
         else return rightGoalFrame;
+    }
+
+    public boolean isGoal(int side, double x, double y){ //Se va a usar el centro del balon como referencia
+        GoalFrame goal = getGoalFrame(side);
+        //Entra en x
+        boolean xIsInsideLeft = x >= goal.getXPosition(); 
+        boolean xIsInsideRight = x <= goal.getXPosition() + goal.getWidth();
+        //Entra en y
+        boolean belowCrossbar = y >= goal.getYPosition(); 
+
+        return xIsInsideLeft && xIsInsideRight && belowCrossbar;
     }
 }

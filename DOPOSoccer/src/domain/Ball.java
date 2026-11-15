@@ -30,6 +30,8 @@ public class Ball extends Entity{
     }
 
     public void move(){
+        double previousBottomBallPosition = yPosition + diameter;
+
         xPosition += velocity.getX();
         yPosition += velocity.getY();
 
@@ -59,6 +61,28 @@ public class Ball extends Entity{
         } else {
             velocity.setY(velocity.getY() + gravity);
         }
+        onCrossbarBouncing(previousBottomBallPosition); 
+    }
+
+    private void onCrossbarBouncing(double previousBottomBallPosition){
+        double bottomBallPosition = yPosition + diameter;
+        for (int i = Match.LEFT_SIDE; i <= Match.RIGHT_SIDE; i++){
+            GoalFrame goal = field.getGoalFrame(i);
+            double top = goal.getYPosition(); //parte alta del crossbar
+
+            boolean xNextToGoalFrame = xPosition + diameter > goal.getXPosition() && xPosition < goal.getXPosition() + goal.getWidth();
+            boolean underCrossbar = previousBottomBallPosition <= top && bottomBallPosition > top; //Si en el frame esta cruzando el crosasbar
+
+            if (xNextToGoalFrame && underCrossbar){ //si debe rebotar con el crossbar
+                yPosition = top - diameter;
+                onCrossbarVertical();
+            }
+        }
+    }
+
+    private void onCrossbarVertical(){
+        if (velocity.getY() < 1 && velocity.getY() > -1) velocity.setY(0);//un golpe muy suave
+        else velocity.setY(velocity.getY() * -FLOOR_FRICTION); //un golpe muy fuerte rebota
     }
 
     public void translate(double dx, double dy){

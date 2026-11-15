@@ -58,6 +58,8 @@ public abstract class Match {
 
         leftPlayer.endFrame();
         rightPlayer.endFrame();
+
+        checkGoal();
     }
 
     public void kick(int side){
@@ -111,10 +113,27 @@ public abstract class Match {
                 ball.setVelocity(Vector2D.add(ball.getVelocity(), change)); //Nueva velocidad del balon tras el impacto
             }
         }
+    }
 
 
+    private void checkGoal(){
+        Vector2D ballCenter = ball.center();
+        //gol en arco izquierdo por jugador derecho
+        if(field.isGoal(LEFT_SIDE, ballCenter.getX(), ballCenter.getY())) goalScored(rightPlayer);
+        
+        else if(field.isGoal(RIGHT_SIDE, ballCenter.getX(), ballCenter.getY())) goalScored(leftPlayer);
+    }
 
+    private void goalScored(Player player){
+        player.scoredGoal();
+        kickOff();
+    }
 
+    private void kickOff(){
+        leftPlayer.kickOffPosition(startX(LEFT_SIDE), startY());
+        rightPlayer.kickOffPosition(startX(RIGHT_SIDE), startY());
+
+        ball.kickOff();
     }
 
 

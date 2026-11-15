@@ -83,6 +83,8 @@ public class GamePanel extends JPanel{
         drawPlayer(g, 1);
         drawPlayer(g, 2);
         drawBall(g);
+
+        //No olviden agregar el marcador aca
     }
 
     public void drawBackground(Graphics g){
