@@ -6,8 +6,11 @@ public abstract class Match {
     public static final int LEFT_SIDE = 1;
     public static final int RIGHT_SIDE = 2;
     private static final double START_X_RATIO = 0.2;       
-    private static final double GROUND_MARGIN_RATIO = 0.15;  
     public final Dimension RESOLUTION;
+
+    public static final int WINNER_POINTS = 100;
+    public static final int LOSER_POINTS = 25;
+
 
     private static final double PLAYER_BOUNCING = 0.3; //Rango entre 0 y 1
 
@@ -16,7 +19,10 @@ public abstract class Match {
     private Field field;
     private Ball ball;
 
-    public Match(int condition, Dimension resolution){
+    private boolean isFinished;
+    private int winnerSide = 0;
+
+    public Match(String condition, Dimension resolution) throws DopoSoccerException{
         setCondition(condition);
 
         this.RESOLUTION = resolution;
@@ -24,7 +30,7 @@ public abstract class Match {
         this.ball = new Ball(field); // El balon se va a crear en el centro del campo
     }
 
-    public abstract void setCondition(int condition);
+    public abstract void setCondition(String condition) throws DopoSoccerException;
 
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
         if(side == LEFT_SIDE) {
@@ -49,6 +55,8 @@ public abstract class Match {
     }
 
     public void update(){
+        if (isFinished) return;
+
         leftPlayer.applyGravity();
         rightPlayer.applyGravity();
         ball.move();
@@ -56,11 +64,17 @@ public abstract class Match {
         collision(leftPlayer);
         collision(rightPlayer);
 
+        ball.keepInsideField();
+
         leftPlayer.endFrame();
         rightPlayer.endFrame();
+
+        checkGoal();
+        checkFinished();
     }
 
     public void kick(int side){
+        if (isFinished) return;
         int direction;
         if(side == LEFT_SIDE) direction = 1;
         else direction = -1;
@@ -111,11 +125,60 @@ public abstract class Match {
                 ball.setVelocity(Vector2D.add(ball.getVelocity(), change)); //Nueva velocidad del balon tras el impacto
             }
         }
-
-
-
-
     }
 
 
+    private void checkGoal(){
+        Vector2D ballCenter = ball.center();
+        //gol en arco izquierdo por jugador derecho
+        if(field.isGoal(LEFT_SIDE, ballCenter.getX(), ballCenter.getY())) goalScored(rightPlayer);
+        
+        else if(field.isGoal(RIGHT_SIDE, ballCenter.getX(), ballCenter.getY())) goalScored(leftPlayer);
+    }
+
+    private void goalScored(Player player){
+        player.scoredGoal();
+        kickOff();
+    }
+
+    private void kickOff(){
+        leftPlayer.kickOffPosition(startX(LEFT_SIDE), startY());
+        rightPlayer.kickOffPosition(startX(RIGHT_SIDE), startY());
+
+        ball.kickOff();
+    }
+
+    protected abstract void checkFinished();
+
+    protected void finish(int winner){
+        if (isFinished) return;
+
+        isFinished = true;
+        winnerSide = winner;
+
+        int loser;
+        if(winner == LEFT_SIDE) loser = RIGHT_SIDE;
+        else loser = LEFT_SIDE;
+
+        getPlayer(winnerSide).getProfile().addPoints(WINNER_POINTS);
+        getPlayer(loser).getProfile().addPoints(LOSER_POINTS);
+    }
+
+    public boolean isFinished(){
+        return isFinished;
+    }
+
+    public int getWinner(){
+        return winnerSide;
+    }
+
+    public abstract String textUnderScore();
+
+    public int getPointsEarned(int side){
+        if (!isFinished) return 0;
+        else{
+            if(side == winnerSide) return WINNER_POINTS;
+            else return LOSER_POINTS;
+        }
+    }
 }

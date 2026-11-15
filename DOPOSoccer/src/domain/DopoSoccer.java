@@ -22,6 +22,7 @@ public class DopoSoccer {
     private Profile profile1;
     private Profile profile2;
     private Match match;
+    private int matchType;
 
 
     public DopoSoccer(){
@@ -29,7 +30,8 @@ public class DopoSoccer {
         this.profile2 = new Profile("2");
     }
 
-    public void newGame(int type, int conditions, Dimension resolution){
+    public void newGame(int type, String conditions, Dimension resolution) throws DopoSoccerException{
+        matchType = type;
         if(type == TIME_MODE) match = new TimeMatch(conditions, resolution);
         else if (type == GOALS_MODE) match = new GoalsMatch(conditions, resolution);
     }
@@ -46,11 +48,11 @@ public class DopoSoccer {
     }
 
     public void move(int player, int direction){
-        match.getPlayer(player).move(direction);
+        if(!match.isFinished()) match.getPlayer(player).move(direction);
     }
 
     public void jump(int player){
-        match.getPlayer(player).jump();
+        if(!match.isFinished()) match.getPlayer(player).jump();
     }
 
     public void kick(int player){
@@ -132,5 +134,33 @@ public class DopoSoccer {
 
     public int getBallDiameter(){
         return match.getBall().getDiameter();
+    }
+
+    public int getGoals(int side){
+        return match.getPlayer(side).getGoals();
+    }
+
+    public boolean isFinished(){
+        return match.isFinished();
+    }
+
+    public int getWinner(){
+        return match.getWinner();
+    }
+
+    public String textUnderScore(){
+        return match.textUnderScore();
+    }
+
+    public int getPointsEarned(int side){
+        return match.getPointsEarned(side);
+    }
+
+    public int getPoints(int side){
+        return getProfile(side).getPoints(); 
+    }
+
+    public void endGame(){
+        match = null;
     }
 }
