@@ -27,7 +27,7 @@ public class LoadingPanel extends JPanel{
     /* This method prepares the loading page */
     public JPanel prepareLoadingPage(){
 
-        JLabel gameName = createLogo();
+        JLabel gameName = DopoSoccerGUI.createLogo(6);
 
         JPanel resolutionOptions = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 10, GAME_SIZE.height / 25)); 
         resolutionOptions.setOpaque(false);
@@ -62,20 +62,6 @@ public class LoadingPanel extends JPanel{
                 main.changeScale(1.7);
             }
         });
-    }
-
-    public JLabel createLogo(){
-        JLabel logo = new JLabel();
-        logo.setHorizontalAlignment(SwingConstants.CENTER);
-        logo.setVerticalAlignment(SwingConstants.CENTER);
-        Image imgLogo = DopoSoccerGUI.loadImage("/resources/logo_dopo_soccer2.png");
-        if (imgLogo != null) {
-            logo.setIcon(new ImageIcon(imgLogo.getScaledInstance(-1, GAME_SIZE.height / 3, Image.SCALE_SMOOTH)));
-        } else {
-            logo.setText("<html><center>DOPO<br>SOCCER</center></html>");
-            logo.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 6));
-        }
-        return logo;
     }
 
     @Override 

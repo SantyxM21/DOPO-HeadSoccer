@@ -40,21 +40,24 @@ public class HomePanel extends JPanel{
     */
     public JPanel prepareHomePage(){
 
-        JLabel gameName = new JLabel("<html><center>DOPO<br>SOCCER</center></html>");
-        gameName.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 7));          // Tamaño de letra que se adapta
-        gameName.setHorizontalAlignment(SwingConstants.CENTER);
-        gameName.setBorder(BorderFactory.createEmptyBorder(0, 0, GAME_SIZE.height / 10, 0));   // margen inferior: sube el texto
-
+        JLabel gameName = DopoSoccerGUI.createLogo(6);
 
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 10, GAME_SIZE.height / 32));
         buttons.setOpaque(false);   
-        buttons.add(createModeButton("Tiempo", timeButton));
-        buttons.add(createModeButton("Goles", goalsButton));
+        buttons.add(createModeButton("Tiempo", timeButton, "/resources/clock.png"));
+        buttons.add(createModeButton("Goles", goalsButton, "/resources/ball.png"));
 
         int side = GAME_SIZE.height / 6;                                                // más pequeño que los botones de modo
         importGameButton.setPreferredSize(new Dimension(side, side));
-        importGameButton.setText("Abrir");
-        importGameButton.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 30));
+        Image openIcon = DopoSoccerGUI.loadImage("/resources/open_file.png");
+        if (openIcon != null) {
+            int iconSide = (int)(side * 0.6);                                          // el icono cabe dentro del círculo
+            importGameButton.setIcon(new ImageIcon(openIcon.getScaledInstance(iconSide, iconSide, Image.SCALE_SMOOTH)));
+        } else {
+            importGameButton.setText("Abrir");                                         // si no carga el icono, se muestra el texto
+            importGameButton.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 30));
+        }
+        importGameButton.setToolTipText("Abrir partida");
 
         JPanel importWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));      // evita que BorderLayout lo estire
         importWrapper.setOpaque(false);
@@ -176,11 +179,18 @@ public class HomePanel extends JPanel{
     This method creates a mode button with the given text 
     @param text the text for the button
     @param button the button to place in the panel (so it can be used later in the controller)
+    @param imagePath the path of the image to show inside the button (null for no image)
     @return the JPanel that contains the button and its label
     */
-    private JPanel createModeButton(String text, RoundButton button){
+    private JPanel createModeButton(String text, RoundButton button, String imagePath){
         JPanel panel = new JPanel(new BorderLayout(0, 1));
         panel.setOpaque(false);
+
+        Image image = (imagePath != null) ? DopoSoccerGUI.loadImage(imagePath) : null;
+        if (image != null) {
+            int side = (int)(button.getPreferredSize().height * 0.6);             // la imagen cabe dentro del círculo
+            button.setIcon(new ImageIcon(image.getScaledInstance(side, side, Image.SCALE_SMOOTH)));
+        }
 
         JLabel label = new JLabel(text, SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 35));

@@ -38,6 +38,20 @@ public class DopoSoccerGUI extends JFrame{
         }
     }
 
+    public static JLabel createLogo(int heightRate){
+        JLabel logo = new JLabel();
+        logo.setHorizontalAlignment(SwingConstants.CENTER);
+        logo.setVerticalAlignment(SwingConstants.CENTER);
+        Image imgLogo = DopoSoccerGUI.loadImage("/resources/logo_dopo_soccer2.png");
+        if (imgLogo != null) {
+            logo.setIcon(new ImageIcon(imgLogo.getScaledInstance(-1, MainPanel.GAME_SIZE.height / (heightRate/2), Image.SCALE_SMOOTH)));
+        } else {
+            logo.setText("<html><center>DOPO<br>SOCCER</center></html>");
+            logo.setFont(new Font("Arial", Font.BOLD, MainPanel.GAME_SIZE.height / heightRate));
+        }
+        return logo;
+    }
+
     public static void main(String[] args) {
         DopoSoccerGUI gui = new DopoSoccerGUI();
     }
