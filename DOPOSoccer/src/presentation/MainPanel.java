@@ -106,6 +106,7 @@ public class MainPanel extends JPanel{
                 game.newGame(matchMode, String.valueOf(confingMode), GAME_SIZE);   // el dominio recibe la condicion como String y la valida
                 game.addHuman(1, playerOne, game.getProfile(1));
                 game.addHuman(2, playerTwo, game.getProfile(2));
+                gamePage.setCountries(playerOne, playerTwo);
                 return true;
             } catch (DopoSoccerException e){
                 JOptionPane.showMessageDialog(null, e.getMessage());

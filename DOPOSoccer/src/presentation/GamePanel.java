@@ -83,7 +83,7 @@ public class GamePanel extends JPanel{
         if(direction2 != 0) game.move(Match.RIGHT_SIDE, direction2);
 
         game.update();
-        updateTimer(game.getTime());
+        updateScoreboard(game.getTime());
         repaint();
     }
 
@@ -124,7 +124,9 @@ public class GamePanel extends JPanel{
 
         // Textos
         leftName.setFont(textFont);
+        leftName.setText(game.getPlayerName(1));
         rightName.setFont(textFont);
+        rightName.setText(game.getPlayerName(2));
         leftGoals.setFont(bigFont);
         rightGoals.setFont(bigFont);
         timeLabel.setFont(bigFont);
@@ -135,15 +137,13 @@ public class GamePanel extends JPanel{
         }
 
         // Banderas
-        int flagH = barH * 11 / 20;
+        int flagH = flagHeight();
         Dimension flagSize = new Dimension(flagH * 7 / 5, flagH);
         for (JLabel flag : new JLabel[]{leftFlag, rightFlag}) {
             flag.setPreferredSize(flagSize);
             flag.setHorizontalAlignment(SwingConstants.CENTER);
             flag.setOpaque(false);
         }
-        leftFlag.setIcon(DopoSoccerGUI.flagIcon(DopoSoccer.COUNTRIES[0], flagH));      // TODO: personaje del jugador 1
-        rightFlag.setIcon(DopoSoccerGUI.flagIcon(DopoSoccer.COUNTRIES[2], flagH));     // TODO: personaje del jugador 2
 
         // Botón de pausa
         int side = barH / 2;
@@ -202,6 +202,22 @@ public class GamePanel extends JPanel{
         return panel;
     }
         
+    private void updateScoreboard(int time){
+        updateTimer(time);
+        leftGoals.setText(String.valueOf(game.getPlayerGoals(1)));
+        rightGoals.setText(String.valueOf(game.getPlayerGoals(2)));
+    }
+
+    public void setCountries(String leftCountry, String rightCountry){
+        leftFlag.setIcon(DopoSoccerGUI.flagIcon(leftCountry, flagHeight()));       
+        rightFlag.setIcon(DopoSoccerGUI.flagIcon(rightCountry, flagHeight()));
+    }
+
+    /* Alto del recuadro de las banderas del marcador */
+    private int flagHeight(){
+        return GAME_SIZE.height / 7 * 11 / 20;
+    }
+
     private void updateTimer(int time){
         int minutes = time / 60;     
         int seconds = time % 60;    

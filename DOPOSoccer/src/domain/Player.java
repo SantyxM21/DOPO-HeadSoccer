@@ -108,16 +108,16 @@ public abstract class Player extends Entity {
     public double getPowerBar(){
         return powerBar;
     }
-
+    
     protected  Character_ createCharacter (String country) throws DopoSoccerException{
         switch (country) {
-            case "Corea":
+            case "Corea del Sur":
                 return new Corea();
-            case "Camerun":
+            case "Camerún":
                 return new Camerun();
             case "Nigeria":
                 return new Nigeria();
-            case "USA":
+            case "Estados Unidos":
                 return new USA();
             default:
                 throw new DopoSoccerException(DopoSoccerException.INEXISTENT_CHARACTER);

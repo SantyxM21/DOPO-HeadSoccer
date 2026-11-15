@@ -197,4 +197,9 @@ public abstract class Match {
             matchTimeSec++;
         }
     }
+
+    public int getPlayerGoals(int player){
+        if(player == 1) return leftPlayer.getGoals();
+        return rightPlayer.getGoals();
+    }
 }
