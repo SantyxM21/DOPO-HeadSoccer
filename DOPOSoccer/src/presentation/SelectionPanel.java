@@ -84,7 +84,7 @@ public class SelectionPanel extends JPanel {
         player1Character.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                main.setInfoPlayer(1);
+                main.updateInfoPlayer(1, DopoSoccer.COUNTRIES[optionP1]);
                 main.showPage("Character page");
             }
         });
@@ -92,7 +92,7 @@ public class SelectionPanel extends JPanel {
         player2Character.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                main.setInfoPlayer(2);
+                main.updateInfoPlayer(2, DopoSoccer.COUNTRIES[optionP2]);
                 main.showPage("Character page");
             }
         });

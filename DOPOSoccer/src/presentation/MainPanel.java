@@ -2,7 +2,6 @@ package presentation;
 
 import domain.DopoSoccer;
 import domain.DopoSoccerException;
-
 import java.awt.*;
 import javax.swing.*;
 
@@ -32,7 +31,6 @@ public class MainPanel extends JPanel{
     private int confingMode;
     private DopoSoccer game;
 
-    private int infoShownPlayer; // 1 leftPlayer 2 rightPlayer
 
     public MainPanel(){
         super(new CardLayout());
@@ -143,8 +141,12 @@ public class MainPanel extends JPanel{
         this.confingMode = configuration;
     }
 
-    public void setInfoPlayer(int player){
-        this.infoShownPlayer = player;
-        charactersPage.setSelectedInfoPlayer(player);
+    public void updateInfoPlayer(int player, String shownChar){
+        String playerName = game.getPlayerName(player);
+        int playerPoints = game.getPlayerPoints(player);
+        int[] playerStats = game.getPlayerStats(player);
+
+
+        charactersPage.updateInfo(playerName, playerPoints, playerStats, player, shownChar);
     }
 }

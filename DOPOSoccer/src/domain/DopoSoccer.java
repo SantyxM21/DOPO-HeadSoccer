@@ -76,6 +76,19 @@ public class DopoSoccer {
         else return profile2;
     }
 
+    public int getPlayerPoints(int side){
+        return getProfile(side).getPoints();
+    }
+
+    public String getPlayerName(int side){
+        return getProfile(side).getName();
+    }
+
+    public int[] getPlayerStats(int side){
+
+        return new int[]{};
+    }
+
     public int getPlayerSize(int player){
         return match.getPlayer(player).getSize();
     }

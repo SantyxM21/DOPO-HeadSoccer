@@ -1,9 +1,10 @@
 package domain;
 
 public class Stats {
-    private static final int MIN_LEVEL = 1;
-    private static final int MAX_LEVEL = 10; 
-    private static final int INICIAL_PRICE = 500;
+    public static final String[] STATS_NAMES = {"Velocidad", "Salto", "Patada", "Vida"};
+    public static final int MIN_LEVEL = 1;
+    public static final int MAX_LEVEL = 10; 
+    public static final int INICIAL_PRICE = 500;
 
     private int speed = MIN_LEVEL;
     private int kick = MIN_LEVEL;

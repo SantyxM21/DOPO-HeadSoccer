@@ -27,4 +27,8 @@ public class Profile {
     public Stats getStats(){
         return stats;
     }
+
+    public String getName(){
+        return name;
+    }
 }

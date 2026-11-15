@@ -1,6 +1,6 @@
 package presentation;
 
-import static domain.DopoSoccer.COUNTRIES;
+import static domain.Stats.STATS_NAMES;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,13 +11,17 @@ public class CharactersInfoPanel extends JPanel{
     private final Dimension GAME_SIZE;
 
     private CustomButton backButton;
+    private JLabel playerPoints;
 
     // Personaje que muestra la tarjeta (posición en COUNTRIES)
-    private int character = 0;
+    private String character;
 
     // Imagen y nombre de la tarjeta, se actualizan con showCharacter
     private final JLabel characterImage = new JLabel();
     private final JLabel characterName = new JLabel("", SwingConstants.CENTER);
+
+    // Valor de cada estadística, en el mismo orden que Stats.STATS_NAMES
+    private final JLabel[] statValues = new JLabel[STATS_NAMES.length];
 
     private int selectedInfoPlayer; //1 left 2 right
 
@@ -41,7 +45,7 @@ public class CharactersInfoPanel extends JPanel{
         gameName.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 20));
         gameName.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JLabel playerPoints = new JLabel("Player :" + "1000 pts");
+        playerPoints = new JLabel("Player : 0");
         playerPoints.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 15));
         playerPoints.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -58,7 +62,6 @@ public class CharactersInfoPanel extends JPanel{
         this.add(topBar, BorderLayout.NORTH);
         this.add(body, BorderLayout.CENTER);
 
-        showCharacter();
         return this;
     }
     
@@ -105,17 +108,23 @@ public class CharactersInfoPanel extends JPanel{
         header.add(imageHolder, BorderLayout.CENTER);
         header.add(characterName, BorderLayout.SOUTH);
 
-        // Fila 2: cuatro estadísticas, cada una con nombre, valor y botón "+"
-        String[] statNames = {"Velocidad:", "Salto:", "Patada:", "Vida:"};
-        JPanel stats = new JPanel(new GridLayout(statNames.length, 1));
+        // Fila 2: una fila por estadística (Stats.STATS_NAMES), cada una con nombre, valor y botón "+"
+        JPanel stats = new JPanel(new GridLayout(STATS_NAMES.length, 1));
         stats.setOpaque(false);
         Font statFont = new Font("Arial", Font.PLAIN, GAME_SIZE.height / 28);
-        int labelWidth = new JLabel().getFontMetrics(statFont).stringWidth("Velocidad:") + GAME_SIZE.width / 80;   // ancho del nombre más largo
-        for (String statName : statNames) {
-            JLabel label = new JLabel(statName);
+
+        // Todos los nombres toman el ancho del más largo para que los valores queden alineados
+        FontMetrics metrics = new JLabel().getFontMetrics(statFont);
+        int labelWidth = 0;
+        for (String statName : STATS_NAMES) labelWidth = Math.max(labelWidth, metrics.stringWidth(statName + ":"));
+        labelWidth += GAME_SIZE.width / 80;
+
+        for (int i = 0; i < STATS_NAMES.length; i++) {
+            JLabel label = new JLabel(STATS_NAMES[i] + ":");
             label.setFont(statFont);
-            JLabel value = new JLabel("1", SwingConstants.CENTER);
+            JLabel value = new JLabel("0", SwingConstants.CENTER);     // el valor real lo pone updateInfo
             value.setFont(statFont);
+            statValues[i] = value;
             CustomButton plus = new CustomButton("+");
             plus.setMargin(new Insets(0, 0, 0, 0));
             plus.setPreferredSize(new Dimension(GAME_SIZE.height / 24, GAME_SIZE.height / 24));
@@ -125,7 +134,6 @@ public class CharactersInfoPanel extends JPanel{
             plusHolder.setOpaque(false);
             plusHolder.add(plus);
 
-            // Todos los nombres toman el valor del string que sea mas largo
             label.setPreferredSize(new Dimension(labelWidth, label.getPreferredSize().height));
 
             JPanel row = new JPanel(new BorderLayout());
@@ -154,12 +162,27 @@ public class CharactersInfoPanel extends JPanel{
 
     /* This method shows the current character's flag and name in the card */
     private void showCharacter(){
-        String country = COUNTRIES[character];
-        characterName.setText(country);
-        characterImage.setIcon(DopoSoccerGUI.flagIcon(country, GAME_SIZE.height / 6));
+        characterName.setText(character);
+        characterImage.setIcon(DopoSoccerGUI.flagIcon(character, GAME_SIZE.height / 6));
     }
 
-    public void setSelectedInfoPlayer(int card){ 
+    public void updateInfo(String name, int points, int[] stats, int card, String shownChar){ 
+        
         this.selectedInfoPlayer = card;
+        this.character = shownChar;
+        playerPoints.setText(name+" : "+points);
+
+        showCharacter();
+        showStats(stats);
+    }
+
+    /*
+    This method shows the character's stats in the card
+    @param stats the values in the same order as Stats.STATS_NAMES
+    */
+    private void showStats(int[] stats){
+        for (int i = 0; i < statValues.length && i < stats.length; i++) {
+            statValues[i].setText(String.valueOf(stats[i]));
+        }
     }
 }
