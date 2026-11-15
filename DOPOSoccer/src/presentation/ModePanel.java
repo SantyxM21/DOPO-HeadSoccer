@@ -103,6 +103,6 @@ public class ModePanel extends JPanel {
     @Override 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        if (DopoSoccerGUI.GAME_BACKGROUND != null) g.drawImage(DopoSoccerGUI.GAME_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
+        if (DopoSoccerGUI.PANEL_BACKGROUND != null) g.drawImage(DopoSoccerGUI.PANEL_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
     }
 }

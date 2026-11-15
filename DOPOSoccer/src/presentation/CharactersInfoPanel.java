@@ -38,20 +38,29 @@ public class CharactersInfoPanel extends JPanel{
         
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setOpaque(false);
-        topBar.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 30, GAME_SIZE.width / 20, 0, GAME_SIZE.width / 40));
+        topBar.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 30, GAME_SIZE.width / 40, 0, GAME_SIZE.width / 40));
 
 
-        JLabel gameName = new JLabel("<html><center>DOPO<br>SOCCER</center></html>");
-        gameName.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 20));
-        gameName.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel gameName = DopoSoccerGUI.createLogo(20);
 
         playerPoints = new JLabel("Player : 0");
-        playerPoints.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 15));
+        playerPoints.setForeground(new Color(247, 254, 255)); 
+        playerPoints.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 14));
         playerPoints.setHorizontalAlignment(SwingConstants.CENTER);
 
-        topBar.add(gameName, BorderLayout.WEST);
+        // El logo y el boton de volver se ponen dentro de JPnales para darles el mismo tamaño
+        // y que la información de los puntos quede bien centrada :)
+        JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        left.setOpaque(false);
+        left.add(gameName);
+        JPanel right = CustomButton.keepSize(backButton);
+        int sideWidth = Math.max(left.getPreferredSize().width, right.getPreferredSize().width);
+        left.setPreferredSize(new Dimension(sideWidth, left.getPreferredSize().height));
+        right.setPreferredSize(new Dimension(sideWidth, right.getPreferredSize().height));
+
+        topBar.add(left, BorderLayout.WEST);
         topBar.add(playerPoints, BorderLayout.CENTER);
-        topBar.add(CustomButton.keepSize(backButton), BorderLayout.EAST);
+        topBar.add(right, BorderLayout.EAST);
 
         // Una sola tarjeta en el centro, con margen a los lados para que no se estire de mas
         JPanel body = new JPanel(new GridLayout(1, 1));
@@ -91,7 +100,6 @@ public class CharactersInfoPanel extends JPanel{
         // Fila 1: espacio de la imagen 
         image.setHorizontalAlignment(SwingConstants.CENTER);
         image.setVerticalAlignment(SwingConstants.CENTER);
-        image.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         JPanel imageHolder = new JPanel(new GridLayout(1, 1)); //Recuadro que va a contener la imagen
         imageHolder.setOpaque(false);
@@ -163,7 +171,7 @@ public class CharactersInfoPanel extends JPanel{
     /* This method shows the current character's flag and name in the card */
     private void showCharacter(){
         characterName.setText(character);
-        characterImage.setIcon(DopoSoccerGUI.flagIcon(character, GAME_SIZE.height / 6));
+        characterImage.setIcon(DopoSoccerGUI.flagIcon(character, GAME_SIZE.height / 5));
     }
 
     public void updateInfo(String name, int points, int[] stats, int card, String shownChar){ 
@@ -184,5 +192,11 @@ public class CharactersInfoPanel extends JPanel{
         for (int i = 0; i < statValues.length && i < stats.length; i++) {
             statValues[i].setText(String.valueOf(stats[i]));
         }
+    }
+
+    @Override 
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        if (DopoSoccerGUI.PANEL_BACKGROUND != null) g.drawImage(DopoSoccerGUI.PANEL_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
     }
 }
