@@ -27,7 +27,6 @@ public class Vector2D {
         return this.y = y;
     }
 
-
     public static Vector2D subtract(Vector2D v1, Vector2D v2){
         return new Vector2D(v1.x - v2.x, v1.y - v2.y);
     }

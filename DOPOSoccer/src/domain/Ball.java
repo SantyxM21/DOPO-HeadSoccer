@@ -5,7 +5,7 @@ public class Ball extends Entity{
     public static final double GRAVITY = 0.15; 
     public static final double WALL_FRICTION = 0.8;
     public static final double AIR_FRICTION = 1;
-    public static final double FLOOR_FRICTION = 0.55;
+    public static final double FLOOR_FRICTION = 0.70;
 
     private Power chargedPower;
     private Player chargedBy;
@@ -67,7 +67,7 @@ public class Ball extends Entity{
     }
 
     public Vector2D center(){
-        return new Vector2D(xPosition + diameter / 2, yPosition + diameter / 2);
+        return new Vector2D(xPosition + diameter / 2.0, yPosition + diameter / 2.0);
     }
 
     public Vector2D getVelocity(){

@@ -52,6 +52,10 @@ public class DopoSoccer {
         match.getPlayer(player).jump();
     }
 
+    public void kick(int player){
+        match.kick(player);
+    }
+
     public boolean hasMatch(){
         return match != null;
     }

@@ -7,12 +7,21 @@ public abstract class Player extends Entity {
     public static final double GRAVITY = 0.15;     
     public final int GROUND_Y;
 
+    //Valores de prueba
+    public static final double KICK_RANGE = 30;
+    public static final double X_KICK_SPEED = 8;
+    public static final double Y_KICK_SPEED = 8;
+
     protected final Field field;
     private final int size;
     private final double speed;
     private final double jumpForce;
     private final double gravity;
 
+    private final double kickRange;
+    private final double xKickSpeed;
+    private final double yKickSpeed;
+    private double xVelocity; //Movimiento en el frame actual 
     private double yVelocity = 0;
 
     protected Character_ selectedCharacter;
@@ -34,17 +43,28 @@ public abstract class Player extends Entity {
         this.speed = field.scale(SPEED);
         this.jumpForce = field.scale(JUMP_FORCE);
         this.gravity = field.scale(GRAVITY);
+
+        this.kickRange = field.scale(KICK_RANGE);
+        this.xKickSpeed = field.scale(X_KICK_SPEED);
+        this.yKickSpeed = field.scale(Y_KICK_SPEED);
     }
 
     public void move(int direction) {
         xPosition += direction * speed;
+        xVelocity = direction * speed;
+
         //Verificaciones para que no se salga de la pantalla
         if (xPosition < 0 ) xPosition = 0;
         if(xPosition > field.getWidth() - size) xPosition = field.getWidth() - size;
     }
 
-    public void kick() throws DopoSoccerException{
-        throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    public void kick(Ball ball, int direction){
+        Vector2D distance = Vector2D.subtract(ball.center(), center());
+
+        boolean isClose = Vector2D.length(distance) <= (size + ball.getDiameter()) / 2.0 + kickRange; //Si esta cerca al balon, tomando su centro como referencia
+        boolean isInFront = direction * distance.getX() >= 0; //Si esta hacia donde patea el jugador
+
+        if (isClose && isInFront) ball.setVelocity(new Vector2D(direction * xKickSpeed, -yKickSpeed));
     }
 
     public void jump() {
@@ -115,4 +135,19 @@ public abstract class Player extends Entity {
     public int getSize(){
         return size;
     }
+
+    public Vector2D center(){
+        return new Vector2D(xPosition + size / 2.0, yPosition + size / 2.0);
+    }
+
+    public Vector2D getVelocity(){
+        return new Vector2D(xVelocity, yVelocity);
+    }
+
+    //Similar al tac()
+    public void endFrame(){
+        xVelocity = 0;
+    }
+
+
 }

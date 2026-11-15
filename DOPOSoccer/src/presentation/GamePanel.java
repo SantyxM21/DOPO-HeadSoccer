@@ -46,7 +46,9 @@ public class GamePanel extends JPanel{
 
     // Mueve al jugador segun las teclas que esten presionadas 
     private void update(){
-        if(!game.hasMatch()) return;                     
+        if(!game.hasMatch()) return;    
+
+        if(keyH.kickPressed) game.kick(Match.LEFT_SIDE);                 
         int direction = 0;
         // Se usa -= y += en caso de qque ambas teclas se presionen al tiempo se "cancelen"
         if(keyH.leftPressed) direction -= 1;
@@ -54,7 +56,7 @@ public class GamePanel extends JPanel{
         if(keyH.jumpPressed) game.jump(Match.LEFT_SIDE);
         if(direction != 0) game.move(Match.LEFT_SIDE, direction);
 
-
+        if(keyH.kickPressedR) game.kick(Match.RIGHT_SIDE);   
         int direction2 = 0;
         if(keyH.leftPressedR) direction2 -= 1;
         if(keyH.rightPressedR) direction2 += 1;
