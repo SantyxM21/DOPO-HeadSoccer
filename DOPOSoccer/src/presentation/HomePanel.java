@@ -14,6 +14,7 @@ public class HomePanel extends JPanel{
     private RoundButton goalsButton;
     private RoundButton importGameButton;
     private CustomButton backButton;
+    private final Image configBackground = DopoSoccerGUI.loadImage("/resources/fondo_popup.png");
     private final Image background = DopoSoccerGUI.loadImage("/resources/fondo_paneles_dopo_soccer.png");
 
     private JDialog configDialog;
@@ -138,17 +139,23 @@ public class HomePanel extends JPanel{
         configDialog = dialog;                      
         dialog.setTitle("Configuración de juego");
         dialog.setSize((int)(GAME_SIZE.width/1.3), (int)(GAME_SIZE.height/1.5));
-        dialog.setLayout(new BorderLayout());
+        dialog.setContentPane(new JPanel(new BorderLayout()){
+            @Override
+            protected void paintComponent(Graphics g){
+                super.paintComponent(g);
+                if (configBackground != null) g.drawImage(configBackground, 0, 0, getWidth(), getHeight(), this);
+            }
+        });
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(this);         // se centra segun donde este la ventana no la panatalla
         dialog.setModal(true);
 
         JLabel message = new JLabel("ELEGIR " + ms.toUpperCase());
-        message.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height/10));       
+        message.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 10));
+        message.setForeground(new Color(27, 42, 85));
         message.setHorizontalAlignment(SwingConstants.CENTER);
         message.setVerticalAlignment(SwingConstants.CENTER);
-        message.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 20, 0, 0, 0));   // margen superior
-
+        message.setBorder(BorderFactory.createEmptyBorder(GAME_SIZE.height / 20, 0, 0, 0));
         int inputFont = GAME_SIZE.height / 16;
         JLabel inputLabel = new JLabel(ms + " :");
         inputLabel.setFont(new Font("Arial", Font.PLAIN, inputFont));
@@ -163,6 +170,7 @@ public class HomePanel extends JPanel{
         form.add(configSizeInput);
 
         JPanel dialogOptions = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 10, GAME_SIZE.width / 40)); 
+        dialogOptions.setOpaque(false);
         
         dialogOptions.add(playButton);
         dialogOptions.add(cancelButton);
