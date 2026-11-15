@@ -1,7 +1,6 @@
 package presentation;
 
 import static domain.Stats.STATS_NAMES;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -22,6 +21,8 @@ public class CharactersInfoPanel extends JPanel{
 
     // Valor de cada estadística, en el mismo orden que Stats.STATS_NAMES
     private final JLabel[] statValues = new JLabel[STATS_NAMES.length];
+    private final CustomButton[] plusBt = new CustomButton[STATS_NAMES.length];
+    private CustomButton powerButton;
 
     private int selectedInfoPlayer; //1 left 2 right
 
@@ -81,6 +82,24 @@ public class CharactersInfoPanel extends JPanel{
                 main.showPage("Selection menu");
             }
         });
+
+        for (int i = 0; i < plusBt.length; i++) {
+            final int stat = i;            //  Java no deja usar la variable i del ciclo dentro de la clase anónima
+            plusBt[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    main.upgradeStat(selectedInfoPlayer, STATS_NAMES[stat]);  
+                    main.updateInfoPlayer(selectedInfoPlayer, character);
+                }
+            });
+        }
+
+        powerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                MainPanel.funcUnderConstruction("En construccion");
+            }
+        });
     }
 
     /*
@@ -136,6 +155,7 @@ public class CharactersInfoPanel extends JPanel{
             CustomButton plus = new CustomButton("+");
             plus.setMargin(new Insets(0, 0, 0, 0));
             plus.setPreferredSize(new Dimension(GAME_SIZE.height / 24, GAME_SIZE.height / 24));
+            plusBt[i] = plus;
 
             // El botón va en un FlowLayout para conservar su tamaño y no estirarse a la celda
             JPanel plusHolder = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
@@ -153,10 +173,10 @@ public class CharactersInfoPanel extends JPanel{
         }
 
         // Fila 3: boton de poder con su tamaño natural
-        CustomButton power = new CustomButton("Poder");
+        powerButton = new CustomButton("Poder");
         JPanel powerCentered = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));     // centra el botón sin estirarlo
         powerCentered.setOpaque(false);
-        powerCentered.add(power);
+        powerCentered.add(powerButton);
 
         JPanel powerHolder = new JPanel(new BorderLayout());     // SOUTH pega el botón al fondo de la fila (y de la tarjeta)
         powerHolder.setOpaque(false);

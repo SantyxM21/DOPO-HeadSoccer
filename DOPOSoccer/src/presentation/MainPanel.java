@@ -149,4 +149,8 @@ public class MainPanel extends JPanel{
 
         charactersPage.updateInfo(playerName, playerPoints, playerStats, player, shownChar);
     }
+
+    public void upgradeStat(int player, String stat){
+        System.out.println(stat+player);
+    }
 }

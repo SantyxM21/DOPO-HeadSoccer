@@ -129,7 +129,13 @@ public class SelectionPanel extends JPanel {
                 changeCharacter(-1, 2);
             }
         });
-        // TODO:swapButton y las flechas de cada jugador
+        
+        swapButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainPanel.funcUnderConstruction("En construccion");
+            }
+        });         
     }
 
     /*
