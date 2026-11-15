@@ -1,9 +1,10 @@
 package test;
-
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.awt.Dimension;
+import domain.*;
 
 /**
  * The test class DopoSoccerTest.
@@ -11,32 +12,33 @@ import org.junit.jupiter.api.Test;
  * @author  (your name)
  * @version (a version number or a date)
  */
-public class DopoSoccerTest
-{
-    /**
-     * Default constructor for test class temp
-     */
-    public DopoSoccerTest()
-    {
-    }
+public class DopoSoccerTest{
+    private DopoSoccer dopoSoccer;
 
-    /**
-     * Sets up the test fixture.
-     *
-     * Called before every test case method.
-     */
     @BeforeEach
-    public void setUp()
-    {
+    public void SetUp() {
+        dopoSoccer = new DopoSoccer();
     }
 
-    /**
-     * Tears down the test fixture.
-     *
-     * Called after every test case method.
-     */
-    @AfterEach
-    public void tearDown()
-    {
+    @Test
+    public void shouldIConstructWithProfiles() {
+        assertNotNull(dopoSoccer.getProfile(Match.LEFT_SIDE));
+        assertNotNull(dopoSoccer.getProfile(Match.RIGHT_SIDE));
+        assertFalse(dopoSoccer.hasMatch());
+    }
+
+    @Test
+    public void shouldCreateNewTimeMatchSuccessfully() throws DopoSoccerException {
+        dopoSoccer.newGame(DopoSoccer.TIME_MODE, "60", new Dimension(800, 600));
+        assertTrue(dopoSoccer.hasMatch());
+        assertFalse(dopoSoccer.isFinished());
+    }
+
+    @Test
+    public void shouldEndGameProperly() throws DopoSoccerException {
+        dopoSoccer.newGame(DopoSoccer.GOALS_MODE, "3", new Dimension(800, 600));
+        assertTrue(dopoSoccer.hasMatch());
+        dopoSoccer.endGame();
+        assertFalse(dopoSoccer.hasMatch());
     }
 }
