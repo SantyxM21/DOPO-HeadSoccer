@@ -16,7 +16,6 @@ public class HomePanel extends JPanel{
     private RoundButton importGameButton;
     private CustomButton backButton;
     private final Image configBackground = DopoSoccerGUI.loadImage("/resources/fondo_popup.png");
-    private final Image background = DopoSoccerGUI.loadImage("/resources/fondo_paneles_dopo_soccer.png");
 
     private JDialog configDialog;
     private JTextField configSizeInput;
@@ -221,7 +220,7 @@ public class HomePanel extends JPanel{
     @Override 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        if (background != null) g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+        if (DopoSoccerGUI.PANEL_BACKGROUND != null) g.drawImage(DopoSoccerGUI.PANEL_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
     }
 
     private int checkPositiveNum(String text) throws DopoSoccerException{

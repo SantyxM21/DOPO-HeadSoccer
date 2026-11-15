@@ -13,7 +13,6 @@ public class LoadingPanel extends JPanel{
     private CustomButton fullScreenButton;
     private CustomButton mediumScreeButton;
     private CustomButton smallScreeButton;
-    private final Image background = DopoSoccerGUI.loadImage("/resources/fondo_dopo_soccer.png");
 
     public LoadingPanel(){
         super(new BorderLayout());
@@ -67,6 +66,6 @@ public class LoadingPanel extends JPanel{
     @Override 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        if (background != null) g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+        if (DopoSoccerGUI.GAME_BACKGROUND != null) g.drawImage(DopoSoccerGUI.GAME_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
     }
 }

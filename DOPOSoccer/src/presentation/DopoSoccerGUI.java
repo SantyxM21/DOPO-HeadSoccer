@@ -16,6 +16,9 @@ public class DopoSoccerGUI extends JFrame{
 
     private static final Image img = loadImage("/resources/logo_icon.png");
 
+    public static final Image PANEL_BACKGROUND = loadImage("/resources/fondo_paneles_dopo_soccer.png");
+    public static final Image GAME_BACKGROUND = loadImage("/resources/fondo_dopo_soccer.png");
+
     private final MainPanel main = new MainPanel();
 
     public DopoSoccerGUI(){

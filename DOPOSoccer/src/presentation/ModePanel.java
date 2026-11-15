@@ -28,7 +28,8 @@ public class ModePanel extends JPanel {
     public JPanel prepareModePage(){
 
         JLabel title = new JLabel("Modalidad");
-        title.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 9));
+        title.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 7));
+        title.setForeground(new Color(247, 254, 255));                                 // azul marino, igual al popup
         title.setHorizontalAlignment(SwingConstants.CENTER);
 
         Component spacer = Box.createRigidArea(backButton.getPreferredSize());
@@ -41,11 +42,8 @@ public class ModePanel extends JPanel {
         topBar.add(CustomButton.keepSize(backButton), BorderLayout.EAST);
 
         // Botones de modalidad en el centro
-        pvpButton.setText("P vs P");
-        pvmButton.setText("P vs M");
-        Font modeFont = new Font("Arial", Font.PLAIN, GAME_SIZE.height / 22);
-        pvpButton.setFont(modeFont);
-        pvmButton.setFont(modeFont);
+        setTextImage(pvpButton, "/resources/pvp_text.png", "P vs P");
+        setTextImage(pvmButton, "/resources/pvm_text.png", "P vs M");
 
         JPanel modes = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 8, 0));
         modes.setOpaque(false);
@@ -57,9 +55,7 @@ public class ModePanel extends JPanel {
         center.add(modes);
 
         // Nombre del juego abajo
-        JLabel gameName = new JLabel("<html><center>DOPO<br>SOCCER</center></html>");
-        gameName.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 16));
-        gameName.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel gameName = DopoSoccerGUI.createLogo(12);
         gameName.setBorder(BorderFactory.createEmptyBorder(0, 0, GAME_SIZE.height / 30, 0));
 
         this.add(topBar, BorderLayout.NORTH);
@@ -67,6 +63,17 @@ public class ModePanel extends JPanel {
         this.add(gameName, BorderLayout.SOUTH);
 
         return this;
+    }
+
+    private void setTextImage(RoundButton button, String path, String fallback){
+        Image image = DopoSoccerGUI.loadImage(path);
+        if (image != null) {
+            int width = (int)(button.getPreferredSize().width * 0.7);                
+            button.setIcon(new ImageIcon(image.getScaledInstance(width, -1, Image.SCALE_SMOOTH)));
+        } else {
+            button.setText(fallback);
+            button.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 22));
+        }
     }
 
     public void prepareController(MainPanel main){
@@ -91,5 +98,11 @@ public class ModePanel extends JPanel {
                 main.setPlayersMode(DopoSoccer.PVSM_MODE);
             }
         });
+    }
+
+    @Override 
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        if (DopoSoccerGUI.GAME_BACKGROUND != null) g.drawImage(DopoSoccerGUI.GAME_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
     }
 }
