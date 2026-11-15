@@ -21,6 +21,7 @@ public abstract class Match {
 
     private boolean isFinished;
     private int winnerSide = 0;
+    private int matchTimeSec = 0;
 
     public Match(String condition, Dimension resolution) throws DopoSoccerException{
         setCondition(condition);
@@ -28,6 +29,7 @@ public abstract class Match {
         this.RESOLUTION = resolution;
         this.field = new Field(resolution);
         this.ball = new Ball(field); // El balon se va a crear en el centro del campo
+
     }
 
     public abstract void setCondition(String condition) throws DopoSoccerException;
@@ -71,6 +73,7 @@ public abstract class Match {
 
         checkGoal();
         checkFinished();
+        matchTimeSec++;
     }
 
     public void kick(int side){
@@ -180,5 +183,9 @@ public abstract class Match {
             if(side == winnerSide) return WINNER_POINTS;
             else return LOSER_POINTS;
         }
+    }
+
+    public int getTime(){
+        return matchTimeSec;
     }
 }

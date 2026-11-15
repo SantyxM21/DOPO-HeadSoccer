@@ -40,6 +40,10 @@ public class DopoSoccer {
         match.update();
     }
 
+    public int getTime(){
+        return match.getTime();
+    }
+
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
         match.addHuman(side, character, profile);
     }
