@@ -16,8 +16,8 @@ public class Profile {
 
     }
 
-    public void addPoints(){
-
+    public void addPoints(int points){
+        this.points += points;
     }
 
     public int getPoints(){

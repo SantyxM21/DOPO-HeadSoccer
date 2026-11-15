@@ -46,7 +46,7 @@ public class GamePanel extends JPanel{
 
     // Mueve al jugador segun las teclas que esten presionadas 
     private void update(){
-        if(!game.hasMatch()) return;    
+        if(!game.hasMatch() || game.isFinished()) return;    
 
         if(keyH.kickPressed) game.kick(Match.LEFT_SIDE);                 
         int direction = 0;

@@ -9,6 +9,10 @@ public abstract class Match {
     private static final double GROUND_MARGIN_RATIO = 0.15;  
     public final Dimension RESOLUTION;
 
+    public static final int WINNER_POINTS = 100;
+    public static final int LOSER_POINTS = 25;
+
+
     private static final double PLAYER_BOUNCING = 0.3; //Rango entre 0 y 1
 
     private Player leftPlayer;
@@ -16,7 +20,11 @@ public abstract class Match {
     private Field field;
     private Ball ball;
 
-    public Match(String condition, Dimension resolution){
+    private boolean isFinished;
+    private int winnerSide = 0;
+
+
+    public Match(String condition, Dimension resolution) throws DopoSoccerException{
         setCondition(condition);
 
         this.RESOLUTION = resolution;
@@ -24,7 +32,7 @@ public abstract class Match {
         this.ball = new Ball(field); // El balon se va a crear en el centro del campo
     }
 
-    public abstract void setCondition(String condition);
+    public abstract void setCondition(String condition) throws DopoSoccerException;
 
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
         if(side == LEFT_SIDE) {
@@ -49,6 +57,8 @@ public abstract class Match {
     }
 
     public void update(){
+        if (isFinished) return;
+
         leftPlayer.applyGravity();
         rightPlayer.applyGravity();
         ball.move();
@@ -62,6 +72,7 @@ public abstract class Match {
         rightPlayer.endFrame();
 
         checkGoal();
+        checkFinished();
     }
 
     public void kick(int side){
@@ -136,5 +147,29 @@ public abstract class Match {
         rightPlayer.kickOffPosition(startX(RIGHT_SIDE), startY());
 
         ball.kickOff();
+    }
+
+    protected abstract void checkFinished();
+
+    protected void finish(int winner){
+        if (isFinished) return;
+
+        isFinished = true;
+        winnerSide = winner;
+
+        int loser;
+        if(winner == LEFT_SIDE) loser = RIGHT_SIDE;
+        else loser = LEFT_SIDE;
+
+        getPlayer(winnerSide).getProfile().addPoints(WINNER_POINTS);
+        getPlayer(loser).getProfile().addPoints(LOSER_POINTS);
+    }
+
+    public boolean isFinished(){
+        return isFinished;
+    }
+
+    public int getWinner(){
+        return winnerSide;
     }
 }

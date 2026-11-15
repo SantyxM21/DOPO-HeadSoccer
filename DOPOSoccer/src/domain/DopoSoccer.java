@@ -28,7 +28,7 @@ public class DopoSoccer {
         this.profile2 = new Profile("2");
     }
 
-    public void newGame(int type, String conditions, Dimension resolution){
+    public void newGame(int type, String conditions, Dimension resolution) throws DopoSoccerException{
         if(type == TIME_MODE) match = new TimeMatch(conditions, resolution);
         else if (type == GOALS_MODE) match = new GoalsMatch(conditions, resolution);
     }
@@ -121,5 +121,9 @@ public class DopoSoccer {
 
     public int getGoals(int side){
         return match.getPlayer(side).getGoals();
+    }
+
+    public boolean isFinished(){
+        return match.isFinished();
     }
 }

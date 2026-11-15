@@ -5,15 +5,30 @@ import java.awt.Dimension;
 public class GoalsMatch extends Match{
     private int numGoals;
     
-    public GoalsMatch(String condition, Dimension resolution) {
+    public GoalsMatch(String condition, Dimension resolution) throws DopoSoccerException{
         super(condition, resolution);
     }
     
-    public void setCondition(String condition){
+    @Override 
+    public void setCondition(String condition) throws DopoSoccerException{
         try {
             numGoals = Integer.parseInt(condition);
         } catch (NumberFormatException e) {
-            // TODO
+            throw new DopoSoccerException(DopoSoccerException.INVALID_GOALS);
         }
     }
+
+    @Override 
+    protected void checkFinished(){
+        int leftGoals = getPlayer(LEFT_SIDE).getGoals();
+        int rightGoals = getPlayer(RIGHT_SIDE).getGoals();
+
+        if (leftGoals >= numGoals) finish(LEFT_SIDE); 
+        else if(rightGoals >= numGoals) finish(RIGHT_SIDE);
+    }
+
+    public int getNumGoals(){
+        return numGoals;
+    }
+
 }
