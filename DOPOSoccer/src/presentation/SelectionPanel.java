@@ -100,7 +100,7 @@ public class SelectionPanel extends JPanel {
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (main.startGame("Corea", "Nigeria")) main.showPage("Game");
+                if (main.startGame(DopoSoccer.COUNTRIES[optionP1], DopoSoccer.COUNTRIES[optionP2])) main.showPage("Game");
             }
         });
 

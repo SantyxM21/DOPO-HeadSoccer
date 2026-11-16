@@ -3,11 +3,8 @@ package domain;
 import java.awt.Dimension;
 
 public class TimeMatch extends Match{
-    private static final double MAX_FRAME_SECONDS = 0.25;
+    private int durationSecs;      
 
-    private double secondsLeft;
-    private long lastUpdatedFrame;
-    
     public TimeMatch(String condition, Dimension resolution) throws DopoSoccerException{
         super(condition, resolution);
     }
@@ -21,22 +18,12 @@ public class TimeMatch extends Match{
             throw new DopoSoccerException(DopoSoccerException.INVALID_TIME);
         }
         if (minutes <= 0) throw new DopoSoccerException(DopoSoccerException.INVALID_TIME);
-        secondsLeft = minutes * 60;
+        durationSecs = (int) Math.ceil(minutes * 60);
     }
 
     @Override
     protected void checkFinished(){
-        long now = System.currentTimeMillis();
-        if (lastUpdatedFrame != 0){
-            double timeElapsed = (now - lastUpdatedFrame) / 1000.0;
-            advanceTime(Math.min(timeElapsed, MAX_FRAME_SECONDS)); //conversion a sdegundos
-        } 
-        lastUpdatedFrame = now;
-    }
-
-    public void advanceTime(double seconds){
-        secondsLeft = Math.max(0, secondsLeft - seconds);
-        if (secondsLeft > 0) return;
+        if (getSecondsLeft() > 0) return;
 
         int leftGoals = getPlayer(LEFT_SIDE).getGoals();
         int rightGoals = getPlayer(RIGHT_SIDE).getGoals();
@@ -47,11 +34,11 @@ public class TimeMatch extends Match{
     }
 
     public int getSecondsLeft(){
-        return (int) Math.ceil(secondsLeft);
+        return Math.max(0, durationSecs - getTime());
     }
 
     public boolean isSuddenDeath(){
-        return secondsLeft == 0 && !isFinished();
+        return getSecondsLeft() == 0 && !isFinished();
     }
 
     @Override 

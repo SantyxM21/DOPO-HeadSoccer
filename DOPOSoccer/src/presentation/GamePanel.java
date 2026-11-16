@@ -14,8 +14,12 @@ public class GamePanel extends JPanel{
 
     private Image image;
     private Graphics graphics;
+
+    private Image leftPlayerImage;
+    private Image rightPlayerImage;
     private DopoSoccer game;
     private KeyHandler keyH = new KeyHandler();
+    private Timer gameLoop;
 
     private int gameTimeSecs = 0;
 
@@ -28,6 +32,7 @@ public class GamePanel extends JPanel{
     private final JLabel leftGoals = new JLabel("2", SwingConstants.CENTER);
     private final JLabel rightGoals = new JLabel("1", SwingConstants.CENTER);
     private final JLabel timeLabel = new JLabel("0:00", SwingConstants.CENTER);
+    private final JLabel timeTitle = new JLabel("Tiempo", SwingConstants.CENTER);
     private final RoundButton pauseButton = new RoundButton();
 
     // Colores del marcador
@@ -53,14 +58,20 @@ public class GamePanel extends JPanel{
     public void prepareController(MainPanel panel){
         addKeyListener(keyH);     
 
-        // Game loop 60 veces por segundo se llama a update()
-        Timer gameLoop = new Timer(16, new ActionListener() {
+        // Game loop: Match.FPS veces por segundo se llama a update()
+        stopGameLoop();                                     // nunca debe haber dos loops actualizando el mismo juego
+        gameLoop = new Timer(1000 / Match.FPS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 update();
             }
         });
         gameLoop.start();
+    }
+
+    /* Detiene el game loop toca llamar antes de descartar este panel */
+    public void stopGameLoop(){
+        if (gameLoop != null) gameLoop.stop();
     }
 
     // Mueve al jugador segun las teclas que esten presionadas 
@@ -83,7 +94,7 @@ public class GamePanel extends JPanel{
         if(direction2 != 0) game.move(Match.RIGHT_SIDE, direction2);
 
         game.update();
-        updateTimer(game.getTime());
+        updateScoreboard();
         repaint();
     }
 
@@ -124,26 +135,25 @@ public class GamePanel extends JPanel{
 
         // Textos
         leftName.setFont(textFont);
+        leftName.setText(game.getPlayerName(1));
         rightName.setFont(textFont);
+        rightName.setText(game.getPlayerName(2));
         leftGoals.setFont(bigFont);
         rightGoals.setFont(bigFont);
         timeLabel.setFont(bigFont);
-        JLabel timeTitle = new JLabel("Tiempo", SwingConstants.CENTER);
         timeTitle.setFont(textFont);
         for (JLabel text : new JLabel[]{leftName, rightName, leftGoals, rightGoals, timeLabel, timeTitle}) {
             text.setForeground(Color.WHITE);                        
         }
 
         // Banderas
-        int flagH = barH * 11 / 20;
+        int flagH = flagHeight();
         Dimension flagSize = new Dimension(flagH * 7 / 5, flagH);
         for (JLabel flag : new JLabel[]{leftFlag, rightFlag}) {
             flag.setPreferredSize(flagSize);
             flag.setHorizontalAlignment(SwingConstants.CENTER);
             flag.setOpaque(false);
         }
-        leftFlag.setIcon(DopoSoccerGUI.flagIcon(DopoSoccer.COUNTRIES[0], flagH));      // TODO: personaje del jugador 1
-        rightFlag.setIcon(DopoSoccerGUI.flagIcon(DopoSoccer.COUNTRIES[2], flagH));     // TODO: personaje del jugador 2
 
         // Botón de pausa
         int side = barH / 2;
@@ -202,10 +212,34 @@ public class GamePanel extends JPanel{
         return panel;
     }
         
-    private void updateTimer(int time){
-        int minutes = time / 60;     
-        int seconds = time % 60;    
-        timeLabel.setText(String.format("%d:%02d", minutes, seconds));   
+    private void updateScoreboard(){
+        boolean timeMode = game.getMatchType() == DopoSoccer.TIME_MODE;
+        int titleSize = GAME_SIZE.height / 7 / (timeMode ? 5 : 7);      // en modo goles el titulo es mas largo osea letra mas pequeña para que quepa
+        if (timeTitle.getFont().getSize() != titleSize) timeTitle.setFont(timeTitle.getFont().deriveFont((float) titleSize));
+
+        if (timeMode) {
+            timeTitle.setText("Tiempo");
+            timeLabel.setText(game.textUnderScore());          // cuenta regresiva o MUERTE SUBITA
+        } else {
+            timeTitle.setText(game.textUnderScore());          // "Goles para ganar N"
+            int time = game.getTime();                         // tiempo transcurrido
+            timeLabel.setText(String.format("%d:%02d", time / 60, time % 60));
+        }
+        leftGoals.setText(String.valueOf(game.getPlayerGoals(1)));
+        rightGoals.setText(String.valueOf(game.getPlayerGoals(2)));
+    }
+
+    public void setCountries(String leftCountry, String rightCountry){
+        leftFlag.setIcon(DopoSoccerGUI.flagIcon(leftCountry, flagHeight()));       
+        rightFlag.setIcon(DopoSoccerGUI.flagIcon(rightCountry, flagHeight()));
+
+        leftPlayerImage = DopoSoccerGUI.loadImage("/resources/Jugador " + leftCountry + ".png");
+        rightPlayerImage = DopoSoccerGUI.loadImage("/resources/Jugador " + rightCountry + ".png");
+    }
+
+    /* Alto del recuadro de las banderas del marcador */
+    private int flagHeight(){
+        return GAME_SIZE.height / 7 * 11 / 20;
     }
 
     public void drawBackground(Graphics g){
@@ -214,8 +248,21 @@ public class GamePanel extends JPanel{
 
     public void drawPlayer(Graphics g, int player){
         int size = game.getPlayerSize(player);
-        g.setColor(Color.WHITE);
-        g.fillOval(game.getPlayerX(player), game.getPlayerY(player), size, size);
+        int x = game.getPlayerX(player);
+        int y = game.getPlayerY(player);
+        Image playerImage = (player == Match.LEFT_SIDE) ? leftPlayerImage : rightPlayerImage;
+
+        if (playerImage != null && player == Match.LEFT_SIDE) {
+            // Volteada la imagen horizontalmente
+            int imgW = playerImage.getWidth(this);
+            int imgH = playerImage.getHeight(this);
+            g.drawImage(playerImage, x + size, y, x, y + size, 0, 0, imgW, imgH, this);
+        } else if (playerImage != null) {
+            g.drawImage(playerImage, x, y, size, size, this);       // escalada al tamaño del jugador
+        } else {
+            g.setColor(Color.WHITE);                                 // si no hay imagen se dibuja un circulo
+            g.fillOval(x, y, size, size);
+        }
     }
 
     public void drawField(Graphics g){

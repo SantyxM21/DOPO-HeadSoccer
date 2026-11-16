@@ -44,6 +44,15 @@ public class DopoSoccer {
         return match.getTime();
     }
 
+    public int getMatchType(){
+        return matchType;
+    }
+
+    public int getPlayerGoals(int side){
+        return match.getPlayerGoals(side);
+    }
+
+
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
         match.addHuman(side, character, profile);
     }

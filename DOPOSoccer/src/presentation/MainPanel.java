@@ -81,6 +81,7 @@ public class MainPanel extends JPanel{
         GAME_SIZE = sizeFor(divisor);
         this.setPreferredSize(GAME_SIZE);
 
+        gamePage.stopGameLoop();            
         this.removeAll();                   // Quita todos los componentes de este container/panel
         homePage = new HomePanel();
         loadingPage = new LoadingPanel();
@@ -106,6 +107,7 @@ public class MainPanel extends JPanel{
                 game.newGame(matchMode, String.valueOf(confingMode), GAME_SIZE);   // el dominio recibe la condicion como String y la valida
                 game.addHuman(1, playerOne, game.getProfile(1));
                 game.addHuman(2, playerTwo, game.getProfile(2));
+                gamePage.setCountries(playerOne, playerTwo);
                 return true;
             } catch (DopoSoccerException e){
                 JOptionPane.showMessageDialog(null, e.getMessage());

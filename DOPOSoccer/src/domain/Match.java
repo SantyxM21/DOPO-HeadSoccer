@@ -11,6 +11,8 @@ public abstract class Match {
     public static final int WINNER_POINTS = 100;
     public static final int LOSER_POINTS = 25;
 
+    public static final int FPS = 60;                      // veces por segundo que se llama a update()
+
 
     private static final double PLAYER_BOUNCING = 0.3; //Rango entre 0 y 1
 
@@ -79,8 +81,8 @@ public abstract class Match {
         rightPlayer.endFrame();
 
         checkGoal();
-        checkFinished();
         updateTime();
+        checkFinished();        // despues de updateTime para que TimeMatch vea el tiempo de este frame
     }
 
     public void kick(int side){
@@ -205,7 +207,7 @@ public abstract class Match {
 
     public void updateTime(){
         fps++;
-        if(fps >= 120){
+        if(fps >= FPS){
             fps = 0;
             matchTimeSec++;
         }
@@ -246,4 +248,8 @@ public abstract class Match {
     }
 
 
+    public int getPlayerGoals(int player){
+        if(player == 1) return leftPlayer.getGoals();
+        return rightPlayer.getGoals();
+    }
 }
