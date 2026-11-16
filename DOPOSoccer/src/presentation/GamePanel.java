@@ -25,6 +25,10 @@ public class GamePanel extends JPanel{
     private String rightCountry;
     private JDialog winnerDialog;
     private final CustomButton menuButton = new CustomButton("Volver al menu");
+    private JDialog pauseDialog;
+    private final CustomButton resumeButton = new CustomButton("Reanudar");
+    private final CustomButton pauseMenuButton = new CustomButton("Menu");
+    private final CustomButton saveButton = new CustomButton("Guardar");
     private static final Image POPUP_BACKGROUND = DopoSoccerGUI.loadImage("/resources/fondo_popup.png");
     private static final Color POPUP_TEXT = new Color(27, 42, 85);
 
@@ -84,6 +88,41 @@ public class GamePanel extends JPanel{
                 main.showPage("Home menu");
             }
         });
+
+        pauseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if (!game.hasMatch() || game.isFinished()) return;
+                gameLoop.stop();                                    // congela el juego 
+                showPausePopup();
+            }
+        });
+
+        resumeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                pauseDialog.dispose();
+                gameLoop.start();
+                requestFocusInWindow();                             // para que el teclado vuelva a mover a los jugadores
+            }
+        });
+
+        pauseMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                pauseDialog.dispose();
+                game.endGame();
+                gameLoop.start();                                   // el loop queda listo para el siguiente partido
+                main.showPage("Home menu");
+            }
+        });
+
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                MainPanel.funcUnderConstruction("Guardar partida: la funcionalidad se encuentra en construccion");
+            }
+        });
     }
 
     /* Detiene el game loop toca llamar antes de descartar este panel */
@@ -123,18 +162,8 @@ public class GamePanel extends JPanel{
         int loser = (winner == Match.LEFT_SIDE) ? Match.RIGHT_SIDE : Match.LEFT_SIDE;
         String winnerCountry = (winner == Match.LEFT_SIDE) ? leftCountry : rightCountry;
 
-        JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(this), "Fin del partido", Dialog.ModalityType.APPLICATION_MODAL);
+        JDialog dialog = createPopup("Fin del partido", 1.6, 1.4);
         winnerDialog = dialog;
-        dialog.setSize((int)(GAME_SIZE.width / 1.6), (int)(GAME_SIZE.height / 1.4));
-        dialog.setResizable(false);
-        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);     // solo se sale con el boton
-        dialog.setContentPane(new JPanel(new BorderLayout()){
-            @Override
-            protected void paintComponent(Graphics g){
-                super.paintComponent(g);
-                if (POPUP_BACKGROUND != null) g.drawImage(POPUP_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
-            }
-        });
 
         int h = GAME_SIZE.height;
         JLabel title = popupLabel("¡GANADOR!", Font.BOLD, h / 10);
@@ -159,6 +188,43 @@ public class GamePanel extends JPanel{
         dialog.add(buttons, BorderLayout.SOUTH);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
+    }
+
+    /* Menu de pausa: Reanudar, Menu y Guardar */
+    private void showPausePopup(){
+        JDialog dialog = createPopup("Pausa", 2.0, 2.2);
+        pauseDialog = dialog;
+
+        int h = GAME_SIZE.height;
+        JLabel title = popupLabel("PAUSA", Font.BOLD, h / 10);
+        title.setBorder(BorderFactory.createEmptyBorder(h / 20, 0, 0, 0));
+
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, GAME_SIZE.width / 60, h / 25));
+        buttons.setOpaque(false);
+        buttons.add(resumeButton);
+        buttons.add(pauseMenuButton);
+        buttons.add(saveButton);
+
+        dialog.add(title, BorderLayout.NORTH);
+        dialog.add(buttons, BorderLayout.CENTER);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    /* Dialogo modal con el fondo de los popups; solo se cierra con sus botones */
+    private JDialog createPopup(String windowTitle, double widthDivisor, double heightDivisor){
+        JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(this), windowTitle, Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setSize((int)(GAME_SIZE.width / widthDivisor), (int)(GAME_SIZE.height / heightDivisor));
+        dialog.setResizable(false);
+        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        dialog.setContentPane(new JPanel(new BorderLayout()){
+            @Override
+            protected void paintComponent(Graphics g){
+                super.paintComponent(g);
+                if (POPUP_BACKGROUND != null) g.drawImage(POPUP_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
+            }
+        });
+        return dialog;
     }
 
     /* "Profile #1: +100 puntos (total 1250)" */
