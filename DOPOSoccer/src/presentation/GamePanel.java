@@ -14,6 +14,9 @@ public class GamePanel extends JPanel{
 
     private Image image;
     private Graphics graphics;
+
+    private Image leftPlayerImage;
+    private Image rightPlayerImage;
     private DopoSoccer game;
     private KeyHandler keyH = new KeyHandler();
 
@@ -211,6 +214,9 @@ public class GamePanel extends JPanel{
     public void setCountries(String leftCountry, String rightCountry){
         leftFlag.setIcon(DopoSoccerGUI.flagIcon(leftCountry, flagHeight()));       
         rightFlag.setIcon(DopoSoccerGUI.flagIcon(rightCountry, flagHeight()));
+
+        leftPlayerImage = DopoSoccerGUI.loadImage("/resources/Jugador " + leftCountry + ".png");
+        rightPlayerImage = DopoSoccerGUI.loadImage("/resources/Jugador " + rightCountry + ".png");
     }
 
     /* Alto del recuadro de las banderas del marcador */
@@ -230,8 +236,21 @@ public class GamePanel extends JPanel{
 
     public void drawPlayer(Graphics g, int player){
         int size = game.getPlayerSize(player);
-        g.setColor(Color.WHITE);
-        g.fillOval(game.getPlayerX(player), game.getPlayerY(player), size, size);
+        int x = game.getPlayerX(player);
+        int y = game.getPlayerY(player);
+        Image playerImage = (player == Match.LEFT_SIDE) ? leftPlayerImage : rightPlayerImage;
+
+        if (playerImage != null && player == Match.LEFT_SIDE) {
+            // Volteada la imagen horizontalmente
+            int imgW = playerImage.getWidth(this);
+            int imgH = playerImage.getHeight(this);
+            g.drawImage(playerImage, x + size, y, x, y + size, 0, 0, imgW, imgH, this);
+        } else if (playerImage != null) {
+            g.drawImage(playerImage, x, y, size, size, this);       // escalada al tamaño del jugador
+        } else {
+            g.setColor(Color.WHITE);                                 // si no hay imagen se dibuja un circulo
+            g.fillOval(x, y, size, size);
+        }
     }
 
     public void drawField(Graphics g){
