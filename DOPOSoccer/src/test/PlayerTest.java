@@ -12,9 +12,9 @@ public class PlayerTest {
     private Field field;
 
     @BeforeEach
-    public void shouldSetUp() throws DopoSoccerException {
+    public void SetUp() throws DopoSoccerException {
         field = new Field(new Dimension(800, 600));
-        player = new Human("Corea", 100, 500, field);
+        player = new Human("Corea del Sur", 100, 500, field);
     }
 
     @Test
@@ -48,5 +48,38 @@ public class PlayerTest {
         } catch (DopoSoccerException e) {
             assertEquals(DopoSoccerException.INEXISTENT_CHARACTER, e.getMessage());
         }
+    }
+
+    @Test
+    public void shouldStartWithFullSurvivalAndEmptyPowerBar() {
+        assertEquals(100, player.getSurvival(), 0.001);
+        assertEquals(0, player.getPowerBar(), 0.001);
+        assertFalse(player.hasAura());
+        assertFalse(player.hasEffect());
+    }
+
+    @Test
+    public void shouldAddQuarterOfPowerBarWhenReceivingGoal() {
+        player.powerBarReceivedGoal();
+        assertEquals(25, player.getPowerBar(), 0.001);
+    }
+
+    @Test
+    public void shouldReduceSurvivalWhenTakingDamageAndNeverGoBelowZero() {
+        player.takeDamage(40);
+        assertEquals(60, player.getSurvival(), 0.001);
+
+        player.takeDamage(500);
+        assertEquals(0, player.getSurvival(), 0.001);
+    }
+
+    @Test
+    public void shouldNotMoveWhileBlockedByEffect() {
+        player.receiveEffect(new PushEffect(), 1);
+        assertTrue(player.hasEffect());
+
+        int initialX = player.getXPosition();
+        player.move(-1);
+        assertEquals(initialX, player.getXPosition());
     }
 }

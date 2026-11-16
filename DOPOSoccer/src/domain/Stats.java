@@ -38,6 +38,7 @@ public class Stats {
         if(indexStat == -1) return 0; //TODO: error
 
         int levelStat = STATS_LEVES[indexStat];
+        if (levelStat >= MAX_LEVEL) return 0;
         int costUpgrade = INICIAL_PRICE*((int)Math.pow(2, levelStat-1));
         if(points >= costUpgrade){
             STATS_LEVES[indexStat] += 1;

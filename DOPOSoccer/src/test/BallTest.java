@@ -49,4 +49,29 @@ public class BallTest {
         assertEquals(ball.getXPosition() + ball.getDiameter() / 2.0, center.getX(), 0.001);
         assertEquals(ball.getYPosition() + ball.getDiameter() / 2.0, center.getY(), 0.001);
     }
+
+    @Test
+    public void shouldChargePowerAndUseCoreanPowerEffect() throws DopoSoccerException {
+        Player player = new Human("Corea del Sur", 100, 500, field);
+        Power power = player.getSelectedCharacter().getPower();
+
+        ball.chargePower(power, player, 1);
+
+        assertEquals(power, ball.getChargedPower());
+        assertEquals(player, ball.getChargedBy());
+        assertEquals(0, ball.getVelocity().getY(), 0.001);
+    }
+
+    @Test
+    public void shouldClearChargeAndClearItOnKickOff() throws DopoSoccerException {
+        Player player = new Human("Corea del Sur", 100, 500, field);
+        ball.chargePower(player.getSelectedCharacter().getPower(), player, 1);
+        ball.clearCharge();
+        assertNull(ball.getChargedPower());
+        assertNull(ball.getChargedBy());
+
+        ball.chargePower(player.getSelectedCharacter().getPower(), player, 1);
+        ball.kickOff();
+        assertNull(ball.getChargedPower());
+    }
 }

@@ -32,4 +32,11 @@ public class MatchTest {
             assertEquals(DopoSoccerException.INVALID_SITE, e.getMessage());
         }
     }
+
+    @Test
+    public void shouldStartPlayersWithFullSurvival() throws DopoSoccerException {
+        match.addHuman(Match.LEFT_SIDE, "Corea del Sur", new Profile("1"));
+        assertEquals(100, match.getPlayer(Match.LEFT_SIDE).getSurvival(), 0.001);
+        assertEquals(0, match.getPlayer(Match.LEFT_SIDE).getPowerBar(), 0.001);
+    }
 }

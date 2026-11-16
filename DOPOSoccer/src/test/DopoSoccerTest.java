@@ -41,4 +41,21 @@ public class DopoSoccerTest{
         dopoSoccer.endGame();
         assertFalse(dopoSoccer.hasMatch());
     }
+
+    @Test
+    public void shouldActivatePowerOnlyWhenPowerBarIsFull() throws DopoSoccerException {
+        dopoSoccer.newGame(DopoSoccer.GOALS_MODE, "3", new Dimension(800, 600));
+        dopoSoccer.addHuman(Match.LEFT_SIDE, "Corea del Sur", dopoSoccer.getProfile(Match.LEFT_SIDE));
+        dopoSoccer.addHuman(Match.RIGHT_SIDE, "Camerún", dopoSoccer.getProfile(Match.RIGHT_SIDE));
+
+        dopoSoccer.activatePower(Match.LEFT_SIDE);
+        assertFalse(dopoSoccer.hasAura(Match.LEFT_SIDE));
+
+        for (int i = 0; i < Match.FPS * 10 + 5; i++) dopoSoccer.update();
+        assertEquals(100, dopoSoccer.getPowerBar(Match.LEFT_SIDE), 0.001);
+
+        dopoSoccer.activatePower(Match.LEFT_SIDE);
+        assertTrue(dopoSoccer.hasAura(Match.LEFT_SIDE));
+        assertEquals(0, dopoSoccer.getPowerBar(Match.LEFT_SIDE), 0.001);
+    }
 }
