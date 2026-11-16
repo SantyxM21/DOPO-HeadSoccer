@@ -81,6 +81,7 @@ public class MainPanel extends JPanel{
         GAME_SIZE = sizeFor(divisor);
         this.setPreferredSize(GAME_SIZE);
 
+        gamePage.stopGameLoop();            
         this.removeAll();                   // Quita todos los componentes de este container/panel
         homePage = new HomePanel();
         loadingPage = new LoadingPanel();

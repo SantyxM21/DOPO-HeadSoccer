@@ -19,6 +19,7 @@ public class GamePanel extends JPanel{
     private Image rightPlayerImage;
     private DopoSoccer game;
     private KeyHandler keyH = new KeyHandler();
+    private Timer gameLoop;
 
     private int gameTimeSecs = 0;
 
@@ -31,6 +32,7 @@ public class GamePanel extends JPanel{
     private final JLabel leftGoals = new JLabel("2", SwingConstants.CENTER);
     private final JLabel rightGoals = new JLabel("1", SwingConstants.CENTER);
     private final JLabel timeLabel = new JLabel("0:00", SwingConstants.CENTER);
+    private final JLabel timeTitle = new JLabel("Tiempo", SwingConstants.CENTER);
     private final RoundButton pauseButton = new RoundButton();
 
     // Colores del marcador
@@ -56,14 +58,20 @@ public class GamePanel extends JPanel{
     public void prepareController(MainPanel panel){
         addKeyListener(keyH);     
 
-        // Game loop 60 veces por segundo se llama a update()
-        Timer gameLoop = new Timer(16, new ActionListener() {
+        // Game loop: Match.FPS veces por segundo se llama a update()
+        stopGameLoop();                                     // nunca debe haber dos loops actualizando el mismo juego
+        gameLoop = new Timer(1000 / Match.FPS, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 update();
             }
         });
         gameLoop.start();
+    }
+
+    /* Detiene el game loop toca llamar antes de descartar este panel */
+    public void stopGameLoop(){
+        if (gameLoop != null) gameLoop.stop();
     }
 
     // Mueve al jugador segun las teclas que esten presionadas 
@@ -86,7 +94,7 @@ public class GamePanel extends JPanel{
         if(direction2 != 0) game.move(Match.RIGHT_SIDE, direction2);
 
         game.update();
-        updateScoreboard(game.getTime());
+        updateScoreboard();
         repaint();
     }
 
@@ -133,7 +141,6 @@ public class GamePanel extends JPanel{
         leftGoals.setFont(bigFont);
         rightGoals.setFont(bigFont);
         timeLabel.setFont(bigFont);
-        JLabel timeTitle = new JLabel("Tiempo", SwingConstants.CENTER);
         timeTitle.setFont(textFont);
         for (JLabel text : new JLabel[]{leftName, rightName, leftGoals, rightGoals, timeLabel, timeTitle}) {
             text.setForeground(Color.WHITE);                        
@@ -205,8 +212,19 @@ public class GamePanel extends JPanel{
         return panel;
     }
         
-    private void updateScoreboard(int time){
-        updateTimer(time);
+    private void updateScoreboard(){
+        boolean timeMode = game.getMatchType() == DopoSoccer.TIME_MODE;
+        int titleSize = GAME_SIZE.height / 7 / (timeMode ? 5 : 7);      // en modo goles el titulo es mas largo osea letra mas pequeña para que quepa
+        if (timeTitle.getFont().getSize() != titleSize) timeTitle.setFont(timeTitle.getFont().deriveFont((float) titleSize));
+
+        if (timeMode) {
+            timeTitle.setText("Tiempo");
+            timeLabel.setText(game.textUnderScore());          // cuenta regresiva o MUERTE SUBITA
+        } else {
+            timeTitle.setText(game.textUnderScore());          // "Goles para ganar N"
+            int time = game.getTime();                         // tiempo transcurrido
+            timeLabel.setText(String.format("%d:%02d", time / 60, time % 60));
+        }
         leftGoals.setText(String.valueOf(game.getPlayerGoals(1)));
         rightGoals.setText(String.valueOf(game.getPlayerGoals(2)));
     }
@@ -222,12 +240,6 @@ public class GamePanel extends JPanel{
     /* Alto del recuadro de las banderas del marcador */
     private int flagHeight(){
         return GAME_SIZE.height / 7 * 11 / 20;
-    }
-
-    private void updateTimer(int time){
-        int minutes = time / 60;     
-        int seconds = time % 60;    
-        timeLabel.setText(String.format("%d:%02d", minutes, seconds));   
     }
 
     public void drawBackground(Graphics g){

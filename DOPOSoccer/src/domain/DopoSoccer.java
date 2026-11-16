@@ -44,6 +44,10 @@ public class DopoSoccer {
         return match.getTime();
     }
 
+    public int getMatchType(){
+        return matchType;
+    }
+
     public int getPlayerGoals(int side){
         return match.getPlayerGoals(side);
     }
