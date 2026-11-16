@@ -52,6 +52,8 @@ public abstract class Player extends Entity {
         this.kickRange = field.scale(KICK_RANGE);
         this.xKickSpeed = field.scale(X_KICK_SPEED);
         this.yKickSpeed = field.scale(Y_KICK_SPEED);
+
+        startStats();               
     }
 
     public void move(int direction){
@@ -196,14 +198,13 @@ public abstract class Player extends Entity {
     }
 
     //Llamada cada frame
-    public void update(){
-        double secondsPerFrame = 1.0 / 60;
+    public void update(double seconds){
         if (effect != null){
             effect.tick(this);
-            effect.update(secondsPerFrame);
+            effect.update(seconds);
             if (effect.isFinished()) effect = null;
         }
-        powerBar = Math.min(MAX_POWER_BAR, powerBar + MAX_POWER_BAR / POWER_BAR_CHARGE_SECONDS * secondsPerFrame); //rapidez de carga 
+        powerBar = Math.min(MAX_POWER_BAR, powerBar + MAX_POWER_BAR / POWER_BAR_CHARGE_SECONDS * seconds); //rapidez de carga
     }
 
     //Hacer el tiro especial

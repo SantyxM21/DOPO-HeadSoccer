@@ -51,7 +51,7 @@ public class DopoSoccerTest{
         dopoSoccer.activatePower(Match.LEFT_SIDE);
         assertFalse(dopoSoccer.hasAura(Match.LEFT_SIDE));
 
-        for (int i = 0; i < Match.FPS * 10 + 5; i++) dopoSoccer.update();
+        for (int i = 0; i < Match.FPS * 10 + 5; i++) dopoSoccer.update(Match.FRAME_SECONDS);
         assertEquals(100, dopoSoccer.getPowerBar(Match.LEFT_SIDE), 0.001);
 
         dopoSoccer.activatePower(Match.LEFT_SIDE);

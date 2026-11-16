@@ -39,7 +39,7 @@ public class GoalsMatchTest {
         Vector2D ballCenter = ball.center();
         ball.translate(leftGoal.getXPosition() + leftGoal.getWidth() / 2 - ballCenter.getX(), leftGoal.getYPosition() + 20 - ballCenter.getY());
 
-        match.update();
+        match.update(Match.FRAME_SECONDS);
 
         assertTrue(match.isFinished());
         assertEquals(Match.RIGHT_SIDE, match.getWinner());

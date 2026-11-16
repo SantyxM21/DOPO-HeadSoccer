@@ -36,7 +36,7 @@ public class TimeMatchTest {
         assertEquals(60, match.getSecondsLeft());
         assertEquals("1:00", match.textUnderScore());
 
-        for (int i = 0; i < Match.FPS * 15 + 1; i++) match.update();
+        for (int i = 0; i < Match.FPS * 15 + 1; i++) match.update(Match.FRAME_SECONDS);
         assertEquals(45, match.getSecondsLeft());
         assertEquals("0:45", match.textUnderScore());
     }
@@ -50,7 +50,7 @@ public class TimeMatchTest {
         match.addHuman(Match.LEFT_SIDE, "Corea del Sur", p1);
         match.addHuman(Match.RIGHT_SIDE, "Camerún", p2);
         
-        for (int i = 0; i < Match.FPS * 60 + 5; i++) match.update();
+        for (int i = 0; i < Match.FPS * 60 + 5; i++) match.update(Match.FRAME_SECONDS);
 
         assertTrue(match.isSuddenDeath());
         assertEquals("MUERTE SUBITA", match.textUnderScore());

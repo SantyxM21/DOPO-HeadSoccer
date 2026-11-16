@@ -12,6 +12,7 @@ public abstract class Match {
     public static final int LOSER_POINTS = 25;
 
     public static final int FPS = 85;                      // veces por segundo que se llama a update()
+    public static final double FRAME_SECONDS = 1.0 / FPS;  // duracion ideal de un frame
 
 
     private static final double PLAYER_BOUNCING = 0.3; //Rango entre 0 y 1
@@ -23,8 +24,7 @@ public abstract class Match {
 
     private boolean isFinished;
     private int winnerSide = 0;
-    private int fps = 0;
-    private int matchTimeSec = 0;
+    private double elapsedSeconds = 0;                     // tiempo real jugado 
 
     public Match(String condition, Dimension resolution) throws DopoSoccerException{
         setCondition(condition);
@@ -62,11 +62,11 @@ public abstract class Match {
         return field.getGroundY() - playerSize();
     }
 
-    public void update(){
+    public void update(double seconds){
         if (isFinished) return;
 
-        leftPlayer.update();
-        rightPlayer.update();
+        leftPlayer.update(seconds);
+        rightPlayer.update(seconds);
         
         leftPlayer.applyGravity();
         rightPlayer.applyGravity();
@@ -81,7 +81,7 @@ public abstract class Match {
         rightPlayer.endFrame();
 
         checkGoal();
-        updateTime();
+        updateTime(seconds);
         checkFinished();        // despues de updateTime para que TimeMatch vea el tiempo de este frame
     }
 
@@ -202,15 +202,11 @@ public abstract class Match {
     }
 
     public int getTime(){
-        return matchTimeSec;
+        return (int) elapsedSeconds;
     }
 
-    public void updateTime(){
-        fps++;
-        if(fps >= FPS){
-            fps = 0;
-            matchTimeSec++;
-        }
+    public void updateTime(double seconds){
+        elapsedSeconds += seconds;
     }
 
     private void touchBall(Player player){

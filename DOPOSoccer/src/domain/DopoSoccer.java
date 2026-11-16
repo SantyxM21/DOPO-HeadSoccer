@@ -36,8 +36,8 @@ public class DopoSoccer {
         else if (type == GOALS_MODE) match = new GoalsMatch(conditions, resolution);
     }
 
-    public void update(){
-        match.update();
+    public void update(double seconds){
+        match.update(seconds);
     }
 
     public int getTime(){

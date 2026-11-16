@@ -20,6 +20,8 @@ public class GamePanel extends JPanel{
     private DopoSoccer game;
     private KeyHandler keyH = new KeyHandler();
     private Timer gameLoop;
+    private long lastFrame = 0;                          
+    private static final double MAX_FRAME_SECONDS = 0.1; 
     private MainPanel main;
     private String leftCountry;
     private String rightCountry;
@@ -102,6 +104,7 @@ public class GamePanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e){
                 pauseDialog.dispose();
+                lastFrame = 0;                                    
                 gameLoop.start();
                 requestFocusInWindow();                             // para que el teclado vuelva a mover a los jugadores
             }
@@ -123,6 +126,13 @@ public class GamePanel extends JPanel{
                 MainPanel.funcUnderConstruction("Guardar partida: la funcionalidad se encuentra en construccion");
             }
         });
+    }
+
+    private double elapsedSeconds(){
+        long now = System.nanoTime();
+        double seconds = (lastFrame == 0) ? Match.FRAME_SECONDS : (now - lastFrame) / 1e9;
+        lastFrame = now;
+        return Math.min(seconds, MAX_FRAME_SECONDS);
     }
 
     /* Detiene el game loop toca llamar antes de descartar este panel */
@@ -149,7 +159,7 @@ public class GamePanel extends JPanel{
         if(keyH.jumpPressedR) game.jump(Match.RIGHT_SIDE);
         if(direction2 != 0) game.move(Match.RIGHT_SIDE, direction2);
 
-        game.update();
+        game.update(elapsedSeconds());
         updateScoreboard();
         repaint();
 
@@ -373,6 +383,7 @@ public class GamePanel extends JPanel{
     public void setCountries(String leftCountry, String rightCountry){
         this.leftCountry = leftCountry;
         this.rightCountry = rightCountry;
+        this.lastFrame = 0;                                         // partido nuevo: el reloj empieza a medir desde cero
         leftFlag.setIcon(DopoSoccerGUI.flagIcon(leftCountry, flagHeight()));       
         rightFlag.setIcon(DopoSoccerGUI.flagIcon(rightCountry, flagHeight()));
 
