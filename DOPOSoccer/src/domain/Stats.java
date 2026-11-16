@@ -19,18 +19,18 @@ public class Stats {
         Arrays.fill(STATS_LEVES, MIN_LEVEL);
     }
 
-    public int getLevel(String stat) throws DopoSoccerException{
+    public int getLevel(String stat){
         switch(stat.toLowerCase().trim()){
             case "speed":
-                return speed;
-            case "kick":
-                return kick;
+                return STATS_LEVES[0];
             case "jump":
-                return jump;
+                return STATS_LEVES[1];
+            case "kick":
+                return STATS_LEVES[2];
             case "survival":
-                return survival;
+                return STATS_LEVES[3];
             default:
-                throw new DopoSoccerException(DopoSoccerException.INVALIDAD_STAT);
+                return 1;
         }
     }
 

@@ -39,10 +39,13 @@ public abstract class Match {
         if(side == LEFT_SIDE) {
             leftPlayer = new Human(character, startX(side), startY(), field);
             leftPlayer.setProfile(profile);
+            leftPlayer.startStats();
+            
         }
         else if (side == RIGHT_SIDE){
             rightPlayer = new Human(character, startX(side), startY(), field);
             rightPlayer.setProfile(profile);
+            rightPlayer.startStats();
         }
         else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
     }
@@ -60,6 +63,9 @@ public abstract class Match {
     public void update(){
         if (isFinished) return;
 
+        leftPlayer.update();
+        rightPlayer.update();
+        
         leftPlayer.applyGravity();
         rightPlayer.applyGravity();
         ball.move();
@@ -112,6 +118,9 @@ public abstract class Match {
         if (length >= minDistance) return; //No existe colision
 
         else{ //Si existe colision
+            touchBall(player);
+
+
             Vector2D collisionDirection;
             if(length == 0) collisionDirection = new Vector2D(0, -1); //evitar division entre 0.  -1 para moverse hacia arriba
             else collisionDirection = Vector2D.scalar(distance, 1 / length);
@@ -140,8 +149,12 @@ public abstract class Match {
         else if(field.isGoal(RIGHT_SIDE, ballCenter.getX(), ballCenter.getY())) goalScored(leftPlayer);
     }
 
-    private void goalScored(Player player){
-        player.scoredGoal();
+    private void goalScored(Player scoredBy){
+        Player receiver;
+        if (scoredBy == leftPlayer) receiver = rightPlayer;
+        else receiver = leftPlayer;
+        scoredBy.scoredGoal();
+        receiver.powerBarReceivedGoal();
         kickOff();
     }
 
@@ -197,4 +210,40 @@ public abstract class Match {
             matchTimeSec++;
         }
     }
+
+    private void touchBall(Player player){
+        if (ball.getChargedPower() == null){
+            //si toca el balon con aura hace el tiro de su poder
+            if (player.hasAura()){
+                int direction;
+                if (player == leftPlayer) direction = 1;
+                else direction = -1;
+
+                player.powerShoot(ball, direction);
+            }
+        } else if (ball.getChargedBy() != player){
+            powerPunch(player); //golpear al rival
+        }
+    }
+
+    private void powerPunch(Player victim){
+        Player shooter = ball.getChargedBy();
+        Power power = ball.getChargedPower();
+        ball.clearCharge();
+
+        double kickMultiplier = 1.0;
+        try {
+            kickMultiplier = shooter.getKickMultiplier();
+        } catch (DopoSoccerException e) {}
+
+        victim.takeDamage(power.getShootDamage() * kickMultiplier);
+
+        int pushDirection;
+        if (victim == leftPlayer) pushDirection = -1;
+        else pushDirection = 1;
+
+        victim.receiveEffect(power.getEffect(), pushDirection); //empuja hacia su arco
+    }
+
+
 }

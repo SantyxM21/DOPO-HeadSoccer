@@ -7,10 +7,11 @@ public abstract class Power {
     protected double shootDamage; 
     protected double durationEfect;
 
-    protected Power(String name, double shootDamage, double durationEfect){
+    protected Power(String name, double shootDamage, double durationEfect, Effect effect){
         this.name = name;
         this.shootDamage = shootDamage;
         this.durationEfect = durationEfect;
+        this.effect = effect;
     }
 
     public void applyPower() throws DopoSoccerException{
@@ -27,5 +28,9 @@ public abstract class Power {
 
     public double getDurationEffect(){
         return durationEfect;
+    }
+
+    public Effect getEffect(){
+        return effect;
     }
 }

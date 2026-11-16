@@ -12,6 +12,9 @@ public abstract class Player extends Entity {
     public static final double X_KICK_SPEED = 8;
     public static final double Y_KICK_SPEED = 8;
 
+    public static final double MAX_POWER_BAR = 100.0;
+    public static final double POWER_BAR_CHARGE_SECONDS = 10.0;
+
     protected final Field field;
     private final int size;
     private final double speed;
@@ -29,8 +32,10 @@ public abstract class Player extends Entity {
     protected Effect effect;
 
     protected int goals;
-    protected double health;
+    protected double survival;
     protected double powerBar;
+
+    protected boolean aura;
 
 
     public Player(String character, double x, double y, Field field) throws DopoSoccerException{
@@ -49,7 +54,8 @@ public abstract class Player extends Entity {
         this.yKickSpeed = field.scale(Y_KICK_SPEED);
     }
 
-    public void move(int direction) {
+    public void move(int direction){
+        if (isBlocked()) return;
         xPosition += direction * speed;
         xVelocity = direction * speed;
 
@@ -59,21 +65,29 @@ public abstract class Player extends Entity {
     }
 
     public void kick(Ball ball, int direction){
+        if (isBlocked()) return;
         Vector2D distance = Vector2D.subtract(ball.center(), center());
 
         boolean isClose = Vector2D.length(distance) <= (size + ball.getDiameter()) / 2.0 + kickRange; //Si esta cerca al balon, tomando su centro como referencia
         boolean isInFront = direction * distance.getX() >= 0; //Si esta hacia donde patea el jugador
 
-        if (isClose && isInFront) ball.setVelocity(new Vector2D(direction * xKickSpeed, -yKickSpeed));
+        if (isClose && isInFront){
+            if (aura) powerShoot(ball, direction);
+            else{
+                ball.clearCharge(); // evita que quede un balón cargado "flotando" si el rival lo patea
+                ball.setVelocity(new Vector2D(direction * xKickSpeed, -yKickSpeed));
+            }
+        }
     }
 
-    public void jump() {
+    public void jump(){
+        if (isBlocked()) return;
         if (yPosition == GROUND_Y){     // Condición para evitar que salte en el aire
             yVelocity = jumpForce;
         }
     }
 
-    public void applyGravity() {
+    public void applyGravity(){
         yPosition += yVelocity;
         yVelocity += gravity;
 
@@ -83,14 +97,16 @@ public abstract class Player extends Entity {
         }
     }
 
-    public double getKickMultiplier(){
-        return 0.0;
-        //return 1 + 0.10 * (kickStat - 1);
+    public double getKickMultiplier() throws DopoSoccerException{
+        if (profile == null) throw new DopoSoccerException(DopoSoccerException.NOT_DATA);;
+        int kickStat = profile.getStatLevel("kick");
+        return 1.0 + 0.10 * (kickStat - 1);
     }
 
-    public double getMaxHp(){
-        return 0.0;
-        //return  100 * (1 + 0.10 * (survivalStat - 1));
+    public double getMaxSurvival() throws DopoSoccerException{
+        if (profile == null) throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+        int survival = profile.getStatLevel("survival");
+        return 100.0 * (1.0 + 0.10 * (survival - 1));
     } 
 
     public Character_ getSelectedCharacter(){
@@ -101,15 +117,15 @@ public abstract class Player extends Entity {
         return goals;
     }
 
-    public double getHp(){
-        return health;
+    public double getSurvival(){
+        return survival;
     }
 
     public double getPowerBar(){
         return powerBar;
     }
 
-    protected  Character_ createCharacter (String country) throws DopoSoccerException{
+    protected  Character_ createCharacter(String country) throws DopoSoccerException{
         switch (country) {
             case "Corea":
                 return new Corea();
@@ -161,5 +177,70 @@ public abstract class Player extends Entity {
         yVelocity = 0;
     }
 
+    public void powerActivation(){
+        if (powerBar >= MAX_POWER_BAR && !aura && selectedCharacter.getPower() != null) {
+            aura = true;
+            powerBar = 0.0;
+        }
+    }
 
+    public void startStats(){
+        if (profile != null){
+            int survivalStat = profile.getStatLevel("survival");
+            this.survival = 100 * (1.0 + 0.1 * (survivalStat - 1));
+        } else{
+            this.survival = 100.0;
+        }
+        this.powerBar = 0.0;
+        this.goals = 0;
+    }
+
+    //Llamada cada frame
+    public void update(){
+        double secondsPerFrame = 1.0 / 60;
+        if (effect != null){
+            effect.tick(this);
+            effect.update(secondsPerFrame);
+            if (effect.isFinished()) effect = null;
+        }
+        powerBar = Math.min(MAX_POWER_BAR, powerBar + MAX_POWER_BAR / POWER_BAR_CHARGE_SECONDS * secondsPerFrame); //rapidez de carga 
+    }
+
+    //Hacer el tiro especial
+    public void powerShoot(Ball ball, int direction){
+        ball.chargePower(selectedCharacter.getPower(), this, direction);
+        aura = false; 
+    }
+
+    public void powerBarReceivedGoal(){
+        powerBar = Math.min(MAX_POWER_BAR, powerBar + MAX_POWER_BAR / 4);  //+1/4
+    }
+
+    public void takeDamage(double damage){
+        survival = Math.max(0, survival - damage);
+    }
+
+    public void receiveEffect(Effect newEffect, int direction){
+        effect = newEffect;
+        newEffect.applyEffect(this, direction);
+    }
+
+    public void pushHorizontal(double DistancePushedPerFrame){
+        double scaledDistancePushed = field.scale(DistancePushedPerFrame);
+        double rightmostAllowedX = field.getWidth() - size;
+        xPosition = Math.max(0, Math.min(xPosition + scaledDistancePushed, rightmostAllowedX));
+        xVelocity = scaledDistancePushed;
+    }
+
+    private boolean isBlocked(){
+        return effect!= null && effect.blockPlayer();
+    }
+
+    public boolean hasAura(){
+        return aura;
+    }
+
+    public boolean hasEffect(){
+        return effect != null;
+    }
 }

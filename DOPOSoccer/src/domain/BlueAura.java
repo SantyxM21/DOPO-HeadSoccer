@@ -3,7 +3,7 @@ package domain;
 public class BlueAura extends Power {
     
     public BlueAura(){
-        super("Aura Azul", 40, 1.5);
+        super("Aura Azul", 40, 1.5, new PushEffect());
     }
 
     @Override 

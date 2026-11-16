@@ -167,4 +167,24 @@ public class DopoSoccer {
     public void endGame(){
         match = null;
     }
+
+    public void activatePower(int player){
+        if(!match.isFinished()) match.getPlayer(player).powerActivation();
+    }
+
+    public double getPowerBar(int side){
+        return match.getPlayer(side).getPowerBar();
+    }
+
+    public double getSurvival(int side){
+        return match.getPlayer(side).getSurvival();
+    }
+
+    public boolean hasAura(int side){
+        return match.getPlayer(side).hasAura();
+    }
+
+    public boolean hasEffect(int side){
+        return match.getPlayer(side).hasEffect();
+    }
 }

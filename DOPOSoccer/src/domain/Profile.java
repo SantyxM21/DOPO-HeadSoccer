@@ -32,4 +32,8 @@ public class Profile {
     public String getName(){
         return name;
     }
+
+    public int getStatLevel(String stat){
+        return stats.getLevel(stat);
+    }
 }

@@ -7,6 +7,8 @@ public class Ball extends Entity{
     public static final double AIR_FRICTION = 1;
     public static final double FLOOR_FRICTION = 0.70;
 
+    public static final double POWER_SPEED = 14;
+
     private Power chargedPower;
     private Player chargedBy;
 
@@ -24,6 +26,7 @@ public class Ball extends Entity{
     }
 
     public void kickOff(){
+        clearCharge();
         xPosition = field.getWidth() / 2 - diameter / 2;
         yPosition = field.getHeight() / 4;
         velocity = new Vector2D(0, 0); //Valores Temporales
@@ -41,9 +44,11 @@ public class Ball extends Entity{
         if(xPosition + diameter > fieldWidth){
             xPosition = fieldWidth - diameter;
             velocity.setX(velocity.getX() * -WALL_FRICTION);
+            clearCharge(); 
         }else if(xPosition < 0){
             xPosition = 0;
             velocity.setX(velocity.getX() * -WALL_FRICTION);
+            clearCharge(); 
         }else{
             velocity.setX(velocity.getX() * AIR_FRICTION);
 
@@ -51,14 +56,14 @@ public class Ball extends Entity{
         }
 
 
-        if (yPosition + diameter > fieldGroundY) {
+        if (yPosition + diameter > fieldGroundY){
             yPosition = fieldGroundY - diameter;  
                 if (Math.abs(velocity.getY()) < 1) velocity.setY(0); 
                 else velocity.setY(velocity.getY() * -FLOOR_FRICTION);
         } else if (yPosition < 0) {
             yPosition = 0;  
             velocity.setY(-velocity.getY());                                
-        } else {
+        } else if(chargedPower == null){
             velocity.setY(velocity.getY() + gravity);
         }
         onCrossbarBouncing(previousBottomBallPosition); 
@@ -117,6 +122,17 @@ public class Ball extends Entity{
 
     public Player getChargedBy(){
         return chargedBy;
+    }
+
+    public void chargePower(Power power, Player chargedBy, int direction){
+        chargedPower = power;
+        this.chargedBy = chargedBy;
+        velocity = new Vector2D(direction * field.scale(POWER_SPEED), 0);
+    }
+
+    public void clearCharge(){
+        chargedPower = null;
+        chargedBy = null;
     }
     
 }
