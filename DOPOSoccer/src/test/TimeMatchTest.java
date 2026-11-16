@@ -33,7 +33,7 @@ public class TimeMatchTest {
         assertEquals(60, match.getSecondsLeft());
         assertEquals("1:00", match.textUnderScore());
 
-        match.advanceTime(15.0);
+        playSeconds(match, 15);
         assertEquals(45, match.getSecondsLeft());
         assertEquals("0:45", match.textUnderScore());
     }
@@ -44,10 +44,11 @@ public class TimeMatchTest {
         
         Profile p1 = new Profile("P1");
         Profile p2 = new Profile("P2");
-        match.addHuman(Match.LEFT_SIDE, "Corea", p1);
-        match.addHuman(Match.RIGHT_SIDE, "Camerun", p2);
-        
-        match.advanceTime(60.0);
+        match.addHuman(Match.LEFT_SIDE, DopoSoccer.COUNTRIES[0], p1);
+        match.addHuman(Match.RIGHT_SIDE, DopoSoccer.COUNTRIES[1], p2);
+
+        playSeconds(match, 60);
+        match.update();
 
         assertTrue(match.isSuddenDeath());
         assertEquals("MUERTE SUBITA", match.textUnderScore());
