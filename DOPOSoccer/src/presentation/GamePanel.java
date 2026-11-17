@@ -144,20 +144,20 @@ public class GamePanel extends JPanel{
     private void update(){
         if(!game.hasMatch() || game.isFinished()) return;    
 
-        if(keyH.kickPressed) game.kick(Match.LEFT_SIDE);                 
+        if(keyH.kickPressed) game.kick(Match.LEFT_PLAYER);                 
         int direction = 0;
         // Se usa -= y += en caso de qque ambas teclas se presionen al tiempo se "cancelen"
         if(keyH.leftPressed) direction -= 1;
         if(keyH.rightPressed) direction += 1;
-        if(keyH.jumpPressed) game.jump(Match.LEFT_SIDE);
-        if(direction != 0) game.move(Match.LEFT_SIDE, direction);
+        if(keyH.jumpPressed) game.jump(Match.LEFT_PLAYER);
+        if(direction != 0) game.move(Match.LEFT_PLAYER, direction);
 
-        if(keyH.kickPressedR) game.kick(Match.RIGHT_SIDE);   
+        if(keyH.kickPressedR) game.kick(Match.RIGHT_PLAYER);   
         int direction2 = 0;
         if(keyH.leftPressedR) direction2 -= 1;
         if(keyH.rightPressedR) direction2 += 1;
-        if(keyH.jumpPressedR) game.jump(Match.RIGHT_SIDE);
-        if(direction2 != 0) game.move(Match.RIGHT_SIDE, direction2);
+        if(keyH.jumpPressedR) game.jump(Match.RIGHT_PLAYER);
+        if(direction2 != 0) game.move(Match.RIGHT_PLAYER, direction2);
 
         game.update(elapsedSeconds());
         updateScoreboard();
@@ -169,8 +169,8 @@ public class GamePanel extends JPanel{
     /* Popup que anuncia el ganador, el marcador final y los puntos ganados por cada jugador */
     private void showWinnerPopup(){
         int winner = game.getWinner();
-        int loser = (winner == Match.LEFT_SIDE) ? Match.RIGHT_SIDE : Match.LEFT_SIDE;
-        String winnerCountry = (winner == Match.LEFT_SIDE) ? leftCountry : rightCountry;
+        int loser = (winner == Match.LEFT_PLAYER) ? Match.RIGHT_PLAYER : Match.LEFT_PLAYER;
+        String winnerCountry = (winner == Match.LEFT_PLAYER) ? leftCountry : rightCountry;
 
         JDialog dialog = createPopup("Fin del partido", 1.6, 1.4);
         winnerDialog = dialog;
@@ -181,7 +181,7 @@ public class GamePanel extends JPanel{
 
         JLabel flag = new JLabel(DopoSoccerGUI.flagIcon(winnerCountry, h / 8), SwingConstants.CENTER);
         JLabel name = popupLabel(game.getPlayerName(winner) + " - " + winnerCountry, Font.BOLD, h / 22);
-        JLabel score = popupLabel(game.getPlayerGoals(Match.LEFT_SIDE) + "  -  " + game.getPlayerGoals(Match.RIGHT_SIDE), Font.BOLD, h / 14);
+        JLabel score = popupLabel(game.getPlayerGoals(Match.LEFT_PLAYER) + "  -  " + game.getPlayerGoals(Match.RIGHT_PLAYER), Font.BOLD, h / 14);
         JLabel winnerPoints = popupLabel(pointsText(winner), Font.PLAIN, h / 28);
         JLabel loserPoints = popupLabel(pointsText(loser), Font.PLAIN, h / 28);
 
@@ -263,8 +263,8 @@ public class GamePanel extends JPanel{
         drawBackground(g);
         if(!game.hasMatch()) return;   
         drawField(g);                             // Primero el fondo para que quede detras de todo
-        drawPlayer(g, 1);
-        drawPlayer(g, 2);
+        drawPlayer(g, Match.LEFT_PLAYER);
+        drawPlayer(g, Match.RIGHT_PLAYER);
         drawBall(g);
     }
 
@@ -286,9 +286,7 @@ public class GamePanel extends JPanel{
 
         // Textos
         leftName.setFont(textFont);
-        leftName.setText(game.getPlayerName(1));
         rightName.setFont(textFont);
-        rightName.setText(game.getPlayerName(2));
         leftGoals.setFont(bigFont);
         rightGoals.setFont(bigFont);
         timeLabel.setFont(bigFont);
@@ -376,8 +374,8 @@ public class GamePanel extends JPanel{
             int time = game.getTime();                         // tiempo transcurrido
             timeLabel.setText(String.format("%d:%02d", time / 60, time % 60));
         }
-        leftGoals.setText(String.valueOf(game.getPlayerGoals(1)));
-        rightGoals.setText(String.valueOf(game.getPlayerGoals(2)));
+        leftGoals.setText(String.valueOf(game.getPlayerGoals(Match.LEFT_PLAYER)));
+        rightGoals.setText(String.valueOf(game.getPlayerGoals(Match.RIGHT_PLAYER)));
     }
 
     public void setCountries(String leftCountry, String rightCountry){
@@ -386,6 +384,8 @@ public class GamePanel extends JPanel{
         this.lastFrame = 0;                                         // partido nuevo: el reloj empieza a medir desde cero
         leftFlag.setIcon(DopoSoccerGUI.flagIcon(leftCountry, flagHeight()));       
         rightFlag.setIcon(DopoSoccerGUI.flagIcon(rightCountry, flagHeight()));
+        leftName.setText(game.getPlayerName(Match.LEFT_PLAYER));
+        rightName.setText(game.getPlayerName(Match.RIGHT_PLAYER));
 
         leftPlayerImage = DopoSoccerGUI.loadImage("/resources/Jugador " + leftCountry + ".png");
         rightPlayerImage = DopoSoccerGUI.loadImage("/resources/Jugador " + rightCountry + ".png");
@@ -404,9 +404,9 @@ public class GamePanel extends JPanel{
         int size = game.getPlayerSize(player);
         int x = game.getPlayerX(player);
         int y = game.getPlayerY(player);
-        Image playerImage = (player == Match.LEFT_SIDE) ? leftPlayerImage : rightPlayerImage;
+        Image playerImage = (player == Match.LEFT_PLAYER) ? leftPlayerImage : rightPlayerImage;
 
-        if (playerImage != null && player == Match.LEFT_SIDE) {
+        if (playerImage != null && player == Match.LEFT_PLAYER) {
             // Volteada la imagen horizontalmente
             int imgW = playerImage.getWidth(this);
             int imgH = playerImage.getHeight(this);
@@ -421,7 +421,7 @@ public class GamePanel extends JPanel{
 
     public void drawField(Graphics g){
         g.setColor(Color.WHITE);
-        for(int side = Match.LEFT_SIDE; side <= Match.RIGHT_SIDE; side++){
+        for(int side = Match.LEFT_PLAYER; side <= Match.RIGHT_PLAYER; side++){
             g.drawRect(game.getGoalFrameX(side), game.getGoalFrameY(), game.getGoalFrameWidth(), game.getGoalFrameHeight());
         }
     }

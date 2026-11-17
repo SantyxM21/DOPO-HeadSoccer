@@ -71,7 +71,7 @@ public class Ball extends Entity{
 
     private void onCrossbarBouncing(double previousBottomBallPosition){
         double bottomBallPosition = yPosition + diameter;
-        for (int i = Match.LEFT_SIDE; i <= Match.RIGHT_SIDE; i++){
+        for (int i = Match.LEFT_PLAYER; i <= Match.RIGHT_PLAYER; i++){
             GoalFrame goal = field.getGoalFrame(i);
             double top = goal.getYPosition(); //parte alta del crossbar
 

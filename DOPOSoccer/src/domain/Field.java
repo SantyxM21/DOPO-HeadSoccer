@@ -48,7 +48,7 @@ public class Field {
     }
 
     public GoalFrame getGoalFrame(int side){
-        if (side == Match.LEFT_SIDE) return leftGoalFrame;
+        if (side == Match.LEFT_PLAYER) return leftGoalFrame;
         else return rightGoalFrame;
     }
 

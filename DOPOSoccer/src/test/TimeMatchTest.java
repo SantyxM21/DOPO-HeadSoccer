@@ -30,8 +30,8 @@ public class TimeMatchTest {
     @Test
     public void shouldAdvanceTimeAndFormatCorrectly() throws DopoSoccerException {
         TimeMatch match = new TimeMatch("1", new Dimension(800, 600)); 
-        match.addHuman(Match.LEFT_SIDE, "Corea del Sur", new Profile("p1"));
-        match.addHuman(Match.RIGHT_SIDE, "Camerún", new Profile("p2"));
+        match.addHuman(Match.LEFT_PLAYER, "Corea del Sur", new Profile("p1"));
+        match.addHuman(Match.RIGHT_PLAYER, "Camerún", new Profile("p2"));
 
         assertEquals(60, match.getSecondsLeft());
         assertEquals("1:00", match.textUnderScore());
@@ -47,8 +47,8 @@ public class TimeMatchTest {
         
         Profile p1 = new Profile("P1");
         Profile p2 = new Profile("P2");
-        match.addHuman(Match.LEFT_SIDE, "Corea del Sur", p1);
-        match.addHuman(Match.RIGHT_SIDE, "Camerún", p2);
+        match.addHuman(Match.LEFT_PLAYER, "Corea del Sur", p1);
+        match.addHuman(Match.RIGHT_PLAYER, "Camerún", p2);
         
         for (int i = 0; i < Match.FPS * 60 + 5; i++) match.update(Match.FRAME_SECONDS);
 

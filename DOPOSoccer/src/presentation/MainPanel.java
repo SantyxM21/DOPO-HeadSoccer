@@ -2,6 +2,7 @@ package presentation;
 
 import domain.DopoSoccer;
 import domain.DopoSoccerException;
+import domain.Match;
 import java.awt.*;
 import javax.swing.*;
 
@@ -101,13 +102,13 @@ public class MainPanel extends JPanel{
         showPage("Home menu");
     }
 
-    public boolean startGame(String playerOne, String playerTwo) {
+    public boolean startGame(String leftCountry, String rightCountry) {
         if(DopoSoccer.PVSP_MODE == playersMode){
             try{
                 game.newGame(matchMode, String.valueOf(confingMode), GAME_SIZE);   // el dominio recibe la condicion como String y la valida
-                game.addHuman(1, playerOne, game.getProfile(1));
-                game.addHuman(2, playerTwo, game.getProfile(2));
-                gamePage.setCountries(playerOne, playerTwo);
+                game.addHuman(Match.LEFT_PLAYER, leftCountry, game.getProfile(Match.LEFT_PLAYER));
+                game.addHuman(Match.RIGHT_PLAYER, rightCountry, game.getProfile(Match.RIGHT_PLAYER));
+                gamePage.setCountries(leftCountry, rightCountry);
                 return true;
             } catch (DopoSoccerException e){
                 JOptionPane.showMessageDialog(null, e.getMessage());
@@ -146,16 +147,23 @@ public class MainPanel extends JPanel{
         this.confingMode = configuration;
     }
 
-    public void updateInfoPlayer(int player, String shownChar){
-        String playerName = game.getPlayerName(player);
-        int playerPoints = game.getPlayerPoints(player);
-        int[] playerStats = game.getPlayerStats(player);
+    public void updateInfoPlayer(int side, String shownChar){
+        String playerName = game.getPlayerName(side);
+        int playerPoints = game.getPlayerPoints(side);
+        int[] playerStats = game.getPlayerStats(side);
 
-
-        charactersPage.updateInfo(playerName, playerPoints, playerStats, player, shownChar);
+        charactersPage.updateInfo(playerName, playerPoints, playerStats, side, shownChar);
     }
 
-    public void upgradeStat(int player, String stat){
-        game.upgradeStats(player, stat);
+    public void upgradeStat(int side, String stat){
+        game.upgradeStats(side, stat);
+    }
+
+    public String getPlayerName(int side){
+        return game.getPlayerName(side);
+    }
+
+    public void swapProfiles(){
+        game.swapProfiles();
     }
 }

@@ -19,14 +19,14 @@ public class DopoSoccer {
 
     public static final String[] COUNTRIES = {"Corea del Sur", "Camerún", "Nigeria", "Estados Unidos"};
 
-    private Profile profile1;
-    private Profile profile2;
+    private Profile leftProfile;
+    private Profile rightProfile;
     private Match match;
     private int matchType;
 
     public DopoSoccer(){
-        this.profile1 = new Profile("1");
-        this.profile2 = new Profile("2");
+        this.leftProfile = new Profile("1");
+        this.rightProfile = new Profile("2");
     }
 
     // ==================== CICLO DE LA PARTIDA ====================
@@ -83,8 +83,14 @@ public class DopoSoccer {
     // ==================== PERFILES ====================
 
     public Profile getProfile(int side){
-        if (side == Match.LEFT_SIDE) return profile1;
-        else return profile2;
+        if (side == Match.LEFT_PLAYER) return leftProfile;
+        else return rightProfile;
+    }
+
+    public void swapProfiles(){
+        Profile temp = leftProfile;
+        leftProfile = rightProfile;
+        rightProfile = temp;
     }
 
     public String getPlayerName(int side){
@@ -196,14 +202,14 @@ public class DopoSoccer {
     }
 
     public int getGoalFrameY(){
-        return match.getField().getGoalFrame(Match.LEFT_SIDE).getYPosition();
+        return match.getField().getGoalFrame(Match.LEFT_PLAYER).getYPosition();
     }
 
     public int getGoalFrameWidth(){
-        return match.getField().getGoalFrame(Match.LEFT_SIDE).getWidth();
+        return match.getField().getGoalFrame(Match.LEFT_PLAYER).getWidth();
     }
 
     public int getGoalFrameHeight(){
-        return match.getField().getGoalFrame(Match.LEFT_SIDE).getHeight();
+        return match.getField().getGoalFrame(Match.LEFT_PLAYER).getHeight();
     }
 }

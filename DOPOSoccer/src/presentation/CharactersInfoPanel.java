@@ -24,7 +24,7 @@ public class CharactersInfoPanel extends JPanel{
     private final CustomButton[] plusBt = new CustomButton[STATS_NAMES.length];
     private CustomButton powerButton;
 
-    private int selectedInfoPlayer; //1 left 2 right
+    private int selectedInfoPlayer;
 
 
     public CharactersInfoPanel(){
@@ -194,9 +194,9 @@ public class CharactersInfoPanel extends JPanel{
         characterImage.setIcon(DopoSoccerGUI.flagIcon(character, GAME_SIZE.height / 5));
     }
 
-    public void updateInfo(String name, int points, int[] stats, int card, String shownChar){ 
+    public void updateInfo(String name, int points, int[] stats, int side, String shownChar){
         
-        this.selectedInfoPlayer = card;
+        this.selectedInfoPlayer = side;
         this.character = shownChar;
         playerPoints.setText(name+" : "+points);
 

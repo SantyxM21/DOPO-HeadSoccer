@@ -28,11 +28,11 @@ public class FieldTest {
 
     @Test
     public void shouldDetectGoalConditionsCorrectly() {
-        GoalFrame leftGoal = field.getGoalFrame(Match.LEFT_SIDE);
+        GoalFrame leftGoal = field.getGoalFrame(Match.LEFT_PLAYER);
         double goalX = leftGoal.getXPosition();
         double goalY = leftGoal.getYPosition();
 
-        assertTrue(field.isGoal(Match.LEFT_SIDE, goalX, goalY + 10));
-        assertFalse(field.isGoal(Match.LEFT_SIDE, -50, goalY));
+        assertTrue(field.isGoal(Match.LEFT_PLAYER, goalX, goalY + 10));
+        assertFalse(field.isGoal(Match.LEFT_PLAYER, -50, goalY));
     }
 }

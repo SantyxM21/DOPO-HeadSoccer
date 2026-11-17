@@ -31,10 +31,10 @@ public class GoalsMatchTest {
     @Test
     public void shouldFinishWhenPlayerReachesGoalsToWin() throws DopoSoccerException {
         GoalsMatch match = new GoalsMatch("1", new Dimension(800, 600));
-        match.addHuman(Match.LEFT_SIDE, "Corea del Sur", new Profile("1"));
-        match.addHuman(Match.RIGHT_SIDE, "Camerún", new Profile("2"));
+        match.addHuman(Match.LEFT_PLAYER, "Corea del Sur", new Profile("1"));
+        match.addHuman(Match.RIGHT_PLAYER, "Camerún", new Profile("2"));
 
-        GoalFrame leftGoal = match.getField().getGoalFrame(Match.LEFT_SIDE);
+        GoalFrame leftGoal = match.getField().getGoalFrame(Match.LEFT_PLAYER);
         Ball ball = match.getBall();
         Vector2D ballCenter = ball.center();
         ball.translate(leftGoal.getXPosition() + leftGoal.getWidth() / 2 - ballCenter.getX(), leftGoal.getYPosition() + 20 - ballCenter.getY());
@@ -42,7 +42,7 @@ public class GoalsMatchTest {
         match.update(Match.FRAME_SECONDS);
 
         assertTrue(match.isFinished());
-        assertEquals(Match.RIGHT_SIDE, match.getWinner());
-        assertEquals(Match.WINNER_POINTS, match.getPointsEarned(Match.RIGHT_SIDE));
+        assertEquals(Match.RIGHT_PLAYER, match.getWinner());
+        assertEquals(Match.WINNER_POINTS, match.getPointsEarned(Match.RIGHT_PLAYER));
     }
 }

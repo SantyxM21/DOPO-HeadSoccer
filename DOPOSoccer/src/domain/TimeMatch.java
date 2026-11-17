@@ -25,12 +25,12 @@ public class TimeMatch extends Match{
     protected void checkFinished(){
         if (getSecondsLeft() > 0) return;
 
-        int leftGoals = getPlayer(LEFT_SIDE).getGoals();
-        int rightGoals = getPlayer(RIGHT_SIDE).getGoals();
+        int leftGoals = getPlayer(LEFT_PLAYER).getGoals();
+        int rightGoals = getPlayer(RIGHT_PLAYER).getGoals();
 
         //Se termina con ganador, muerte subita no
-        if (leftGoals > rightGoals) finish(LEFT_SIDE);
-        else if (rightGoals > leftGoals) finish(RIGHT_SIDE);
+        if (leftGoals > rightGoals) finish(LEFT_PLAYER);
+        else if (rightGoals > leftGoals) finish(RIGHT_PLAYER);
     }
 
     public int getSecondsLeft(){

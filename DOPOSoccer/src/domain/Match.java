@@ -3,8 +3,8 @@ package domain;
 import java.awt.Dimension;
 
 public abstract class Match {
-    public static final int LEFT_SIDE = 1;
-    public static final int RIGHT_SIDE = 2;
+    public static final int LEFT_PLAYER = 1;
+    public static final int RIGHT_PLAYER = 2;
     private static final double START_X_RATIO = 0.2;       
     public final Dimension RESOLUTION;
 
@@ -38,14 +38,14 @@ public abstract class Match {
     public abstract void setCondition(String condition) throws DopoSoccerException;
 
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
-        if(side == LEFT_SIDE) leftPlayer = new Human(character, startX(side), startY(), field, profile);
-        else if (side == RIGHT_SIDE) rightPlayer = new Human(character, startX(side), startY(), field, profile);
+        if(side == LEFT_PLAYER) leftPlayer = new Human(character, startX(side), startY(), field, profile);
+        else if (side == RIGHT_PLAYER) rightPlayer = new Human(character, startX(side), startY(), field, profile);
         else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
     }
 
     private double startX(int side){
         double margin = field.getWidth() * START_X_RATIO;
-        if(side == LEFT_SIDE) return margin;
+        if(side == LEFT_PLAYER) return margin;
         return field.getWidth() - margin - playerSize();
     }
 
@@ -79,14 +79,14 @@ public abstract class Match {
     public void kick(int side){
         if (isFinished) return;
         int direction;
-        if(side == LEFT_SIDE) direction = 1;
+        if(side == LEFT_PLAYER) direction = 1;
         else direction = -1;
         getPlayer(side).kick(ball, direction);
     }
 
     public Player getPlayer(int side){
-        if(side == LEFT_SIDE) return leftPlayer;
-        else if(side == RIGHT_SIDE) return rightPlayer;
+        if(side == LEFT_PLAYER) return leftPlayer;
+        else if(side == RIGHT_PLAYER) return rightPlayer;
 
         else throw new IllegalArgumentException("Lado inválido: " + side);
     }
@@ -137,9 +137,9 @@ public abstract class Match {
     private void checkGoal(){
         Vector2D ballCenter = ball.center();
         //gol en arco izquierdo por jugador derecho
-        if(field.isGoal(LEFT_SIDE, ballCenter.getX(), ballCenter.getY())) goalScored(rightPlayer);
+        if(field.isGoal(LEFT_PLAYER, ballCenter.getX(), ballCenter.getY())) goalScored(rightPlayer);
         
-        else if(field.isGoal(RIGHT_SIDE, ballCenter.getX(), ballCenter.getY())) goalScored(leftPlayer);
+        else if(field.isGoal(RIGHT_PLAYER, ballCenter.getX(), ballCenter.getY())) goalScored(leftPlayer);
     }
 
     private void goalScored(Player scoredBy){
@@ -152,8 +152,8 @@ public abstract class Match {
     }
 
     private void kickOff(){
-        leftPlayer.kickOffPosition(startX(LEFT_SIDE), startY());
-        rightPlayer.kickOffPosition(startX(RIGHT_SIDE), startY());
+        leftPlayer.kickOffPosition(startX(LEFT_PLAYER), startY());
+        rightPlayer.kickOffPosition(startX(RIGHT_PLAYER), startY());
 
         ball.kickOff();
     }
@@ -167,8 +167,8 @@ public abstract class Match {
         winnerSide = winner;
 
         int loser;
-        if(winner == LEFT_SIDE) loser = RIGHT_SIDE;
-        else loser = LEFT_SIDE;
+        if(winner == LEFT_PLAYER) loser = RIGHT_PLAYER;
+        else loser = LEFT_PLAYER;
 
         getPlayer(winnerSide).getProfile().addPoints(WINNER_POINTS);
         getPlayer(loser).getProfile().addPoints(LOSER_POINTS);
@@ -230,8 +230,7 @@ public abstract class Match {
     }
 
 
-    public int getPlayerGoals(int player){
-        if(player == 1) return leftPlayer.getGoals();
-        return rightPlayer.getGoals();
+    public int getPlayerGoals(int side){
+        return getPlayer(side).getGoals();
     }
 }

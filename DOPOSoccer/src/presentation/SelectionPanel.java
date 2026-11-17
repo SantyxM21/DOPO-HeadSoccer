@@ -1,6 +1,7 @@
 package presentation;
 
 import domain.DopoSoccer;
+import domain.Match;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -13,15 +14,17 @@ public class SelectionPanel extends JPanel {
     private CustomButton playButton;
     private CustomButton swapButton;
 
-    private RoundButton player1Character;
-    private RoundButton player2Character;
-    private CustomButton player1Previous;
-    private CustomButton player1Next;
-    private CustomButton player2Previous;
-    private CustomButton player2Next;
+    private RoundButton leftCharacter;
+    private RoundButton rightCharacter;
+    private CustomButton leftPrevious;
+    private CustomButton leftNext;
+    private CustomButton rightPrevious;
+    private CustomButton rightNext;
+    private JLabel leftName;
+    private JLabel rightName;
 
-    private int optionP1 = 0;
-    private int optionP2 = 0;
+    private int leftOption = 0;
+    private int rightOption = 0;
 
 
     public SelectionPanel(){
@@ -29,14 +32,15 @@ public class SelectionPanel extends JPanel {
         this.GAME_SIZE = MainPanel.GAME_SIZE;
         backButton = CustomButton.createBackButton();
         playButton = new CustomButton("Jugar");
-        swapButton = new CustomButton("↔");           // ↔ intercambia los personajes
-        player1Character = new RoundButton();
-        player2Character = new RoundButton();
-        player1Previous = new CustomButton("←");      // ←
-        player1Next = new CustomButton("→");          // →
-        player2Previous = new CustomButton("←");
-        player2Next = new CustomButton("→");
-
+        swapButton = new CustomButton("↔");
+        leftCharacter = new RoundButton();
+        rightCharacter = new RoundButton();
+        leftPrevious = new CustomButton("←");      // ←
+        leftNext = new CustomButton("→");          // →
+        rightPrevious = new CustomButton("←");
+        rightNext = new CustomButton("→");
+        leftName = new JLabel("", SwingConstants.CENTER);
+        rightName = new JLabel("", SwingConstants.CENTER);
     }
 
     /*
@@ -60,12 +64,12 @@ public class SelectionPanel extends JPanel {
         topBar.add(title, BorderLayout.CENTER);
         topBar.add(CustomButton.keepSize(backButton), BorderLayout.EAST);
 
-        // Tres columnas: jugador 1, centro (jugar) y jugador 2 / máquina
+        // Tres columnas: jugador izquierdo, centro (jugar) y jugador derecho / máquina
         JPanel body = new JPanel(new GridLayout(1, 3));
         body.setOpaque(false);
-        body.add(createCharacterColumn(player1Character, DopoSoccer.COUNTRIES[optionP1], player1Previous, player1Next, "Ivan"));
+        body.add(createCharacterColumn(leftCharacter, DopoSoccer.COUNTRIES[leftOption], leftPrevious, leftNext, leftName));
         body.add(createCenterColumn());
-        body.add(createCharacterColumn(player2Character, DopoSoccer.COUNTRIES[optionP2], player2Previous, player2Next, "Cesar"));
+        body.add(createCharacterColumn(rightCharacter, DopoSoccer.COUNTRIES[rightOption], rightPrevious, rightNext, rightName));
 
         this.add(topBar, BorderLayout.NORTH);
         this.add(body, BorderLayout.CENTER);
@@ -74,6 +78,8 @@ public class SelectionPanel extends JPanel {
     }
 
     public void prepareController(MainPanel main){
+        showPlayerNames(main);
+
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -81,18 +87,18 @@ public class SelectionPanel extends JPanel {
             }
         });
 
-        player1Character.addActionListener(new ActionListener() {
+        leftCharacter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                main.updateInfoPlayer(1, DopoSoccer.COUNTRIES[optionP1]);
+                main.updateInfoPlayer(Match.LEFT_PLAYER, DopoSoccer.COUNTRIES[leftOption]);
                 main.showPage("Character page");
             }
         });
 
-        player2Character.addActionListener(new ActionListener() {
+        rightCharacter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                main.updateInfoPlayer(2, DopoSoccer.COUNTRIES[optionP2]);
+                main.updateInfoPlayer(Match.RIGHT_PLAYER, DopoSoccer.COUNTRIES[rightOption]);
                 main.showPage("Character page");
             }
         });
@@ -100,42 +106,48 @@ public class SelectionPanel extends JPanel {
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (main.startGame(DopoSoccer.COUNTRIES[optionP1], DopoSoccer.COUNTRIES[optionP2])) main.showPage("Game");
+                if (main.startGame(DopoSoccer.COUNTRIES[leftOption], DopoSoccer.COUNTRIES[rightOption])) main.showPage("Game");
             }
         });
 
-        player1Next.addActionListener(new ActionListener() {
+        leftNext.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeCharacter(1, 1);
+                changeCharacter(1, Match.LEFT_PLAYER);
             }
         });
-        player1Previous.addActionListener(new ActionListener() {
+        leftPrevious.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeCharacter(-1, 1);
+                changeCharacter(-1, Match.LEFT_PLAYER);
             }
         });
 
-        player2Next.addActionListener(new ActionListener() {
+        rightNext.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeCharacter(1, 2);
+                changeCharacter(1, Match.RIGHT_PLAYER);
             }
         });
-        player2Previous.addActionListener(new ActionListener() {
+        rightPrevious.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeCharacter(-1, 2);
+                changeCharacter(-1, Match.RIGHT_PLAYER);
             }
         });
-        
+
         swapButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MainPanel.funcUnderConstruction("En construccion");
+                main.swapProfiles();
+                showPlayerNames(main);
             }
-        });         
+        });
+    }
+
+    private void showPlayerNames(MainPanel main){
+        leftName.setText(main.getPlayerName(Match.LEFT_PLAYER));
+        rightName.setText(main.getPlayerName(Match.RIGHT_PLAYER));
     }
 
     /*
@@ -144,10 +156,10 @@ public class SelectionPanel extends JPanel {
     @param characterName the text shown inside the circle
     @param previous the button to select the previous character
     @param next the button to select the next character
-    @param playerName the text shown below the arrows
+    @param name the label with the profile name shown below the arrows
     @return the panel that contains the whole column
     */
-    private JPanel createCharacterColumn(RoundButton character, String characterName, CustomButton previous, CustomButton next, String playerName){
+    private JPanel createCharacterColumn(RoundButton character, String characterName, CustomButton previous, CustomButton next, JLabel name){
         int side = GAME_SIZE.height / 4;
         Dimension fixed = new Dimension(side, side);      // diámetro fijo del círculo
         character.setPreferredSize(fixed);
@@ -162,7 +174,6 @@ public class SelectionPanel extends JPanel {
         arrows.add(previous);
         arrows.add(next);
 
-        JLabel name = new JLabel(playerName, SwingConstants.CENTER);
         name.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 35));
         name.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.BLACK, 2),
@@ -205,18 +216,18 @@ public class SelectionPanel extends JPanel {
         return column;
     }
 
-    private void changeCharacter(int step, int player){
+    private void changeCharacter(int step, int side){
         int numCharacter = DopoSoccer.COUNTRIES.length;
         RoundButton character;
         String country;
-        if (player == 1) {
-            optionP1 = Math.floorMod(optionP1 + step, numCharacter);   // floorMod evita indices negativos al ir hacia atras con previous
-            character = player1Character;
-            country = DopoSoccer.COUNTRIES[optionP1];
+        if (side == Match.LEFT_PLAYER) {
+            leftOption = Math.floorMod(leftOption + step, numCharacter);   // floorMod evita indices negativos al ir hacia atras con previous
+            character = leftCharacter;
+            country = DopoSoccer.COUNTRIES[leftOption];
         } else {
-            optionP2 = Math.floorMod(optionP2 + step, numCharacter);
-            character = player2Character;
-            country = DopoSoccer.COUNTRIES[optionP2];
+            rightOption = Math.floorMod(rightOption + step, numCharacter);
+            character = rightCharacter;
+            country = DopoSoccer.COUNTRIES[rightOption];
         }
         DopoSoccerGUI.showFlag(character, country, GAME_SIZE.height / 8);
     }

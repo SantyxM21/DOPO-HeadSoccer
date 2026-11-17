@@ -21,11 +21,11 @@ public class GoalsMatch extends Match{
 
     @Override 
     protected void checkFinished(){
-        int leftGoals = getPlayer(LEFT_SIDE).getGoals();
-        int rightGoals = getPlayer(RIGHT_SIDE).getGoals();
+        int leftGoals = getPlayer(LEFT_PLAYER).getGoals();
+        int rightGoals = getPlayer(RIGHT_PLAYER).getGoals();
 
-        if (leftGoals >= numGoals) finish(LEFT_SIDE); 
-        else if(rightGoals >= numGoals) finish(RIGHT_SIDE);
+        if (leftGoals >= numGoals) finish(LEFT_PLAYER); 
+        else if(rightGoals >= numGoals) finish(RIGHT_PLAYER);
     }
 
     public int getNumGoals(){

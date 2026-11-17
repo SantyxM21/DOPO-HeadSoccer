@@ -22,9 +22,20 @@ public class DopoSoccerTest{
 
     @Test
     public void shouldIConstructWithProfiles() {
-        assertNotNull(dopoSoccer.getProfile(Match.LEFT_SIDE));
-        assertNotNull(dopoSoccer.getProfile(Match.RIGHT_SIDE));
+        assertNotNull(dopoSoccer.getProfile(Match.LEFT_PLAYER));
+        assertNotNull(dopoSoccer.getProfile(Match.RIGHT_PLAYER));
         assertFalse(dopoSoccer.hasMatch());
+    }
+
+    @Test
+    public void shouldSwapProfilesBetweenSides() {
+        Profile left = dopoSoccer.getProfile(Match.LEFT_PLAYER);
+        Profile right = dopoSoccer.getProfile(Match.RIGHT_PLAYER);
+
+        dopoSoccer.swapProfiles();
+
+        assertSame(right, dopoSoccer.getProfile(Match.LEFT_PLAYER));
+        assertSame(left, dopoSoccer.getProfile(Match.RIGHT_PLAYER));
     }
 
     @Test
@@ -45,17 +56,17 @@ public class DopoSoccerTest{
     @Test
     public void shouldActivatePowerOnlyWhenPowerBarIsFull() throws DopoSoccerException {
         dopoSoccer.newGame(DopoSoccer.GOALS_MODE, "3", new Dimension(800, 600));
-        dopoSoccer.addHuman(Match.LEFT_SIDE, "Corea del Sur", dopoSoccer.getProfile(Match.LEFT_SIDE));
-        dopoSoccer.addHuman(Match.RIGHT_SIDE, "Camerún", dopoSoccer.getProfile(Match.RIGHT_SIDE));
+        dopoSoccer.addHuman(Match.LEFT_PLAYER, "Corea del Sur", dopoSoccer.getProfile(Match.LEFT_PLAYER));
+        dopoSoccer.addHuman(Match.RIGHT_PLAYER, "Camerún", dopoSoccer.getProfile(Match.RIGHT_PLAYER));
 
-        dopoSoccer.activatePower(Match.LEFT_SIDE);
-        assertFalse(dopoSoccer.hasAura(Match.LEFT_SIDE));
+        dopoSoccer.activatePower(Match.LEFT_PLAYER);
+        assertFalse(dopoSoccer.hasAura(Match.LEFT_PLAYER));
 
         for (int i = 0; i < Match.FPS * 10 + 5; i++) dopoSoccer.update(Match.FRAME_SECONDS);
-        assertEquals(100, dopoSoccer.getPowerBar(Match.LEFT_SIDE), 0.001);
+        assertEquals(100, dopoSoccer.getPowerBar(Match.LEFT_PLAYER), 0.001);
 
-        dopoSoccer.activatePower(Match.LEFT_SIDE);
-        assertTrue(dopoSoccer.hasAura(Match.LEFT_SIDE));
-        assertEquals(0, dopoSoccer.getPowerBar(Match.LEFT_SIDE), 0.001);
+        dopoSoccer.activatePower(Match.LEFT_PLAYER);
+        assertTrue(dopoSoccer.hasAura(Match.LEFT_PLAYER));
+        assertEquals(0, dopoSoccer.getPowerBar(Match.LEFT_PLAYER), 0.001);
     }
 }
