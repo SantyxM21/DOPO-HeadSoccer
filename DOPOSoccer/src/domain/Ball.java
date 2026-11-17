@@ -138,4 +138,8 @@ public class Ball extends Entity{
         chargedBy = null;
     }
     
+    public boolean hasPower(){
+        if(chargedPower == null) return false;
+        return true;
+    }
 }

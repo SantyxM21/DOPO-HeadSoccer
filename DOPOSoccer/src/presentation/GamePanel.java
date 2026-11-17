@@ -32,6 +32,8 @@ public class GamePanel extends JPanel{
     private final CustomButton pauseMenuButton = new CustomButton("Menu");
     private final CustomButton saveButton = new CustomButton("Guardar");
     private static final Image POPUP_BACKGROUND = DopoSoccerGUI.loadImage("/resources/fondo_popup.png");
+    private static final Image AURA_IMAGE = DopoSoccerGUI.loadImage("/resources/aura.png");
+    private static final double AURA_SCALE = 1.6;
     private static final Color POPUP_TEXT = new Color(27, 42, 85);
 
     private int gameTimeSecs = 0;
@@ -144,6 +146,7 @@ public class GamePanel extends JPanel{
     private void update(){
         if(!game.hasMatch() || game.isFinished()) return;    
 
+        if(keyH.powerPressed) game.activatePower(Match.LEFT_PLAYER);
         if(keyH.kickPressed) game.kick(Match.LEFT_PLAYER);                 
         int direction = 0;
         // Se usa -= y += en caso de qque ambas teclas se presionen al tiempo se "cancelen"
@@ -152,6 +155,7 @@ public class GamePanel extends JPanel{
         if(keyH.jumpPressed) game.jump(Match.LEFT_PLAYER);
         if(direction != 0) game.move(Match.LEFT_PLAYER, direction);
 
+        if(keyH.powerPressedR) game.activatePower(Match.RIGHT_PLAYER);
         if(keyH.kickPressedR) game.kick(Match.RIGHT_PLAYER);   
         int direction2 = 0;
         if(keyH.leftPressedR) direction2 -= 1;
@@ -376,6 +380,12 @@ public class GamePanel extends JPanel{
         }
         leftGoals.setText(String.valueOf(game.getPlayerGoals(Match.LEFT_PLAYER)));
         rightGoals.setText(String.valueOf(game.getPlayerGoals(Match.RIGHT_PLAYER)));
+        leftPower.setValue(close((int)game.getPowerBar(Match.LEFT_PLAYER)));
+        rightPower.setValue(close((int)game.getPowerBar(Match.RIGHT_PLAYER)));
+    }
+
+    private static int close(int n) {
+        return (n / 10) * 10;
     }
 
     public void setCountries(String leftCountry, String rightCountry){
@@ -406,6 +416,7 @@ public class GamePanel extends JPanel{
         int y = game.getPlayerY(player);
         Image playerImage = (player == Match.LEFT_PLAYER) ? leftPlayerImage : rightPlayerImage;
 
+        if (game.hasAura(player)) drawAura(g, x, y, size);
         if (playerImage != null && player == Match.LEFT_PLAYER) {
             // Volteada la imagen horizontalmente
             int imgW = playerImage.getWidth(this);
@@ -417,6 +428,12 @@ public class GamePanel extends JPanel{
             g.setColor(Color.WHITE);                                 // si no hay imagen se dibuja un circulo
             g.fillOval(x, y, size, size);
         }
+    }
+
+    private void drawAura(Graphics g, int x, int y, int size){
+        if (AURA_IMAGE == null) return;
+        int auraSize = (int) (size * AURA_SCALE);
+        g.drawImage(AURA_IMAGE, x + (size - auraSize) / 2, y + size - auraSize, auraSize, auraSize, this);   // centrada y apoyada en los pies
     }
 
     public void drawField(Graphics g){

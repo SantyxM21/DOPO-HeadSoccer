@@ -12,7 +12,7 @@ public abstract class Player extends Entity {
     public static final double Y_KICK_SPEED = 8;
 
     public static final double MAX_POWER_BAR = 100.0;
-    public static final double POWER_BAR_CHARGE_SECONDS = 10.0;
+    public static final double POWER_BAR_CHARGE_SECONDS = 1.0;
 
     protected final Field field;
     private final int size;

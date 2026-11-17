@@ -142,38 +142,38 @@ public abstract class Match {
         double length = Vector2D.length(distance); //distancia entre los centros
         double minDistance = (player.getSize() + ball.getDiameter()) / 2.0; //minima distancia sin colision
 
-        if (length >= minDistance) return; //No existe colision
-
-        else{ //Si existe colision
-            touchBall(player);
-
-
+        if (length < minDistance){ //Si existe colision
             Vector2D collisionDirection;
             if(length == 0) collisionDirection = new Vector2D(0, -1); //evitar division entre 0.  -1 para moverse hacia arriba
             else collisionDirection = Vector2D.scalar(distance, 1 / length);
-
+            
             //Evitar que queden superpuesto uno sobre el otro
             double overlap = minDistance - length; //Cuanto se esta superponiendo
             ball.translate(collisionDirection.getX() * overlap, collisionDirection.getY() * overlap);
-
+            
             //Rebotar
             Vector2D ballSpeed = Vector2D.subtract(ball.getVelocity(), player.getVelocity()); //Velocidad del balon vista desde el jugador
-
+            
             double approach = Vector2D.dot(ballSpeed, collisionDirection); // - el balon va hacia el jugador + el balon se esta alejando
             if(approach < 0){
                 Vector2D change = Vector2D.scalar(collisionDirection, -(1 + PLAYER_BOUNCING) * approach); //empujon en direccion del choque
                 ball.setVelocity(Vector2D.add(ball.getVelocity(), change)); //Nueva velocidad del balon tras el impacto
             }
+            touchBall(player);
         }
     }
 
     private void touchBall(Player player){
-        if (ball.getChargedPower() == null){
-            //si toca el balon con aura hace el tiro de su poder
-            if (player.hasAura()) player.powerShoot(ball, directionOf(player));
-        } else if (ball.getChargedBy() != player){
-            powerPunch(player); //golpear al rival
+        if(player.hasAura()){                                       // Si el jugador tiene aura aplica el poder
+            player.powerShoot(ball, directionOf(player));
         }
+        else if(ball.getChargedBy() != player && ball.hasPower()){  // Si golpa al rival y el balon tiene poder
+            powerPunch(player);                                     // entonces empuja al jugador impactado
+        }
+
+
+
+
     }
 
     private void powerPunch(Player victim){
