@@ -5,7 +5,7 @@ import java.awt.Dimension;
 public abstract class Match {
     public static final int LEFT_PLAYER = 1;
     public static final int RIGHT_PLAYER = 2;
-    private static final double START_X_RATIO = 0.2;       
+    private static final double START_X_RATIO = 0.2;
     public final Dimension RESOLUTION;
 
     public static final int WINNER_POINTS = 100;
@@ -24,7 +24,7 @@ public abstract class Match {
 
     private boolean isFinished;
     private int winnerSide = 0;
-    private double elapsedSeconds = 0;                     // tiempo real jugado 
+    private double elapsedSeconds = 0;                     // tiempo real jugado
 
     public Match(String condition, Dimension resolution) throws DopoSoccerException{
         setCondition(condition);
@@ -37,28 +37,14 @@ public abstract class Match {
 
     public abstract void setCondition(String condition) throws DopoSoccerException;
 
-    public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
-        if(side == LEFT_PLAYER) leftPlayer = new Human(character, startX(side), startY(), field, profile);
-        else if (side == RIGHT_PLAYER) rightPlayer = new Human(character, startX(side), startY(), field, profile);
-        else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
-    }
-
-    private double startX(int side){
-        double margin = field.getWidth() * START_X_RATIO;
-        if(side == LEFT_PLAYER) return margin;
-        return field.getWidth() - margin - playerSize();
-    }
-
-    private double startY(){
-        return field.getGroundY() - playerSize();
-    }
+    // ==================== CICLO DE LA PARTIDA ====================
 
     public void update(double seconds){
         if (isFinished) return;
 
         leftPlayer.update(seconds);
         rightPlayer.update(seconds);
-        
+
         leftPlayer.applyGravity();
         rightPlayer.applyGravity();
         ball.move();
@@ -76,12 +62,16 @@ public abstract class Match {
         checkFinished();        // despues de updateTime para que TimeMatch vea el tiempo de este frame
     }
 
-    public void kick(int side){
-        if (isFinished) return;
-        int direction;
-        if(side == LEFT_PLAYER) direction = 1;
-        else direction = -1;
-        getPlayer(side).kick(ball, direction);
+    public void updateTime(double seconds){
+        elapsedSeconds += seconds;
+    }
+
+    // ==================== JUGADORES =====================
+
+    public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
+        if(side == LEFT_PLAYER) leftPlayer = new Human(character, startX(side), startY(), field, profile);
+        else if (side == RIGHT_PLAYER) rightPlayer = new Human(character, startX(side), startY(), field, profile);
+        else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
     }
 
     public Player getPlayer(int side){
@@ -91,17 +81,31 @@ public abstract class Match {
         else throw new IllegalArgumentException("Lado inválido: " + side);
     }
 
+    private double startX(int side){
+        double margin = field.getWidth() * START_X_RATIO;
+        if(side == LEFT_PLAYER) return margin;
+        return field.getWidth() - margin - playerSize();
+    }
+
+    private double startY(){
+        return field.getGroundY() - playerSize();
+    }
+
     private int playerSize(){
         return (int) field.scale(Player.PLAYER_SIZE);
     }
 
-    public Field getField(){
-        return field;
+    // ==================== ACCIONES DEL JUGADOR ====================
+
+    public void kick(int side){
+        if (isFinished) return;
+        int direction;
+        if(side == LEFT_PLAYER) direction = 1;
+        else direction = -1;
+        getPlayer(side).kick(ball, direction);
     }
 
-    public Ball getBall(){
-        return ball;
-    }
+    // ==================== COLISIONES Y PODERES ====================
 
     private void collision(Player player){
         Vector2D distance  = Vector2D.subtract(ball.center(), player.center());
@@ -120,84 +124,17 @@ public abstract class Match {
 
             //Evitar que queden superpuesto uno sobre el otro
             double overlap = minDistance - length; //Cuanto se esta superponiendo
-            ball.translate(collisionDirection.getX() * overlap, collisionDirection.getY() * overlap);  
-            
+            ball.translate(collisionDirection.getX() * overlap, collisionDirection.getY() * overlap);
+
             //Rebotar
             Vector2D ballSpeed = Vector2D.subtract(ball.getVelocity(), player.getVelocity()); //Velocidad del balon vista desde el jugador
 
             double approach = Vector2D.dot(ballSpeed, collisionDirection); // - el balon va hacia el jugador + el balon se esta alejando
-            if(approach < 0){                                  
+            if(approach < 0){
                 Vector2D change = Vector2D.scalar(collisionDirection, -(1 + PLAYER_BOUNCING) * approach); //empujon en direccion del choque
                 ball.setVelocity(Vector2D.add(ball.getVelocity(), change)); //Nueva velocidad del balon tras el impacto
             }
         }
-    }
-
-
-    private void checkGoal(){
-        Vector2D ballCenter = ball.center();
-        //gol en arco izquierdo por jugador derecho
-        if(field.isGoal(LEFT_PLAYER, ballCenter.getX(), ballCenter.getY())) goalScored(rightPlayer);
-        
-        else if(field.isGoal(RIGHT_PLAYER, ballCenter.getX(), ballCenter.getY())) goalScored(leftPlayer);
-    }
-
-    private void goalScored(Player scoredBy){
-        Player receiver;
-        if (scoredBy == leftPlayer) receiver = rightPlayer;
-        else receiver = leftPlayer;
-        scoredBy.scoredGoal();
-        receiver.powerBarReceivedGoal();
-        kickOff();
-    }
-
-    private void kickOff(){
-        leftPlayer.kickOffPosition(startX(LEFT_PLAYER), startY());
-        rightPlayer.kickOffPosition(startX(RIGHT_PLAYER), startY());
-
-        ball.kickOff();
-    }
-
-    protected abstract void checkFinished();
-
-    protected void finish(int winner){
-        if (isFinished) return;
-
-        isFinished = true;
-        winnerSide = winner;
-
-        int loser;
-        if(winner == LEFT_PLAYER) loser = RIGHT_PLAYER;
-        else loser = LEFT_PLAYER;
-
-        getPlayer(winnerSide).getProfile().addPoints(WINNER_POINTS);
-        getPlayer(loser).getProfile().addPoints(LOSER_POINTS);
-    }
-
-    public boolean isFinished(){
-        return isFinished;
-    }
-
-    public int getWinner(){
-        return winnerSide;
-    }
-
-    public abstract String textUnderScore();
-
-    public int getPointsEarned(int side){
-        if (!isFinished) return 0;
-        else{
-            if(side == winnerSide) return WINNER_POINTS;
-            else return LOSER_POINTS;
-        }
-    }
-
-    public int getTime(){
-        return (int) elapsedSeconds;
-    }
-
-    public void updateTime(double seconds){
-        elapsedSeconds += seconds;
     }
 
     private void touchBall(Player player){
@@ -229,8 +166,89 @@ public abstract class Match {
         victim.receiveEffect(power.getEffect(), pushDirection); //empuja hacia su arco
     }
 
+    // ==================== GOLES Y SAQUE ====================
+
+    private void checkGoal(){
+        Vector2D ballCenter = ball.center();
+        //gol en arco izquierdo por jugador derecho
+        if(field.isGoal(LEFT_PLAYER, ballCenter.getX(), ballCenter.getY())) goalScored(rightPlayer);
+
+        else if(field.isGoal(RIGHT_PLAYER, ballCenter.getX(), ballCenter.getY())) goalScored(leftPlayer);
+    }
+
+    private void goalScored(Player scoredBy){
+        Player receiver;
+        if (scoredBy == leftPlayer) receiver = rightPlayer;
+        else receiver = leftPlayer;
+        scoredBy.scoredGoal();
+        receiver.powerBarReceivedGoal();
+        kickOff();
+    }
+
+    private void kickOff(){
+        resetPlayer(leftPlayer, LEFT_PLAYER);
+        resetPlayer(rightPlayer, RIGHT_PLAYER);
+
+        ball.kickOff();
+    }
+
+    private void resetPlayer(Player player, int side){
+        player.setXPosition(startX(side));
+        player.setYPosition(startY());
+        player.setVelocity(new Vector2D(0, 0));
+    }
+
+    // ==================== FIN DE LA PARTIDA ====================
+
+    protected abstract void checkFinished();
+
+    protected void finish(int winner){
+        if (isFinished) return;
+
+        isFinished = true;
+        winnerSide = winner;
+
+        int loser;
+        if(winner == LEFT_PLAYER) loser = RIGHT_PLAYER;
+        else loser = LEFT_PLAYER;
+
+        getPlayer(winnerSide).getProfile().addPoints(WINNER_POINTS);
+        getPlayer(loser).getProfile().addPoints(LOSER_POINTS);
+    }
+
+    public boolean isFinished(){
+        return isFinished;
+    }
+
+    public int getWinner(){
+        return winnerSide;
+    }
+
+    public int getPointsEarned(int side){
+        if (!isFinished) return 0;
+        else{
+            if(side == winnerSide) return WINNER_POINTS;
+            else return LOSER_POINTS;
+        }
+    }
+
+    // ==================== ESTADO DE LA PARTIDA ====================
+
+    public abstract String textUnderScore();
+
+    public int getTime(){
+        return (int) elapsedSeconds;
+    }
 
     public int getPlayerGoals(int side){
         return getPlayer(side).getGoals();
+    }
+
+    public Field getField(){
+        return field;
+    }
+
+    public Ball getBall(){
+        return ball;
     }
 }

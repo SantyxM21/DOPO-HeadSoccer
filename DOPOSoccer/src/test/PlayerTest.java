@@ -61,8 +61,8 @@ public class PlayerTest {
     }
 
     @Test
-    public void shouldStartWithFullSurvivalAndEmptyPowerBar() {
-        assertEquals(100, player.getSurvival(), 0.001);
+    public void shouldStartWithFullHealthAndEmptyPowerBar() {
+        assertEquals(100, player.getHealth(), 0.001);
         assertEquals(0, player.getPowerBar(), 0.001);
         assertFalse(player.hasAura());
         assertFalse(player.hasEffect());
@@ -75,12 +75,12 @@ public class PlayerTest {
     }
 
     @Test
-    public void shouldReduceSurvivalWhenTakingDamageAndNeverGoBelowZero() {
+    public void shouldReduceHealthWhenTakingDamageAndNeverGoBelowZero() {
         player.takeDamage(40);
-        assertEquals(60, player.getSurvival(), 0.001);
+        assertEquals(60, player.getHealth(), 0.001);
 
         player.takeDamage(500);
-        assertEquals(0, player.getSurvival(), 0.001);
+        assertEquals(0, player.getHealth(), 0.001);
     }
 
     @Test

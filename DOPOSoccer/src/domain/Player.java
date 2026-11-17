@@ -5,7 +5,6 @@ public abstract class Player extends Entity {
     public static final double SPEED = 5.0;
     public static final double JUMP_FORCE = -6.5;  // negativo ya que Y disminuye hacia arriba
     public static final double GRAVITY = 0.15;     
-    public final int GROUND_Y;
 
     //Valores de prueba
     public static final double KICK_RANGE = 30;
@@ -17,6 +16,7 @@ public abstract class Player extends Entity {
 
     protected final Field field;
     private final int size;
+    private final int groundY;
     private final double speed;
     private final double jumpForce;
     private final double gravity;
@@ -32,7 +32,7 @@ public abstract class Player extends Entity {
     protected Effect effect;
 
     protected int goals;
-    protected double survival;
+    protected double health;
     protected double powerBar;
 
     protected boolean aura;
@@ -41,12 +41,12 @@ public abstract class Player extends Entity {
     public Player(String character, double x, double y, Field field, Profile profile) throws DopoSoccerException{
         super(x, y);
         if (profile == null) throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
-        GROUND_Y = (int) y;
         this.selectedCharacter = createCharacter(character);
         this.profile = profile;
 
         this.field = field;
         this.size = (int) field.scale(PLAYER_SIZE);
+        this.groundY = field.getGroundY() - size;
         this.speed = field.scale(SPEED);
         this.jumpForce = field.scale(JUMP_FORCE);
         this.gravity = field.scale(GRAVITY);
@@ -55,7 +55,7 @@ public abstract class Player extends Entity {
         this.xKickSpeed = field.scale(X_KICK_SPEED);
         this.yKickSpeed = field.scale(Y_KICK_SPEED);
 
-        startStats();               
+        startStats();
     }
 
     public void move(int direction){
@@ -86,7 +86,7 @@ public abstract class Player extends Entity {
 
     public void jump(){
         if (isBlocked()) return;
-        if (yPosition == GROUND_Y){     // Condición para evitar que salte en el aire
+        if (yPosition == groundY){     // Condición para evitar que salte en el aire
             yVelocity = jumpForce;
         }
     }
@@ -95,8 +95,8 @@ public abstract class Player extends Entity {
         yPosition += yVelocity;
         yVelocity += gravity;
 
-        if (yPosition >= GROUND_Y){   // una vez que llega al suele ya no baja mas
-            yPosition = GROUND_Y;
+        if (yPosition >= groundY){   // una vez que llega al suele ya no baja mas
+            yPosition = groundY;
             yVelocity = 0;
         }
     }
@@ -106,9 +106,9 @@ public abstract class Player extends Entity {
         return 1.0 + 0.10 * (kickStat - 1);
     }
 
-    public double getMaxSurvival(){
-        int survival = profile.getStatLevel(Stats.HEALTH_STAT);
-        return 100.0 * (1.0 + 0.10 * (survival - 1));
+    public double getMaxHealth(){
+        int healthStat = profile.getStatLevel(Stats.HEALTH_STAT);
+        return 100.0 * (1.0 + 0.10 * (healthStat - 1));
     } 
 
     public Character_ getSelectedCharacter(){
@@ -119,8 +119,8 @@ public abstract class Player extends Entity {
         return goals;
     }
 
-    public double getSurvival(){
-        return survival;
+    public double getHealth(){
+        return health;
     }
 
     public double getPowerBar(){
@@ -167,12 +167,9 @@ public abstract class Player extends Entity {
         goals++;
     }
 
-    public void kickOffPosition(double x, double y){
-        xPosition = x;
-        yPosition = y;
-
-        xVelocity = 0;
-        yVelocity = 0;
+    public void setVelocity(Vector2D velocity){
+        xVelocity = velocity.getX();
+        yVelocity = velocity.getY();
     }
 
     public void powerActivation(){
@@ -183,7 +180,7 @@ public abstract class Player extends Entity {
     }
 
     public void startStats(){
-        this.survival = getMaxSurvival();
+        this.health = getMaxHealth();
         this.powerBar = 0.0;
         this.goals = 0;
     }
@@ -209,7 +206,7 @@ public abstract class Player extends Entity {
     }
 
     public void takeDamage(double damage){
-        survival = Math.max(0, survival - damage);
+        health = Math.max(0, health - damage);
     }
 
     public void receiveEffect(Effect newEffect, int direction){

@@ -34,9 +34,9 @@ public class MatchTest {
     }
 
     @Test
-    public void shouldStartPlayersWithFullSurvival() throws DopoSoccerException {
+    public void shouldStartPlayersWithFullHealth() throws DopoSoccerException {
         match.addHuman(Match.LEFT_PLAYER, "Corea del Sur", new Profile("1"));
-        assertEquals(100, match.getPlayer(Match.LEFT_PLAYER).getSurvival(), 0.001);
+        assertEquals(100, match.getPlayer(Match.LEFT_PLAYER).getHealth(), 0.001);
         assertEquals(0, match.getPlayer(Match.LEFT_PLAYER).getPowerBar(), 0.001);
     }
 }

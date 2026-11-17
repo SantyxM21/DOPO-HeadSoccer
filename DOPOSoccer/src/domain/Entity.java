@@ -16,4 +16,12 @@ public abstract class Entity {
     public int getYPosition(){
         return (int) yPosition;
     }
+
+    public void setXPosition(double x){
+        xPosition = x;
+    }
+
+    public void setYPosition(double y){
+        yPosition = y;
+    }
 }

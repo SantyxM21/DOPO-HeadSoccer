@@ -166,8 +166,8 @@ public class DopoSoccer {
         return match.getPlayer(side).getPowerBar();
     }
 
-    public double getSurvival(int side){
-        return match.getPlayer(side).getSurvival();
+    public double getHealth(int side){
+        return match.getPlayer(side).getHealth();
     }
 
     public boolean hasAura(int side){
