@@ -102,12 +102,12 @@ public abstract class Player extends Entity {
     }
 
     public double getKickMultiplier(){
-        int kickStat = profile.getStatLevel("kick");
+        int kickStat = profile.getStatLevel(Stats.KICK_STAT);
         return 1.0 + 0.10 * (kickStat - 1);
     }
 
     public double getMaxSurvival(){
-        int survival = profile.getStatLevel("survival");
+        int survival = profile.getStatLevel(Stats.HEALTH_STAT);
         return 100.0 * (1.0 + 0.10 * (survival - 1));
     } 
 

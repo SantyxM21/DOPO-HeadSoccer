@@ -239,7 +239,7 @@ public class GamePanel extends JPanel{
 
     /* "Profile #1: +100 puntos (total 1250)" */
     private String pointsText(int side){
-        return game.getPlayerName(side) + ": +" + game.getPointsEarned(side) + " puntos (total " + game.getPoints(side) + ")";
+        return game.getPlayerName(side) + ": +" + game.getPointsEarned(side) + " puntos (total " + game.getPlayerPoints(side) + ")";
     }
 
     private JLabel popupLabel(String text, int style, int size){

@@ -101,15 +101,16 @@ public class DopoSoccer {
         return getProfile(side).getPoints();
     }
 
-    public int getPoints(int side){
-        return getProfile(side).getPoints();
-    }
 
     public int[] getPlayerStats(int side){
         return getProfile(side).getStats();
     }
 
-    public void upgradeStats(int player, String stat){
+    public int getUpgradePrice(int side, int stat){
+        return getProfile(side).getUpgradePrice(stat);
+    }
+
+    public void upgradeStats(int player, int stat) throws DopoSoccerException{
         getProfile(player).upgradeStat(stat);
     }
 

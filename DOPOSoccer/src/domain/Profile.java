@@ -12,7 +12,7 @@ public class Profile {
         this.stats = new Stats();
     }
 
-    public void upgradeStat(String stat){
+    public void upgradeStat(int stat) throws DopoSoccerException{
         int discountedPoints =  stats.upgradeStat(stat, points);
         this.points -= discountedPoints;
     }
@@ -33,7 +33,11 @@ public class Profile {
         return name;
     }
 
-    public int getStatLevel(String stat){
+    public int getUpgradePrice(int stat){
+        return stats.getUpgradePrice(stat);
+    }
+
+    public int getStatLevel(int stat){
         return stats.getLevel(stat);
     }
 }

@@ -1,5 +1,6 @@
 package presentation;
 
+import domain.DopoSoccerException;
 import static domain.Stats.STATS_NAMES;
 import java.awt.*;
 import java.awt.event.*;
@@ -88,8 +89,12 @@ public class CharactersInfoPanel extends JPanel{
             plusBt[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e){
-                    main.upgradeStat(selectedInfoPlayer, STATS_NAMES[stat]);  
-                    main.updateInfoPlayer(selectedInfoPlayer, character);
+                    try {
+                        main.upgradeStat(selectedInfoPlayer, stat);
+                        main.updateInfoPlayer(selectedInfoPlayer, character);
+                    } catch (DopoSoccerException ex) {
+                        JOptionPane.showMessageDialog(CharactersInfoPanel.this, ex.getMessage());
+                    }
                 }
             });
         }

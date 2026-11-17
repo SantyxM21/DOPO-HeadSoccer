@@ -17,7 +17,7 @@ public class ProfileTest {
     @Test
     public void shouldConstructProfileWithName() {
         assertEquals("Profile #1", profile.getName());
-        assertEquals(1, profile.getStatLevel("kick"));
+        assertEquals(1, profile.getStatLevel(Stats.KICK_STAT));
     }
 
     @Test
@@ -28,10 +28,10 @@ public class ProfileTest {
     }
 
     @Test
-    public void shouldDiscountPointsWhenUpgradingStat() {
+    public void shouldDiscountPointsWhenUpgradingStat() throws DopoSoccerException {
         int initialPoints = profile.getPoints();
-        profile.upgradeStat("Patada");
+        profile.upgradeStat(Stats.KICK_STAT);
         assertEquals(initialPoints - 500, profile.getPoints());
-        assertEquals(2, profile.getStatLevel("kick"));
+        assertEquals(2, profile.getStatLevel(Stats.KICK_STAT));
     }
 }

@@ -155,7 +155,7 @@ public class MainPanel extends JPanel{
         charactersPage.updateInfo(playerName, playerPoints, playerStats, side, shownChar);
     }
 
-    public void upgradeStat(int side, String stat){
+    public void upgradeStat(int side, int stat) throws DopoSoccerException{
         game.upgradeStats(side, stat);
     }
 
