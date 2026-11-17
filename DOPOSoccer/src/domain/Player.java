@@ -38,10 +38,12 @@ public abstract class Player extends Entity {
     protected boolean aura;
 
 
-    public Player(String character, double x, double y, Field field) throws DopoSoccerException{
+    public Player(String character, double x, double y, Field field, Profile profile) throws DopoSoccerException{
         super(x, y);
+        if (profile == null) throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
         GROUND_Y = (int) y;
         this.selectedCharacter = createCharacter(character);
+        this.profile = profile;
 
         this.field = field;
         this.size = (int) field.scale(PLAYER_SIZE);
@@ -99,14 +101,12 @@ public abstract class Player extends Entity {
         }
     }
 
-    public double getKickMultiplier() throws DopoSoccerException{
-        if (profile == null) throw new DopoSoccerException(DopoSoccerException.NOT_DATA);;
+    public double getKickMultiplier(){
         int kickStat = profile.getStatLevel("kick");
         return 1.0 + 0.10 * (kickStat - 1);
     }
 
-    public double getMaxSurvival() throws DopoSoccerException{
-        if (profile == null) throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    public double getMaxSurvival(){
         int survival = profile.getStatLevel("survival");
         return 100.0 * (1.0 + 0.10 * (survival - 1));
     } 
@@ -140,10 +140,6 @@ public abstract class Player extends Entity {
             default:
                 throw new DopoSoccerException(DopoSoccerException.INEXISTENT_CHARACTER);
         }
-    }
-
-    public void setProfile(Profile profile){
-        this.profile = profile;
     }
 
     public Profile getProfile(){
@@ -187,12 +183,7 @@ public abstract class Player extends Entity {
     }
 
     public void startStats(){
-        if (profile != null){
-            int survivalStat = profile.getStatLevel("survival");
-            this.survival = 100 * (1.0 + 0.1 * (survivalStat - 1));
-        } else{
-            this.survival = 100.0;
-        }
+        this.survival = getMaxSurvival();
         this.powerBar = 0.0;
         this.goals = 0;
     }

@@ -38,17 +38,8 @@ public abstract class Match {
     public abstract void setCondition(String condition) throws DopoSoccerException;
 
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
-        if(side == LEFT_SIDE) {
-            leftPlayer = new Human(character, startX(side), startY(), field);
-            leftPlayer.setProfile(profile);
-            leftPlayer.startStats();
-            
-        }
-        else if (side == RIGHT_SIDE){
-            rightPlayer = new Human(character, startX(side), startY(), field);
-            rightPlayer.setProfile(profile);
-            rightPlayer.startStats();
-        }
+        if(side == LEFT_SIDE) leftPlayer = new Human(character, startX(side), startY(), field, profile);
+        else if (side == RIGHT_SIDE) rightPlayer = new Human(character, startX(side), startY(), field, profile);
         else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
     }
 
@@ -229,12 +220,7 @@ public abstract class Match {
         Power power = ball.getChargedPower();
         ball.clearCharge();
 
-        double kickMultiplier = 1.0;
-        try {
-            kickMultiplier = shooter.getKickMultiplier();
-        } catch (DopoSoccerException e) {}
-
-        victim.takeDamage(power.getShootDamage() * kickMultiplier);
+        victim.takeDamage(power.getShootDamage() * shooter.getKickMultiplier());
 
         int pushDirection;
         if (victim == leftPlayer) pushDirection = -1;

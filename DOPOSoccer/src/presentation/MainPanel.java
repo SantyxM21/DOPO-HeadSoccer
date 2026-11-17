@@ -114,7 +114,10 @@ public class MainPanel extends JPanel{
                 return false;
             }
         }
-        else return false; //Aun no hay mas modos de juegos implementados
+        else {
+            funcUnderConstruction(DopoSoccerException.UNDER_CONSTRUCTION); //Aun no hay mas modos de juegos implementados
+            return false;
+        }
 
     }
 
