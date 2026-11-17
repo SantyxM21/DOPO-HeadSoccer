@@ -68,6 +68,11 @@ public abstract class Player extends Entity {
         if(xPosition > field.getWidth() - size) xPosition = field.getWidth() - size;
     }
 
+    public void translate(double dx, double dy){
+        xPosition = Math.max(0, Math.min(xPosition + dx, field.getWidth() - size));
+        yPosition = Math.min(yPosition + dy, groundY);
+    }
+
     public void kick(Ball ball, int direction){
         if (isBlocked()) return;
         Vector2D distance = Vector2D.subtract(ball.center(), center());

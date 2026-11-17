@@ -4,8 +4,9 @@ public class Ball extends Entity{
     public static final int BASE_DIAMETER = 40;
     public static final double GRAVITY = 0.15; 
     public static final double WALL_FRICTION = 0.8;
-    public static final double AIR_FRICTION = 1;
-    public static final double FLOOR_FRICTION = 0.70;
+    public static final double AIR_FRICTION = 0.999;
+    public static final double FLOOR_FRICTION = 0.75;
+    public static final double MIN_ROLLING_SPEED = 0.7;
 
     public static final double POWER_SPEED = 14;
 
@@ -15,6 +16,7 @@ public class Ball extends Entity{
     private int diameter;
     private final Field field;
     private final double gravity;
+    private final double minRollingSpeed;
     private Vector2D velocity;
 
     public Ball(Field field){
@@ -22,6 +24,7 @@ public class Ball extends Entity{
         this.field = field;
         this.diameter = (int) field.scale(BASE_DIAMETER);
         this.gravity = field.scale(GRAVITY);
+        this.minRollingSpeed = field.scale(MIN_ROLLING_SPEED);
         kickOff();
     }
 
@@ -51,22 +54,22 @@ public class Ball extends Entity{
             clearCharge(); 
         }else{
             velocity.setX(velocity.getX() * AIR_FRICTION);
-
-            if (Math.abs(velocity.getX()) < 1.9) velocity.setX(0);
         }
 
 
         if (yPosition + diameter > fieldGroundY){
-            yPosition = fieldGroundY - diameter;  
-                if (Math.abs(velocity.getY()) < 1) velocity.setY(0); 
+            yPosition = fieldGroundY - diameter;
+                if (Math.abs(velocity.getY()) < 1) velocity.setY(0);
                 else velocity.setY(velocity.getY() * -FLOOR_FRICTION);
         } else if (yPosition < 0) {
-            yPosition = 0;  
-            velocity.setY(-velocity.getY());                                
+            yPosition = 0;
+            velocity.setY(-velocity.getY());
         } else if(chargedPower == null){
             velocity.setY(velocity.getY() + gravity);
         }
-        onCrossbarBouncing(previousBottomBallPosition); 
+        onCrossbarBouncing(previousBottomBallPosition);
+
+        if (yPosition + diameter >= fieldGroundY && Math.abs(velocity.getX()) < minRollingSpeed) velocity.setX(0);
     }
 
     private void onCrossbarBouncing(double previousBottomBallPosition){

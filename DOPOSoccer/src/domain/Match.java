@@ -15,7 +15,7 @@ public abstract class Match {
     public static final double FRAME_SECONDS = 1.0 / FPS;  // duracion ideal de un frame
 
 
-    private static final double PLAYER_BOUNCING = 0.3; //Rango entre 0 y 1
+    private static final double PLAYER_BOUNCING = 0.5   ; //Rango entre 0 y 1
 
     private Player leftPlayer;
     private Player rightPlayer;
@@ -47,6 +47,7 @@ public abstract class Match {
 
         leftPlayer.applyGravity();
         rightPlayer.applyGravity();
+        playersCollision();
         ball.move();
 
         collision(leftPlayer);
@@ -109,6 +110,32 @@ public abstract class Match {
     }
 
     // ==================== COLISIONES Y PODERES ====================
+
+    private void playersCollision(){
+        Vector2D distance = Vector2D.subtract(rightPlayer.center(), leftPlayer.center());
+        double length = Vector2D.length(distance);
+        double minDistance = (leftPlayer.getSize() + rightPlayer.getSize()) / 2.0;
+
+        if (length >= minDistance) return;
+
+        Vector2D direction;
+        if (length == 0) direction = new Vector2D(1, 0);
+        else direction = Vector2D.scalar(distance, 1 / length);
+
+        double overlap = minDistance - length;
+        Vector2D leftBefore = leftPlayer.center();
+        leftPlayer.translate(-direction.getX() * overlap / 2, -direction.getY() * overlap / 2);
+
+        // si uno choca con la pared o el suelo, el otro se mueve lo que falte
+        double leftMoved = -Vector2D.dot(Vector2D.subtract(leftPlayer.center(), leftBefore), direction);
+        double remaining = overlap - leftMoved;
+        Vector2D rightBefore = rightPlayer.center();
+        rightPlayer.translate(direction.getX() * remaining, direction.getY() * remaining);
+
+        double rightMoved = Vector2D.dot(Vector2D.subtract(rightPlayer.center(), rightBefore), direction);
+        remaining -= rightMoved;
+        if (remaining > 0) leftPlayer.translate(-direction.getX() * remaining, -direction.getY() * remaining);
+    }
 
     private void collision(Player player){
         Vector2D distance  = Vector2D.subtract(ball.center(), player.center());
