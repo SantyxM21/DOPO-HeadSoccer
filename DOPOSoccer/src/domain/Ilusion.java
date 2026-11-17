@@ -3,7 +3,7 @@ package domain;
 public class Ilusion extends Power {
     
     public Ilusion(){
-        super("Ilusión", 30, 2.5, new ConfusionEffect());
+        super("Ilusión", 30, new ConfusionEffect());
     }
 
     @Override 

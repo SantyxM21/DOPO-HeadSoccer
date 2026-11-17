@@ -38,10 +38,10 @@ public abstract class Player extends Entity {
     protected boolean aura;
 
 
-    public Player(String character, double x, double y, Field field, Profile profile) throws DopoSoccerException{
+    public Player(Character_ character, double x, double y, Field field, Profile profile) throws DopoSoccerException{
         super(x, y);
-        if (profile == null) throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
-        this.selectedCharacter = createCharacter(character);
+        if (character == null || profile == null) throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+        this.selectedCharacter = character;
         this.profile = profile;
 
         this.field = field;
@@ -55,7 +55,7 @@ public abstract class Player extends Entity {
         this.xKickSpeed = field.scale(X_KICK_SPEED);
         this.yKickSpeed = field.scale(Y_KICK_SPEED);
 
-        startStats();
+        resetForNewMatch();
     }
 
     public void move(int direction){
@@ -127,21 +127,6 @@ public abstract class Player extends Entity {
         return powerBar;
     }
 
-    protected  Character_ createCharacter(String country) throws DopoSoccerException{
-        switch (country) {
-            case "Corea del Sur":
-                return new Corea();
-            case "Camerún":
-                return new Camerun();
-            case "Nigeria":
-                return new Nigeria();
-            case "Estados Unidos":
-                return new USA();
-            default:
-                throw new DopoSoccerException(DopoSoccerException.INEXISTENT_CHARACTER);
-        }
-    }
-
     public Profile getProfile(){
         return profile;
     }
@@ -179,7 +164,7 @@ public abstract class Player extends Entity {
         }
     }
 
-    public void startStats(){
+    public void resetForNewMatch(){
         this.health = getMaxHealth();
         this.powerBar = 0.0;
         this.goals = 0;

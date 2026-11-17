@@ -14,13 +14,13 @@ public class PlayerTest {
     @BeforeEach
     public void SetUp() throws DopoSoccerException {
         field = new Field(new Dimension(800, 600));
-        player = new Human("Corea del Sur", 100, 500, field, new Profile("1"));
+        player = new Human(new Corea(), 100, 500, field, new Profile("1"));
     }
 
     @Test
     public void shouldConstructPlayerSuccessfully() throws DopoSoccerException {
         assertNotNull(player.getSelectedCharacter());
-        assertEquals("Corea", player.getSelectedCharacter().getName());
+        assertEquals("Corea del Sur", player.getSelectedCharacter().getName());
         assertEquals(0, player.getGoals());
     }
 
@@ -42,18 +42,19 @@ public class PlayerTest {
     }
 
     @Test
-    public void shouldThrowExceptionForInexistentCharacter() {
+    public void shouldThrowExceptionWithoutCharacter() {
         try {
-            new Human("Inexistente", 100, 500, field, new Profile("1"));
+            new Human(null, 100, 500, field, new Profile("1"));
+            fail("Deberia lanzar excepcion sin personaje");
         } catch (DopoSoccerException e) {
-            assertEquals(DopoSoccerException.INEXISTENT_CHARACTER, e.getMessage());
+            assertEquals(DopoSoccerException.NOT_DATA, e.getMessage());
         }
     }
 
     @Test
     public void shouldThrowExceptionWithoutProfile() {
         try {
-            new Human("Corea del Sur", 100, 500, field, null);
+            new Human(new Corea(), 100, 500, field, null);
             fail("Deberia lanzar excepcion sin perfil");
         } catch (DopoSoccerException e) {
             assertEquals(DopoSoccerException.NOT_DATA, e.getMessage());

@@ -72,10 +72,6 @@ public class DopoSoccer {
         match.kick(player);
     }
 
-    public void applyGravity(int player){
-        match.getPlayer(player).applyGravity();
-    }
-
     public void activatePower(int player){
         if(!match.isFinished()) match.getPlayer(player).powerActivation();
     }
@@ -126,10 +122,6 @@ public class DopoSoccer {
 
     public int getPlayerGoals(int side){
         return match.getPlayerGoals(side);
-    }
-
-    public int getGoals(int side){
-        return match.getPlayer(side).getGoals();
     }
 
     public boolean isFinished(){

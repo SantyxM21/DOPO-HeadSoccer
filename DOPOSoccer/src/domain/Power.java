@@ -5,12 +5,10 @@ public abstract class Power {
 
     protected String name;
     protected double shootDamage; 
-    protected double durationEfect;
 
-    protected Power(String name, double shootDamage, double durationEfect, Effect effect){
+    protected Power(String name, double shootDamage, Effect effect){
         this.name = name;
         this.shootDamage = shootDamage;
-        this.durationEfect = durationEfect;
         this.effect = effect;
     }
 
@@ -27,7 +25,7 @@ public abstract class Power {
     }
 
     public double getDurationEffect(){
-        return durationEfect;
+        return effect.getDuration();
     }
 
     public Effect getEffect(){

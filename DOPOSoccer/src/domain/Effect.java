@@ -20,6 +20,10 @@ public abstract class Effect {
         return timeLeft <= 0;
     }
 
+    public double getDuration() {
+        return duration;
+    }
+
     public double getTimeLeft() {
         return timeLeft;
     }

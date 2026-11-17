@@ -14,7 +14,7 @@ public class PushEffectTest {
     @BeforeEach
     public void setUp() throws DopoSoccerException {
         Field field = new Field(new Dimension(800, 600));
-        player = new Human("Corea del Sur", 400, 500, field, new Profile("1"));
+        player = new Human(new Corea(), 400, 500, field, new Profile("1"));
         effect = new PushEffect();
     }
 

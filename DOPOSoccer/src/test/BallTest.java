@@ -52,7 +52,7 @@ public class BallTest {
 
     @Test
     public void shouldChargePowerAndUseCoreanPowerEffect() throws DopoSoccerException {
-        Player player = new Human("Corea del Sur", 100, 500, field, new Profile("1"));
+        Player player = new Human(new Corea(), 100, 500, field, new Profile("1"));
         Power power = player.getSelectedCharacter().getPower();
 
         ball.chargePower(power, player, 1);
@@ -64,7 +64,7 @@ public class BallTest {
 
     @Test
     public void shouldClearChargeAndClearItOnKickOff() throws DopoSoccerException {
-        Player player = new Human("Corea del Sur", 100, 500, field, new Profile("1"));
+        Player player = new Human(new Corea(), 100, 500, field, new Profile("1"));
         ball.chargePower(player.getSelectedCharacter().getPower(), player, 1);
         ball.clearCharge();
         assertNull(ball.getChargedPower());

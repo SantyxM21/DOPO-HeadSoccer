@@ -3,7 +3,7 @@ package domain;
 public class USA extends Character_{
 
     public USA(){
-        super("USA", new Ilusion());
+        super("Estados Unidos", new Ilusion());
     }
     
 }

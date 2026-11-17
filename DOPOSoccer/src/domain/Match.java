@@ -69,8 +69,8 @@ public abstract class Match {
     // ==================== JUGADORES =====================
 
     public void addHuman(int side, String character, Profile profile) throws DopoSoccerException{
-        if(side == LEFT_PLAYER) leftPlayer = new Human(character, startX(side), startY(), field, profile);
-        else if (side == RIGHT_PLAYER) rightPlayer = new Human(character, startX(side), startY(), field, profile);
+        if(side == LEFT_PLAYER) leftPlayer = new Human(Character_.create(character), startX(side), startY(), field, profile);
+        else if (side == RIGHT_PLAYER) rightPlayer = new Human(Character_.create(character), startX(side), startY(), field, profile);
         else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
     }
 
@@ -99,10 +99,13 @@ public abstract class Match {
 
     public void kick(int side){
         if (isFinished) return;
-        int direction;
-        if(side == LEFT_PLAYER) direction = 1;
-        else direction = -1;
-        getPlayer(side).kick(ball, direction);
+        Player player = getPlayer(side);
+        player.kick(ball, directionOf(player));
+    }
+
+    private int directionOf(Player player){
+        if (player == leftPlayer) return 1;
+        return -1;
     }
 
     // ==================== COLISIONES Y PODERES ====================
@@ -140,13 +143,7 @@ public abstract class Match {
     private void touchBall(Player player){
         if (ball.getChargedPower() == null){
             //si toca el balon con aura hace el tiro de su poder
-            if (player.hasAura()){
-                int direction;
-                if (player == leftPlayer) direction = 1;
-                else direction = -1;
-
-                player.powerShoot(ball, direction);
-            }
+            if (player.hasAura()) player.powerShoot(ball, directionOf(player));
         } else if (ball.getChargedBy() != player){
             powerPunch(player); //golpear al rival
         }
@@ -159,11 +156,7 @@ public abstract class Match {
 
         victim.takeDamage(power.getShootDamage() * shooter.getKickMultiplier());
 
-        int pushDirection;
-        if (victim == leftPlayer) pushDirection = -1;
-        else pushDirection = 1;
-
-        victim.receiveEffect(power.getEffect(), pushDirection); //empuja hacia su arco
+        victim.receiveEffect(power.getEffect(), -directionOf(victim)); //empuja hacia su arco
     }
 
     // ==================== GOLES Y SAQUE ====================
