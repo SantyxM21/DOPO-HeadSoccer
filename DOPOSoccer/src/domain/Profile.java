@@ -8,7 +8,7 @@ public class Profile {
 
     public Profile(String profileNumber){
         this.name = "Profile #" + profileNumber;
-        this.points = 100000;
+        this.points = 1000000000;
         this.stats = new Stats();
     }
 

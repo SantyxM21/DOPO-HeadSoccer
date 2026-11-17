@@ -3,7 +3,7 @@ package domain;
 public abstract class Player extends Entity {
     public static final int PLAYER_SIZE = 80;
     public static final double SPEED = 5.0;
-    public static final double JUMP_FORCE = -6.5;  // negativo ya que Y disminuye hacia arriba
+    public static final double JUMP_FORCE = -5.5;  // negativo ya que Y disminuye hacia arriba
     public static final double GRAVITY = 0.15;     
 
     //Valores de prueba
@@ -47,8 +47,8 @@ public abstract class Player extends Entity {
         this.field = field;
         this.size = (int) field.scale(PLAYER_SIZE);
         this.groundY = field.getGroundY() - size;
-        this.speed = field.scale(SPEED);
-        this.jumpForce = field.scale(JUMP_FORCE);
+        this.speed = field.scale(SPEED) * getSpeedMultiplier();
+        this.jumpForce = field.scale(JUMP_FORCE) * Math.sqrt(getJumpMultiplier()); // la altura crece con el cuadrado de la fuerza
         this.gravity = field.scale(GRAVITY);
 
         this.kickRange = field.scale(KICK_RANGE);
@@ -104,6 +104,16 @@ public abstract class Player extends Entity {
             yPosition = groundY;
             yVelocity = 0;
         }
+    }
+
+    public double getSpeedMultiplier(){
+        int speedStat = profile.getStatLevel(Stats.SPEED_STAT);
+        return 1.0 + 0.03 * (speedStat - 1);
+    }
+
+    public double getJumpMultiplier(){
+        int jumpStat = profile.getStatLevel(Stats.JUMP_STAT);
+        return 1.0 + 0.03 * (jumpStat - 1);
     }
 
     public double getKickMultiplier(){
