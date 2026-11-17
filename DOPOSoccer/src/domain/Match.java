@@ -19,6 +19,8 @@ public abstract class Match {
 
     private Player leftPlayer;
     private Player rightPlayer;
+    private Effect leftEffect;
+    private Effect rightEffect;
     private Field field;
     private Ball ball;
 
@@ -44,14 +46,16 @@ public abstract class Match {
 
         leftPlayer.update(seconds);
         rightPlayer.update(seconds);
+        updateEffect(leftPlayer, seconds);
+        updateEffect(rightPlayer, seconds);
 
         leftPlayer.applyGravity();
         rightPlayer.applyGravity();
         playersCollision();
         ball.move();
 
-        collision(leftPlayer);
-        collision(rightPlayer);
+        ballCollision(leftPlayer);
+        ballCollision(rightPlayer);
 
         ball.keepInsideField();
 
@@ -112,11 +116,13 @@ public abstract class Match {
     // ==================== COLISIONES Y PODERES ====================
 
     private void playersCollision(){
+        if (leftPlayer.isTouching(rightPlayer)) separatePlayers();
+    }
+
+    private void separatePlayers(){
         Vector2D distance = Vector2D.subtract(rightPlayer.center(), leftPlayer.center());
         double length = Vector2D.length(distance);
-        double minDistance = (leftPlayer.getSize() + rightPlayer.getSize()) / 2.0;
-
-        if (length >= minDistance) return;
+        double minDistance = leftPlayer.radius() + rightPlayer.radius();
 
         Vector2D direction;
         if (length == 0) direction = new Vector2D(1, 0);
@@ -137,29 +143,37 @@ public abstract class Match {
         if (remaining > 0) leftPlayer.translate(-direction.getX() * remaining, -direction.getY() * remaining);
     }
 
-    private void collision(Player player){
-        Vector2D distance  = Vector2D.subtract(ball.center(), player.center());
-        double length = Vector2D.length(distance); //distancia entre los centros
-        double minDistance = (player.getSize() + ball.getDiameter()) / 2.0; //minima distancia sin colision
+    private void ballCollision(Player player){
+        if (!ball.isTouching(player)) return;
+        bounceBall(player);
 
-        if (length < minDistance){ //Si existe colision
-            Vector2D collisionDirection;
-            if(length == 0) collisionDirection = new Vector2D(0, -1); //evitar division entre 0.  -1 para moverse hacia arriba
-            else collisionDirection = Vector2D.scalar(distance, 1 / length);
+        if(ball.hasPower()) {
             
-            //Evitar que queden superpuesto uno sobre el otro
-            double overlap = minDistance - length; //Cuanto se esta superponiendo
-            ball.translate(collisionDirection.getX() * overlap, collisionDirection.getY() * overlap);
-            
-            //Rebotar
-            Vector2D ballSpeed = Vector2D.subtract(ball.getVelocity(), player.getVelocity()); //Velocidad del balon vista desde el jugador
-            
-            double approach = Vector2D.dot(ballSpeed, collisionDirection); // - el balon va hacia el jugador + el balon se esta alejando
-            if(approach < 0){
-                Vector2D change = Vector2D.scalar(collisionDirection, -(1 + PLAYER_BOUNCING) * approach); //empujon en direccion del choque
-                ball.setVelocity(Vector2D.add(ball.getVelocity(), change)); //Nueva velocidad del balon tras el impacto
-            }
-            touchBall(player);
+        }
+
+        touchBall(player);      // despues del rebote para que no sobrescriba la velocidad del poder
+    }
+
+    private void bounceBall(Player player){
+        Vector2D distance  = Vector2D.subtract(ball.center(), player.center());
+        double length = Vector2D.length(distance);
+        double minDistance = player.radius() + ball.radius(); //minima distancia sin colision
+
+        Vector2D collisionDirection;
+        if(length == 0) collisionDirection = new Vector2D(0, -1); //evitar division entre 0.  -1 para moverse hacia arriba
+        else collisionDirection = Vector2D.scalar(distance, 1 / length);
+
+        //Evitar que queden superpuesto uno sobre el otro
+        double overlap = minDistance - length; //Cuanto se esta superponiendo
+        ball.translate(collisionDirection.getX() * overlap, collisionDirection.getY() * overlap);
+
+        //Rebotar
+        Vector2D ballSpeed = Vector2D.subtract(ball.getVelocity(), player.getVelocity()); //Velocidad del balon vista desde el jugador
+
+        double approach = Vector2D.dot(ballSpeed, collisionDirection); // - el balon va hacia el jugador + el balon se esta alejando
+        if(approach < 0){
+            Vector2D change = Vector2D.scalar(collisionDirection, -(1 + PLAYER_BOUNCING) * approach); //empujon en direccion del choque
+            ball.setVelocity(Vector2D.add(ball.getVelocity(), change)); //Nueva velocidad del balon tras el impacto
         }
     }
 
@@ -167,7 +181,7 @@ public abstract class Match {
         if(player.hasAura()){                                       // Si el jugador tiene aura aplica el poder
             player.powerShoot(ball, directionOf(player));
         }
-        else if(ball.getChargedBy() != player && ball.hasPower()){  // Si golpa al rival y el balon tiene poder
+        else if(ball.getChargedBy() != player && ball.hasPower()){  // Si golpea al rival y el balon tiene poder
             powerPunch(player);                                     // entonces empuja al jugador impactado
         }
 
@@ -181,9 +195,39 @@ public abstract class Match {
         Power power = ball.getChargedPower();
         ball.clearCharge();
 
-        victim.takeDamage(power.getShootDamage() * shooter.getKickMultiplier());
+        applyEffect(victim, power.hit(victim, shooter), -directionOf(victim)); //empuja hacia su arco
+    }
 
-        victim.receiveEffect(power.getEffect(), -directionOf(victim)); //empuja hacia su arco
+    public void applyEffect(Player target, Effect effect, int direction){
+        if (effectOf(target) != null) removeEffect(target);     // el nuevo efecto reemplaza al anterior
+        setEffect(target, effect);
+        effect.applyEffect(target, direction);
+    }
+
+    private void updateEffect(Player target, double seconds){
+        Effect effect = effectOf(target);
+        if (effect == null) return;
+        effect.update(target, seconds);
+        if (effect.isFinished()) removeEffect(target);
+    }
+
+    private void removeEffect(Player target){
+        target.restoreValues();
+        setEffect(target, null);
+    }
+
+    private Effect effectOf(Player player){
+        if (player == leftPlayer) return leftEffect;
+        return rightEffect;
+    }
+
+    private void setEffect(Player player, Effect effect){
+        if (player == leftPlayer) leftEffect = effect;
+        else rightEffect = effect;
+    }
+
+    public boolean hasEffect(int side){
+        return effectOf(getPlayer(side)) != null;
     }
 
     // ==================== GOLES Y SAQUE ====================
@@ -216,6 +260,7 @@ public abstract class Match {
         player.setXPosition(startX(side));
         player.setYPosition(startY());
         player.setVelocity(new Vector2D(0, 0));
+        if (effectOf(player) != null) removeEffect(player);
     }
 
     // ==================== FIN DE LA PARTIDA ====================

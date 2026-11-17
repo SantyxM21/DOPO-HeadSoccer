@@ -1,29 +1,19 @@
 package domain;
 
-public class Ball extends Entity{
+public class Ball extends CircularEntity{
     public static final int BASE_DIAMETER = 40;
-    public static final double GRAVITY = 0.15; 
     public static final double WALL_FRICTION = 0.8;
     public static final double AIR_FRICTION = 0.999;
     public static final double FLOOR_FRICTION = 0.75;
     public static final double MIN_ROLLING_SPEED = 0.7;
 
-    public static final double POWER_SPEED = 14;
-
     private Power chargedPower;
     private Player chargedBy;
 
-    private int diameter;
-    private final Field field;
-    private final double gravity;
     private final double minRollingSpeed;
-    private Vector2D velocity;
 
     public Ball(Field field){
-        super(0, 0); //Valores temporales
-        this.field = field;
-        this.diameter = (int) field.scale(BASE_DIAMETER);
-        this.gravity = field.scale(GRAVITY);
+        super(0, 0, field, BASE_DIAMETER);
         this.minRollingSpeed = field.scale(MIN_ROLLING_SPEED);
         kickOff();
     }
@@ -103,22 +93,6 @@ public class Ball extends Entity{
         yPosition = Math.max(0, Math.min(yPosition, field.getGroundY() - diameter));
     }
 
-    public Vector2D center(){
-        return new Vector2D(xPosition + diameter / 2.0, yPosition + diameter / 2.0);
-    }
-
-    public Vector2D getVelocity(){
-        return velocity;
-    }
-
-    public void setVelocity(Vector2D v){
-        this.velocity = v;
-    }
-
-    public int getDiameter(){
-         return diameter; 
-    }
-
     public Power getChargedPower(){
         return chargedPower;
     }
@@ -130,7 +104,7 @@ public class Ball extends Entity{
     public void chargePower(Power power, Player chargedBy, int direction){
         chargedPower = power;
         this.chargedBy = chargedBy;
-        velocity = new Vector2D(direction * field.scale(POWER_SPEED), 0);
+        velocity = power.shotVelocity(direction, field);
     }
 
     public void clearCharge(){

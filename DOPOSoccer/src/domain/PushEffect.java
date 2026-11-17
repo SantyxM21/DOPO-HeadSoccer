@@ -12,15 +12,14 @@ public class PushEffect extends Effect{
     public void applyEffect(Player target, int direction) {
         super.applyEffect(target, direction);
         this.direction = direction; // -1 izquierda 1 derecha
+        target.setSpeed(0);
+        target.setJumpForce(0);
+        target.setKickForce(0);
     }
 
     @Override
-    public void tick(Player target) {
+    public void update(Player target, double secondsElapsed) {
         target.pushHorizontal(direction * PUSH_SPEED);
-    }
-
-    @Override
-    public boolean blockPlayer() {
-        return true;
+        super.update(target, secondsElapsed);
     }
 }

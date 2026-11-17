@@ -151,7 +151,7 @@ public class DopoSoccer {
     }
 
     public int getPlayerSize(int player){
-        return match.getPlayer(player).getSize();
+        return match.getPlayer(player).getDiameter();
     }
 
     public double getPowerBar(int side){
@@ -167,7 +167,7 @@ public class DopoSoccer {
     }
 
     public boolean hasEffect(int side){
-        return match.getPlayer(side).hasEffect();
+        return match.hasEffect(side);
     }
 
     // ==================== BALÓN ====================

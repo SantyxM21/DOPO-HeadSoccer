@@ -66,7 +66,6 @@ public class PlayerTest {
         assertEquals(100, player.getHealth(), 0.001);
         assertEquals(0, player.getPowerBar(), 0.001);
         assertFalse(player.hasAura());
-        assertFalse(player.hasEffect());
     }
 
     @Test
@@ -85,10 +84,8 @@ public class PlayerTest {
     }
 
     @Test
-    public void shouldNotMoveWhileBlockedByEffect() {
-        player.receiveEffect(new PushEffect(), 1);
-        assertTrue(player.hasEffect());
-
+    public void shouldNotMoveWithZeroSpeed() {
+        player.setSpeed(0);
         int initialX = player.getXPosition();
         player.move(-1);
         assertEquals(initialX, player.getXPosition());

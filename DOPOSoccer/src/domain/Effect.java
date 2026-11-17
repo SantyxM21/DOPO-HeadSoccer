@@ -9,7 +9,12 @@ public abstract class Effect {
         this.timeLeft = duration;
     }
 
-    public void update(double secondsElapsed) {
+    public void applyEffect(Player target, int direction) {
+        timeLeft = duration;
+    }
+
+    //Cada frame
+    public void update(Player target, double secondsElapsed) {
         if (timeLeft > 0) {
             timeLeft -= secondsElapsed;
             if (timeLeft < 0) timeLeft = 0;
@@ -26,16 +31,5 @@ public abstract class Effect {
 
     public double getTimeLeft() {
         return timeLeft;
-    }
-
-    public void applyEffect(Player target, int direction) {
-        timeLeft = duration;
-    }
-
-    //Cada frame
-    public void tick(Player target) {}
-
-    public boolean blockPlayer() {
-        return false;
     }
 }

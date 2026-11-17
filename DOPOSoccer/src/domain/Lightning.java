@@ -1,13 +1,13 @@
 package domain;
 
 public class Lightning extends Power {
-    
+
     public Lightning(){
-        super("Rayo", 60, new ElectroEffect());
+        super("Rayo", 60);
     }
 
-    @Override 
-    public void applyPower() throws DopoSoccerException{
-        throw new DopoSoccerException(DopoSoccerException.NOT_DATA);
+    @Override
+    protected Effect createEffect(){
+        return new ElectroEffect();
     }
 }

@@ -20,18 +20,18 @@ public class PushEffectTest {
 
     @Test
     public void shouldFinishAfterItsDuration() {
-        effect.update(1.0);
+        effect.update(player, 1.0);
         assertEquals(0.5, effect.getTimeLeft(), 0.001);
         assertFalse(effect.isFinished());
 
-        effect.update(1.0);
+        effect.update(player, 1.0);
         assertEquals(0, effect.getTimeLeft(), 0.001);
         assertTrue(effect.isFinished());
     }
 
     @Test
     public void shouldRestartTimeWhenApplied() {
-        effect.update(1.0);
+        effect.update(player, 1.0);
         effect.applyEffect(player, 1);
         assertEquals(1.5, effect.getTimeLeft(), 0.001);
     }
@@ -40,12 +40,12 @@ public class PushEffectTest {
     public void shouldPushPlayerInTheGivenDirection() {
         effect.applyEffect(player, 1);
         int xBeforePushRight = player.getXPosition();
-        effect.tick(player);
+        effect.update(player, 0.01);
         assertTrue(player.getXPosition() > xBeforePushRight);
 
         effect.applyEffect(player, -1);
         int xBeforePushLeft = player.getXPosition();
-        effect.tick(player);
+        effect.update(player, 0.01);
         assertTrue(player.getXPosition() < xBeforePushLeft);
     }
 }
