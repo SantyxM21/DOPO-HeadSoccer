@@ -37,6 +37,18 @@ public abstract class Power {
         return new Vector2D(direction * field.scale(SHOT_SPEED), 0);
     }
     
+    // Gravedad que afecta al balon mientras lleva el poder
+    // por defecto es 0, el tiro sale recto
+    public double shotGravity(Field field){
+        return 0;
+    }
+
+    // Velocidad vertical con la que el balon con poder rebota al tocar el suelo
+    // por defecto rebota como un balon normal, perdiendo fuerza en cada bote
+    public double floorBounce(double ySpeed, Field field){
+        return -ySpeed * Ball.FLOOR_FRICTION;
+    }
+
     // Posición desde la que sale el balon con poder
     // todos los poderes salen por defecto a la misma altura que el personaje
     public Vector2D positionAnimation(Player player, int direction, Field field){

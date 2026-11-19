@@ -49,13 +49,16 @@ public class Ball extends CircularEntity{
 
         if (yPosition + diameter > fieldGroundY){
             yPosition = fieldGroundY - diameter;
-                if (Math.abs(velocity.getY()) < 1) velocity.setY(0);
-                else velocity.setY(velocity.getY() * -FLOOR_FRICTION);
+            if (chargedPower != null) velocity.setY(chargedPower.floorBounce(velocity.getY(), field));   // cada poder decide como rebota
+            else if (Math.abs(velocity.getY()) < 1) velocity.setY(0);
+            else velocity.setY(velocity.getY() * -FLOOR_FRICTION);
         } else if (yPosition < 0) {
             yPosition = 0;
             velocity.setY(-velocity.getY());
         } else if(chargedPower == null){
             velocity.setY(velocity.getY() + gravity);
+        } else {
+            velocity.setY(velocity.getY() + chargedPower.shotGravity(field));   // por defecto 0, el tiro sale recto
         }
         onCrossbarBouncing(previousBottomBallPosition);
 
