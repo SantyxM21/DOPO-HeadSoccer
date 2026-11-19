@@ -249,7 +249,7 @@ public abstract class Match {
         kickOff();
     }
 
-    private void kickOff(){
+    protected void kickOff(){
         resetPlayer(leftPlayer, LEFT_PLAYER);
         resetPlayer(rightPlayer, RIGHT_PLAYER);
 

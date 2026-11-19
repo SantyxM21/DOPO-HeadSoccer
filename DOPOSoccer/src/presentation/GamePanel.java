@@ -285,8 +285,8 @@ public class GamePanel extends JPanel{
             power.setBackground(Color.WHITE);
             power.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
         }
-        leftPower.setValue(0);                                       // TODO: poder del jugador 1
-        rightPower.setValue(60);                                     // TODO: poder del jugador 2
+        leftPower.setValue(0);                                       
+        rightPower.setValue(60);                                     
 
         // Textos
         leftName.setFont(textFont);
@@ -372,7 +372,7 @@ public class GamePanel extends JPanel{
 
         if (timeMode) {
             timeTitle.setText("Tiempo");
-            timeLabel.setText(game.textUnderScore());          // cuenta regresiva o MUERTE SUBITA
+            timeLabel.setText(lines(game.textUnderScore()));   // cuenta regresiva o MUERTE SUBITA   
         } else {
             timeTitle.setText(game.textUnderScore());          // "Goles para ganar N"
             int time = game.getTime();                         // tiempo transcurrido
@@ -382,6 +382,12 @@ public class GamePanel extends JPanel{
         rightGoals.setText(String.valueOf(game.getPlayerGoals(Match.RIGHT_PLAYER)));
         leftPower.setValue(close((int)game.getPowerBar(Match.LEFT_PLAYER)));
         rightPower.setValue(close((int)game.getPowerBar(Match.RIGHT_PLAYER)));
+    }
+
+    // Salto de linea 
+    private static String lines(String text) {
+        if (!text.contains(" ")) return text;                       
+        return "<html><center>" + text.replace(" ", "<br>") + "</center></html>";
     }
 
     private static int close(int n) {

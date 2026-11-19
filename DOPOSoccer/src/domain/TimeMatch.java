@@ -3,7 +3,8 @@ package domain;
 import java.awt.Dimension;
 
 public class TimeMatch extends Match{
-    private int durationSecs;      
+    private int durationSecs;   
+    private boolean suddenDeath = false;
 
     public TimeMatch(String condition, Dimension resolution) throws DopoSoccerException{
         super(condition, resolution);
@@ -31,6 +32,10 @@ public class TimeMatch extends Match{
         //Se termina con ganador, muerte subita no
         if (leftGoals > rightGoals) finish(LEFT_PLAYER);
         else if (rightGoals > leftGoals) finish(RIGHT_PLAYER);
+        else if (isSuddenDeath() && !suddenDeath) {
+            kickOff();
+            suddenDeath = true;
+        }
     }
 
     public int getSecondsLeft(){
