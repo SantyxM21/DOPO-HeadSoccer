@@ -2,8 +2,8 @@ package domain;
 
 public abstract class Player extends CircularEntity {
     public static final int PLAYER_SIZE = 80;
-    public static final double SPEED = 5.0;
-    public static final double JUMP_FORCE = -5.5;  // negativo ya que Y disminuye hacia arriba
+    public static final double SPEED = 3.5;
+    public static final double JUMP_FORCE = -4.8;  // negativo ya que Y disminuye hacia arriba
 
     //Valores de prueba
     public static final double KICK_RANGE = 30;
@@ -108,12 +108,12 @@ public abstract class Player extends CircularEntity {
 
     public double getSpeedMultiplier(){
         int speedStat = profile.getStatLevel(Stats.SPEED_STAT);
-        return 1.0 + 0.03 * (speedStat - 1);
+        return 1.0 + 0.10 * (speedStat - 1);
     }
 
     public double getJumpMultiplier(){
         int jumpStat = profile.getStatLevel(Stats.JUMP_STAT);
-        return 1.0 + 0.03 * (jumpStat - 1);
+        return 1.0 + 0.10 * (jumpStat - 1);
     }
 
     public double getKickMultiplier(){

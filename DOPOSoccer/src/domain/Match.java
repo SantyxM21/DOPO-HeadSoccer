@@ -153,11 +153,6 @@ public abstract class Match {
     private void ballCollision(Player player){
         if (!ball.isTouching(player)) return;
         bounceBall(player);
-
-        if(ball.hasPower()) {
-            
-        }
-
         touchBall(player);      // despues del rebote para que no sobrescriba la velocidad del poder
     }
 
@@ -191,10 +186,6 @@ public abstract class Match {
         else if(ball.getChargedBy() != player && ball.hasPower()){  // Si golpea al rival y el balon tiene poder
             powerPunch(player);                                     // entonces empuja al jugador impactado
         }
-
-
-
-
     }
 
     private void powerPunch(Player victim){

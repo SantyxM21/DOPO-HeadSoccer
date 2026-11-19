@@ -33,6 +33,9 @@ public class GamePanel extends JPanel{
     private final CustomButton saveButton = new CustomButton("Guardar");
     private static final Image POPUP_BACKGROUND = DopoSoccerGUI.loadImage("/resources/fondo_popup.png");
     private static final Image AURA_IMAGE = DopoSoccerGUI.loadImage("/resources/aura.png");
+    private static final Image BALL_IMAGE = DopoSoccerGUI.loadImage("/resources/brazuca.png");
+    private Image scaledBall;                               
+    private int scaledBallSize;
     private static final double AURA_SCALE = 1.6;
     private static final Color POPUP_TEXT = new Color(27, 42, 85);
 
@@ -42,12 +45,12 @@ public class GamePanel extends JPanel{
     private final JProgressBar rightPower = new JProgressBar(0, 100);
     private final JProgressBar leftHealth = new JProgressBar(0, 100);
     private final JProgressBar rightHealth = new JProgressBar(0, 100);
-    private final JLabel leftName = new JLabel("Player 1", SwingConstants.RIGHT);
-    private final JLabel rightName = new JLabel("Machine", SwingConstants.LEFT);
+    private final JLabel leftName = new JLabel("Jugador 1", SwingConstants.RIGHT);
+    private final JLabel rightName = new JLabel("Jugador 2", SwingConstants.LEFT);
     private final JLabel leftFlag = new JLabel();
     private final JLabel rightFlag = new JLabel();
-    private final JLabel leftGoals = new JLabel("2", SwingConstants.CENTER);
-    private final JLabel rightGoals = new JLabel("1", SwingConstants.CENTER);
+    private final JLabel leftGoals = new JLabel("0", SwingConstants.CENTER);
+    private final JLabel rightGoals = new JLabel("0", SwingConstants.CENTER);
     private final JLabel timeLabel = new JLabel("0:00", SwingConstants.CENTER);
     private final JLabel timeTitle = new JLabel("Tiempo", SwingConstants.CENTER);
     private final RoundButton pauseButton = new RoundButton();
@@ -294,8 +297,8 @@ public class GamePanel extends JPanel{
             power.setBackground(Color.WHITE);
             power.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
         }
-        leftPower.setValue(0);
-        rightPower.setValue(60);
+        leftPower.setValue(0);                                      
+        rightPower.setValue(0);
 
         // Barras de vida
         Dimension healthSize = new Dimension(GAME_SIZE.width / 10, barH / 5);
@@ -306,6 +309,8 @@ public class GamePanel extends JPanel{
             health.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
             health.setStringPainted(true);                           // muestra "vida / vida maxima" sobre la barra
             health.setFont(new Font("Arial", Font.BOLD, barH / 7));
+            health.setValue(health.getMaximum());                    // el partido inicia con la vida al maximo
+            health.setString(health.getMaximum() + " / " + health.getMaximum());
         }
 
         // Textos
@@ -493,12 +498,27 @@ public class GamePanel extends JPanel{
         }
     }
 
+    // para escalar la imagen del balon
+    private Image ballImage(int diameter){
+        if (scaledBall == null || scaledBallSize != diameter) {
+            scaledBall = new ImageIcon(BALL_IMAGE.getScaledInstance(diameter, diameter, Image.SCALE_SMOOTH)).getImage();  // ImageIcon espera a que termine de escalar
+            scaledBallSize = diameter;
+        }
+        return scaledBall;
+    }
+
     public void drawBall(Graphics g){
         int diameter = game.getBallDiameter();
+        int x = game.getBallX();
+        int y = game.getBallY();
 
-        g.setColor(Color.ORANGE);
-        g.fillOval(game.getBallX(), game.getBallY(), diameter, diameter);
-        g.setColor(Color.BLACK);
-        g.drawOval(game.getBallX(), game.getBallY(), diameter, diameter);
+        if (BALL_IMAGE != null) {
+            g.drawImage(ballImage(diameter), x, y, this);
+        } else {
+            g.setColor(Color.ORANGE);                                 // si no hay imagen se dibuja un circulo
+            g.fillOval(x, y, diameter, diameter);
+            g.setColor(Color.BLACK);
+            g.drawOval(x, y, diameter, diameter);
+        }
     }
 }
