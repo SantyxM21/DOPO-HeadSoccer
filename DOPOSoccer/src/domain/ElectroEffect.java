@@ -6,8 +6,8 @@ public class ElectroEffect extends Effect{
     }
 
     @Override
-    public void applyEffect(Player target, int direction) {
-        super.applyEffect(target, direction);               
+    public void applyEffect(Player target, int direction, Field field) {
+        super.applyEffect(target, direction, field);               
         target.setSpeed(target.getSpeed()/2);               // se mueve al 50 % de su velocidad
         target.setJumpForce(0);                  // no puede saltar
     }

@@ -214,7 +214,7 @@ public abstract class Match {
     public void applyEffect(Player target, Effect effect, int direction){
         if (effectOf(target) != null) removeEffect(target);     // el nuevo efecto reemplaza al anterior
         setEffect(target, effect);
-        effect.applyEffect(target, direction);
+        effect.applyEffect(target, direction, field);
     }
 
     private void updateEffect(Player target, double seconds){

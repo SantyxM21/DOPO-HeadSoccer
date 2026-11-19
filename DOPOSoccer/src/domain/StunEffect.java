@@ -8,8 +8,8 @@ public class StunEffect extends Effect{
     }
 
     @Override
-    public void applyEffect(Player target, int direction) {
-        super.applyEffect(target, direction);
+    public void applyEffect(Player target, int direction, Field field) {
+        super.applyEffect(target, direction, field);
         target.setSpeed(0);
         target.setJumpForce(0);
         target.setKickForce(0);

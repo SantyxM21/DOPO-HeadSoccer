@@ -1,7 +1,7 @@
 package domain;
 
 public abstract class Power {
-    public static final double SHOT_SPEED = 10;
+    public static final double SHOT_SPEED = 5;
 
     protected String name;
     protected double shootDamage;
@@ -39,7 +39,7 @@ public abstract class Power {
     
     // Posición desde la que sale el balon con poder
     // todos los poderes salen por defecto a la misma altura que el personaje
-    public Vector2D positionAnimation(Player player, int direction){
+    public Vector2D positionAnimation(Player player, int direction, Field field){
         Vector2D centerPlayer = player.center();
         int radiusPlayer = player.diameter/2;
 

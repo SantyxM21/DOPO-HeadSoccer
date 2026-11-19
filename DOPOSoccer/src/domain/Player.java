@@ -221,12 +221,6 @@ public abstract class Player extends CircularEntity {
         health = getMaxHealth();
     }
 
-    public void pushHorizontal(double DistancePushedPerFrame){
-        double scaledDistancePushed = field.scale(DistancePushedPerFrame);
-        double rightmostAllowedX = field.getWidth() - diameter;
-        xPosition = Math.max(0, Math.min(xPosition + scaledDistancePushed, rightmostAllowedX));
-        velocity.setX(scaledDistancePushed);
-    }
 
     public boolean hasAura(){
         return aura;

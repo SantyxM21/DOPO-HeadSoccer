@@ -9,7 +9,7 @@ public abstract class Effect {
         this.timeLeft = duration;
     }
 
-    public void applyEffect(Player target, int direction) {
+    public void applyEffect(Player target, int direction, Field field) {
         timeLeft = duration;
     }
 
