@@ -21,7 +21,7 @@ public class Ball extends CircularEntity{
     public void kickOff(){
         clearCharge();
         xPosition = field.getWidth() / 2 - diameter / 2;
-        yPosition = field.getHeight() / 4;
+        yPosition = field.getHeight() / 3;
         velocity = new Vector2D(0, 0); //Valores Temporales
     }
 

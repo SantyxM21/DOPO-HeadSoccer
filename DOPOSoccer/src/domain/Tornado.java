@@ -17,7 +17,7 @@ public class Tornado extends Power{
     @Override 
     public Vector2D positionAnimation(Player player, int direction, Field field){
         int ground = field.getGroundY();
-        int playerRadius = player.getDiameter()/2;
+        double playerRadius = player.radius();
         double playerX = player.center().getX();
 
         return  new Vector2D(playerX + (direction*playerRadius), ground);

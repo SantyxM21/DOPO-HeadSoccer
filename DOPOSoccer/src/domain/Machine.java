@@ -2,6 +2,7 @@ package domain;
 
 public class Machine extends Player {
 
+    // TODO: los controles del segundo jugar aun funcionan cuando la maquina controla
     public static final int DUMB = 1;
     public static final int OFENSIVE = 2;
     public static final int DEFENSIVE = 3;

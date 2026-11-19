@@ -53,7 +53,7 @@ public abstract class Power {
     // todos los poderes salen por defecto a la misma altura que el personaje
     public Vector2D positionAnimation(Player player, int direction, Field field){
         Vector2D centerPlayer = player.center();
-        int radiusPlayer = player.diameter/2;
+        double radiusPlayer = player.radius();
 
         double initialX = centerPlayer.getX() + (radiusPlayer*direction);
         double initialY = centerPlayer.getY();
