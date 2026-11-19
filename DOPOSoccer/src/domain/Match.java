@@ -44,6 +44,9 @@ public abstract class Match {
     public void update(double seconds){
         if (isFinished) return;
 
+        leftPlayer.act(this, seconds);          // las maquinas deciden antes de la fisica y se les pasa match para que puedan obtener info de la partida
+        rightPlayer.act(this, seconds);
+
         leftPlayer.update(seconds);
         rightPlayer.update(seconds);
         updateEffect(leftPlayer, seconds);
@@ -116,8 +119,12 @@ public abstract class Match {
     // ==================== ACCIONES DEL JUGADOR ====================
 
     public void kick(int side){
+        kick(getPlayer(side));
+    }
+
+    // Las maquinas patean por aqui para que tambien se revise el aturdimiento del rival
+    public void kick(Player player){
         if (isFinished) return;
-        Player player = getPlayer(side);
         Player rival = rivalOf(player);
         player.kick(ball, rival, directionOf(player));
         checkStun(rival);

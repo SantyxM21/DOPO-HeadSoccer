@@ -198,6 +198,9 @@ public abstract class Player extends CircularEntity {
         this.goals = 0;
     }
 
+    public void act(Match match, double seconds){
+    }
+
     //Llamada cada frame
     public void update(double seconds){
         powerBar = Math.min(MAX_POWER_BAR, powerBar + MAX_POWER_BAR / POWER_BAR_CHARGE_SECONDS * seconds); //rapidez de carga
