@@ -162,6 +162,10 @@ public class DopoSoccer {
         return match.getPlayer(side).getHealth();
     }
 
+    public double getMaxHealth(int side){
+        return match.getPlayer(side).getMaxHealth();
+    }
+
     public boolean hasAura(int side){
         return match.getPlayer(side).hasAura();
     }

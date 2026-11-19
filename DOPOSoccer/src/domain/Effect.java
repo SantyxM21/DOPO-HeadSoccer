@@ -21,6 +21,10 @@ public abstract class Effect {
         }
     }
 
+    public void end(Player target) {
+        target.restoreValues();
+    }
+
     public boolean isFinished() {
         return timeLeft <= 0;
     }

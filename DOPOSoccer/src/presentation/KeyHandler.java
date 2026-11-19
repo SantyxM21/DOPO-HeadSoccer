@@ -10,6 +10,9 @@ public class KeyHandler implements KeyListener {
     //derecho
     public boolean leftPressedR, rightPressedR, jumpPressedR, kickPressedR, powerPressedR;
 
+    // y kickHeld evita patear con la tecla presionada
+    private boolean kickHeld, kickHeldR;
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -37,10 +40,12 @@ public class KeyHandler implements KeyListener {
             jumpPressedR = true;
         }
         if(code == KeyEvent.VK_Q){
-            kickPressed = true;
+            if (!kickHeld) kickPressed = true;
+            kickHeld = true;
         }
         if(code == KeyEvent.VK_M){
-            kickPressedR = true;
+            if (!kickHeldR) kickPressedR = true;
+            kickHeldR = true;
         }
         if(code == KeyEvent.VK_E){
             powerPressed = true;
@@ -75,10 +80,10 @@ public class KeyHandler implements KeyListener {
             jumpPressedR = false;
         }
         if(code == KeyEvent.VK_Q){
-            kickPressed = false;
+            kickHeld = false;
         }
         if(code == KeyEvent.VK_M){
-            kickPressedR = false;
+            kickHeldR = false;
         }
         if(code == KeyEvent.VK_E){
             powerPressed = false;

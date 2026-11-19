@@ -105,7 +105,14 @@ public abstract class Match {
     public void kick(int side){
         if (isFinished) return;
         Player player = getPlayer(side);
-        player.kick(ball, directionOf(player));
+        Player rival = rivalOf(player);
+        player.kick(ball, rival, directionOf(player));
+        checkStun(rival);
+    }
+
+    private Player rivalOf(Player player){
+        if (player == leftPlayer) return rightPlayer;
+        return leftPlayer;
     }
 
     private int directionOf(Player player){
@@ -178,7 +185,7 @@ public abstract class Match {
     }
 
     private void touchBall(Player player){
-        if(player.hasAura()){                                       // Si el jugador tiene aura aplica el poder
+        if(!ball.hasPower() && player.hasAura()){                                       // Si el jugador tiene aura aplica el poder
             player.powerShoot(ball, directionOf(player));
         }
         else if(ball.getChargedBy() != player && ball.hasPower()){  // Si golpea al rival y el balon tiene poder
@@ -196,6 +203,12 @@ public abstract class Match {
         ball.clearCharge();
 
         applyEffect(victim, power.hit(victim, shooter), -directionOf(victim)); //empuja hacia su arco
+        // checkStun(victim);                                      // si el tiro lo deja sin vida, el aturdimiento reemplaza al efecto del poder
+    }
+
+    /* Si la vida del jugador llego a cero por los golpes del rival, queda aturdido */
+    private void checkStun(Player victim){
+        if (victim.getHealth() == 0) applyEffect(victim, new StunEffect(), 0);
     }
 
     public void applyEffect(Player target, Effect effect, int direction){
@@ -212,7 +225,7 @@ public abstract class Match {
     }
 
     private void removeEffect(Player target){
-        target.restoreValues();
+        effectOf(target).end(target);                           // cada efecto sabe como devolver al jugador a la normalidad
         setEffect(target, null);
     }
 

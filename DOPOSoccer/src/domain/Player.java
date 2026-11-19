@@ -9,6 +9,7 @@ public abstract class Player extends CircularEntity {
     public static final double KICK_RANGE = 30;
     public static final double X_KICK_SPEED = 8;
     public static final double Y_KICK_SPEED = 8;
+    public static final double KICK_DAMAGE = 10;     
 
     public static final double MAX_POWER_BAR = 100.0;
     public static final double POWER_BAR_CHARGE_SECONDS = 1.0;
@@ -61,20 +62,32 @@ public abstract class Player extends CircularEntity {
         yPosition = Math.min(yPosition + dy, groundY);
     }
 
-    public void kick(Ball ball, int direction){
-        if (kickForce == 0) return;
-        Vector2D distance = Vector2D.subtract(ball.center(), center());
+    public void kick(Ball ball, Player rival, int direction){
+        if (kickForce == 0) return;                                     
 
-        boolean isClose = Vector2D.length(distance) <= radius() + ball.radius() + kickRange; //Si esta cerca al balon, tomando su centro como referencia
-        boolean isInFront = direction * distance.getX() >= 0; //Si esta hacia donde patea el jugador
-
-        if (isClose && isInFront){
+        if (inKickRange(ball, direction)){                              // si la patada toca el balon, solo impulsa el balon
             if (aura) powerShoot(ball, direction);
             else{
                 ball.clearCharge(); // evita que quede un balón cargado "flotando" si el rival lo patea
                 ball.setVelocity(new Vector2D(direction * xKickSpeed * kickForce, -yKickSpeed * kickForce));
             }
         }
+        else if (inKickRange(rival, direction) && rival.getHealth() > 0){   // a un rival aturdido no se le hace mas daño
+            rival.takeDamage(KICK_DAMAGE * getKickMultiplier());
+        }
+    }
+
+    /*
+    This method tells if a circular entity is within reach of the player's foot
+    @param target the ball or the rival
+    @param direction the direction the player kicks to (1 right, -1 left)
+    @return true if the target is close and in front of the player
+    */
+    private boolean inKickRange(CircularEntity target, int direction){
+        Vector2D distance = Vector2D.subtract(target.center(), center());
+        boolean isClose = Vector2D.length(distance) <= radius() + target.radius() + kickRange; //Si esta cerca, tomando su centro como referencia
+        boolean isInFront = direction * distance.getX() >= 0; //Si esta hacia donde patea el jugador
+        return isClose && isInFront;
     }
 
     public void jump(){
@@ -202,6 +215,10 @@ public abstract class Player extends CircularEntity {
 
     public void takeDamage(double damage){
         health = Math.max(0, health - damage);
+    }
+
+    public void restoreHealth(){
+        health = getMaxHealth();
     }
 
     public void pushHorizontal(double DistancePushedPerFrame){

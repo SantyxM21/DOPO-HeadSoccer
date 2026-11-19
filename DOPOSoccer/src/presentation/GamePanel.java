@@ -40,6 +40,8 @@ public class GamePanel extends JPanel{
 
     private final JProgressBar leftPower = new JProgressBar(0, 100);
     private final JProgressBar rightPower = new JProgressBar(0, 100);
+    private final JProgressBar leftHealth = new JProgressBar(0, 100);
+    private final JProgressBar rightHealth = new JProgressBar(0, 100);
     private final JLabel leftName = new JLabel("Player 1", SwingConstants.RIGHT);
     private final JLabel rightName = new JLabel("Machine", SwingConstants.LEFT);
     private final JLabel leftFlag = new JLabel();
@@ -52,6 +54,7 @@ public class GamePanel extends JPanel{
 
     // Colores del marcador
     private static final Color POWER_FILL = new Color(24, 40, 82);
+    private static final Color HEALTH_FILL = new Color(46, 160, 67);
 
     public GamePanel(DopoSoccer game){
         super();
@@ -147,7 +150,10 @@ public class GamePanel extends JPanel{
         if(!game.hasMatch() || game.isFinished()) return;    
 
         if(keyH.powerPressed) game.activatePower(Match.LEFT_PLAYER);
-        if(keyH.kickPressed) game.kick(Match.LEFT_PLAYER);                 
+        if(keyH.kickPressed){                                   // una patada por vez presionada, para no hacer daño en cada frame
+            game.kick(Match.LEFT_PLAYER);
+            keyH.kickPressed = false;
+        }
         int direction = 0;
         // Se usa -= y += en caso de qque ambas teclas se presionen al tiempo se "cancelen"
         if(keyH.leftPressed) direction -= 1;
@@ -156,7 +162,10 @@ public class GamePanel extends JPanel{
         if(direction != 0) game.move(Match.LEFT_PLAYER, direction);
 
         if(keyH.powerPressedR) game.activatePower(Match.RIGHT_PLAYER);
-        if(keyH.kickPressedR) game.kick(Match.RIGHT_PLAYER);   
+        if(keyH.kickPressedR){
+            game.kick(Match.RIGHT_PLAYER);
+            keyH.kickPressedR = false;
+        }
         int direction2 = 0;
         if(keyH.leftPressedR) direction2 -= 1;
         if(keyH.rightPressedR) direction2 += 1;
@@ -285,8 +294,19 @@ public class GamePanel extends JPanel{
             power.setBackground(Color.WHITE);
             power.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
         }
-        leftPower.setValue(0);                                       
-        rightPower.setValue(60);                                     
+        leftPower.setValue(0);
+        rightPower.setValue(60);
+
+        // Barras de vida
+        Dimension healthSize = new Dimension(GAME_SIZE.width / 10, barH / 5);
+        for (JProgressBar health : new JProgressBar[]{leftHealth, rightHealth}) {
+            health.setPreferredSize(healthSize);
+            health.setForeground(HEALTH_FILL);
+            health.setBackground(Color.WHITE);
+            health.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+            health.setStringPainted(true);                           // muestra "vida / vida maxima" sobre la barra
+            health.setFont(new Font("Arial", Font.BOLD, barH / 7));
+        }
 
         // Textos
         leftName.setFont(textFont);
@@ -327,9 +347,9 @@ public class GamePanel extends JPanel{
         // Tres columnas iguales: jugador 1 / centro / jugador 2 
         JPanel row = new JPanel(new GridLayout(1, 3, gap, 0));
         row.setOpaque(false);
-        row.add(stack(keepHeight(leftPower), leftName));
+        row.add(stack(keepHeight(bars(leftHealth, leftPower)), leftName));
         row.add(center);
-        row.add(stack(keepHeight(rightPower), rightName));
+        row.add(stack(keepHeight(bars(rightHealth, rightPower)), rightName));
 
         // La pausa va aparte a la derecha
         JPanel pauseHolder = new JPanel(new FlowLayout(FlowLayout.CENTER, gap, barH / 6));
@@ -354,6 +374,15 @@ public class GamePanel extends JPanel{
         holder.setOpaque(false);
         holder.add(component, BorderLayout.NORTH);                   // NORTH respeta el alto y estira el ancho
         return holder;
+    }
+
+    /* Pone la barra de vida encima de la barra de poder */
+    private JPanel bars(JProgressBar health, JProgressBar power){
+        JPanel panel = new JPanel(new GridLayout(2, 1, 0, 2));
+        panel.setOpaque(false);
+        panel.add(health);
+        panel.add(power);
+        return panel;
     }
 
     /* Apila los componentes uno encima del otro */
@@ -382,6 +411,21 @@ public class GamePanel extends JPanel{
         rightGoals.setText(String.valueOf(game.getPlayerGoals(Match.RIGHT_PLAYER)));
         leftPower.setValue(close((int)game.getPowerBar(Match.LEFT_PLAYER)));
         rightPower.setValue(close((int)game.getPowerBar(Match.RIGHT_PLAYER)));
+        showHealth(leftHealth, Match.LEFT_PLAYER);
+        showHealth(rightHealth, Match.RIGHT_PLAYER);
+    }
+
+    /*
+    This method shows a player's current health in its bar
+    @param bar the player's health bar
+    @param player the side of the player
+    */
+    private void showHealth(JProgressBar bar, int player){
+        int health = (int) Math.ceil(game.getHealth(player));         
+        int maxHealth = (int) game.getMaxHealth(player);
+        bar.setMaximum(maxHealth);
+        bar.setValue(health);
+        bar.setString(health + " / " + maxHealth);
     }
 
     // Salto de linea 
