@@ -104,7 +104,9 @@ public class Ball extends CircularEntity{
     public void chargePower(Power power, Player chargedBy, int direction){
         chargedPower = power;
         this.chargedBy = chargedBy;
-        velocity = power.shotVelocity(direction, field);
+
+        setPositions(power.positionAnimation(chargedBy, direction));        // posición desde donde sale la animación del poder
+        setVelocity(power.shotVelocity(direction, field));                  // la velocidad con la que sale el balon al estar cargada de un poder
     }
 
     public void clearCharge(){

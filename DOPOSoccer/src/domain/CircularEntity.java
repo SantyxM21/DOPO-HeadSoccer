@@ -59,4 +59,9 @@ public abstract class CircularEntity {
     public void setVelocity(Vector2D velocity){
         this.velocity = new Vector2D(velocity.getX(), velocity.getY());
     }
+
+    public void setPositions(Vector2D positions){
+        setXPosition(positions.getX());
+        setYPosition(positions.getY());
+    }
 }

@@ -203,7 +203,7 @@ public abstract class Match {
         ball.clearCharge();
 
         applyEffect(victim, power.hit(victim, shooter), -directionOf(victim)); //empuja hacia su arco
-        // checkStun(victim);                                      // si el tiro lo deja sin vida, el aturdimiento reemplaza al efecto del poder
+        checkStun(victim);                                      // si el tiro lo deja sin vida, el aturdimiento reemplaza al efecto del poder
     }
 
     /* Si la vida del jugador llego a cero por los golpes del rival, queda aturdido */
