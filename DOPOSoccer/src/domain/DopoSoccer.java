@@ -55,7 +55,8 @@ public class DopoSoccer {
         match.addHuman(side, character, profile);
     }
 
-    public void addMachine(int side, String character, String machineType){
+    public void addMachine(int side, String character, Profile profile, int machineType) throws DopoSoccerException{
+        match.addMachine(side, character, profile, machineType);
     }
 
     // ==================== ACCIONES DEL JUGADOR ====================

@@ -79,6 +79,19 @@ public abstract class Match {
         else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
     }
 
+    public void addMachine(int side, String character, Profile profile, int machineType) throws DopoSoccerException{
+        Machine newMachine;
+        if(machineType == Machine.DUMB) newMachine = new DumbMachine(Character_.create(character), startX(side), startY(), field, profile, machineType);
+        else if(machineType == Machine.OFENSIVE) newMachine = new OfensiveMachine(Character_.create(character), startX(side), startY(), field, profile, machineType);
+        else if(machineType == Machine.DEFENSIVE) newMachine = new DefensiveMachine(Character_.create(character), startX(side), startY(), field, profile, machineType);
+        else if(machineType == Machine.EXPERT) newMachine = new ExpertMachine(Character_.create(character), startX(side), startY(), field, profile, machineType);
+        else throw new DopoSoccerException(DopoSoccerException.INVALID_MACHINE);
+
+        if(side == LEFT_PLAYER) leftPlayer = newMachine;
+        else if (side == RIGHT_PLAYER) rightPlayer = newMachine;
+        else throw new DopoSoccerException(DopoSoccerException.INVALID_SITE);
+    }
+
     public Player getPlayer(int side){
         if(side == LEFT_PLAYER) return leftPlayer;
         else if(side == RIGHT_PLAYER) return rightPlayer;

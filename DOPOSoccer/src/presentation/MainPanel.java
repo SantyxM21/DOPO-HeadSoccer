@@ -2,6 +2,7 @@ package presentation;
 
 import domain.DopoSoccer;
 import domain.DopoSoccerException;
+import domain.Machine;
 import domain.Match;
 import java.awt.*;
 import javax.swing.*;
@@ -103,23 +104,26 @@ public class MainPanel extends JPanel{
     }
 
     public boolean startGame(String leftCountry, String rightCountry) {
-        if(DopoSoccer.PVSP_MODE == playersMode){
-            try{
+        try {
+            if(DopoSoccer.PVSP_MODE == playersMode){
                 game.newGame(matchMode, String.valueOf(confingMode), GAME_SIZE);   // el dominio recibe la condicion como String y la valida
                 game.addHuman(Match.LEFT_PLAYER, leftCountry, game.getProfile(Match.LEFT_PLAYER));
                 game.addHuman(Match.RIGHT_PLAYER, rightCountry, game.getProfile(Match.RIGHT_PLAYER));
                 gamePage.setCountries(leftCountry, rightCountry);
                 return true;
-            } catch (DopoSoccerException e){
-                JOptionPane.showMessageDialog(null, e.getMessage());
-                return false;
             }
-        }
-        else {
-            funcUnderConstruction(DopoSoccerException.UNDER_CONSTRUCTION); //Aun no hay mas modos de juegos implementados
+            else if(DopoSoccer.PVSM_MODE == playersMode){
+                game.newGame(matchMode, String.valueOf(confingMode), GAME_SIZE);   
+                game.addHuman(Match.LEFT_PLAYER, leftCountry, game.getProfile(Match.LEFT_PLAYER));
+                game.addMachine(Match.RIGHT_PLAYER, rightCountry, game.getProfile(Match.RIGHT_PLAYER), Machine.DUMB); // Machine dumb temporal
+                return true;
+            }
+
+            return false;
+        } catch (DopoSoccerException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
             return false;
         }
-
     }
 
     /* 

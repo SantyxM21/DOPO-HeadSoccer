@@ -12,6 +12,7 @@ public class DopoSoccerException extends Exception {
 
     public static final String INVALID_GOALS = "Deben ser goles positivos";
     public static final String INVALID_TIME = "El tiempo debe ser positivo";
+    public static final String INVALID_MACHINE = "No existe ese tipo de maquina";
 
     public DopoSoccerException(String ms){
         super(ms);
