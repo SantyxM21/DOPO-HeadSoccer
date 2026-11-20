@@ -113,7 +113,7 @@ public class MainPanel extends JPanel{
             else if(DopoSoccer.PVSM_MODE == playersMode){
                 game.newGame(matchMode, String.valueOf(confingMode), GAME_SIZE);   
                 game.addHuman(Match.LEFT_PLAYER, leftCountry, game.getProfile(Match.LEFT_PLAYER));
-                game.addMachine(Match.RIGHT_PLAYER, rightCountry, game.getProfile(Match.RIGHT_PLAYER), Machine.OFENSIVE); // Machine dumb temporal
+                game.addMachine(Match.RIGHT_PLAYER, rightCountry, game.getProfile(Match.RIGHT_PLAYER), Machine.DEFENSIVE); // Machine dumb temporal
             }else  return false;
             
             gamePage.setCountries(leftCountry, rightCountry);
