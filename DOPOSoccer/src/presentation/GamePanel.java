@@ -35,6 +35,7 @@ public class GamePanel extends JPanel{
     private static final Image POPUP_BACKGROUND = DopoSoccerGUI.loadImage("/resources/fondo_popup.png");
     private static final Image AURA_IMAGE = DopoSoccerGUI.loadImage("/resources/aura.png");
     private static final Image BALL_IMAGE = DopoSoccerGUI.loadImage("/resources/brazuca.png");
+    private static final Image NET_IMAGE = DopoSoccerGUI.loadImage("/resources/net.png");
     private Image scaledBall;                               
     private int scaledBallSize;
     private static final double AURA_SCALE = 1.6;
@@ -503,10 +504,31 @@ public class GamePanel extends JPanel{
     }
 
     public void drawField(Graphics g){
+        /*
         g.setColor(Color.WHITE);
         for(int side = Match.LEFT_PLAYER; side <= Match.RIGHT_PLAYER; side++){
             g.drawRect(game.getGoalFrameX(side), game.getGoalFrameY(), game.getGoalFrameWidth(), game.getGoalFrameHeight());
+        } */
+        int x;
+        int y = game.getGoalFrameY();
+        int width = game.getGoalFrameWidth();
+        int height = game.getGoalFrameHeight();
+
+        for (int i = Match.LEFT_PLAYER; i <= Match.RIGHT_PLAYER; i++){
+            x = game.getGoalFrameX(i);
+            if (NET_IMAGE == null) {
+                g.setColor(Color.WHITE);
+                g.drawRect(x, y, width, height);
+            } 
+            else if(i == Match.LEFT_PLAYER) g.drawImage(NET_IMAGE, x, y, width, height, this);
+            else if(i == Match.RIGHT_PLAYER){
+                int imageWidth = NET_IMAGE.getWidth(this);
+                int imageHeight = NET_IMAGE.getHeight(this);
+                g.drawImage(NET_IMAGE, x + width, y, x, y + height, 0, 0, imageWidth, imageHeight, this);
+            }
         }
+
+        
     }
 
     // para escalar la imagen del balon
