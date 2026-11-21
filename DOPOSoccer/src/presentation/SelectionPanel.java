@@ -1,6 +1,7 @@
 package presentation;
 
 import domain.DopoSoccer;
+import domain.Machine;
 import domain.Match;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,6 +23,8 @@ public class SelectionPanel extends JPanel {
     private CustomButton rightNext;
     private JLabel leftName;
     private JLabel rightName;
+    private JComboBox<String> machineProfile;      // reemplaza a rightName cuando el rival es una maquina
+    private JPanel rightNameHolder;                 // muestra rightName o machineProfile segun la modalidad
 
     private int leftOption = 0;
     private int rightOption = 0;
@@ -41,6 +44,8 @@ public class SelectionPanel extends JPanel {
         rightNext = new CustomButton("→");
         leftName = new JLabel("", SwingConstants.CENTER);
         rightName = new JLabel("", SwingConstants.CENTER);
+        machineProfile = new JComboBox<>(Machine.PROFILE_NAMES);
+        machineProfile.setSelectedIndex(Machine.EXPERT - 1);
     }
 
     /*
@@ -67,9 +72,10 @@ public class SelectionPanel extends JPanel {
         // Tres columnas: jugador izquierdo, centro (jugar) y jugador derecho / máquina
         JPanel body = new JPanel(new GridLayout(1, 3));
         body.setOpaque(false);
+        styleNameLabel(leftName);
         body.add(createCharacterColumn(leftCharacter, DopoSoccer.COUNTRIES[leftOption], leftPrevious, leftNext, leftName));
         body.add(createCenterColumn());
-        body.add(createCharacterColumn(rightCharacter, DopoSoccer.COUNTRIES[rightOption], rightPrevious, rightNext, rightName));
+        body.add(createCharacterColumn(rightCharacter, DopoSoccer.COUNTRIES[rightOption], rightPrevious, rightNext, createRightNameHolder()));
 
         this.add(topBar, BorderLayout.NORTH);
         this.add(body, BorderLayout.CENTER);
@@ -106,7 +112,7 @@ public class SelectionPanel extends JPanel {
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (main.startGame(DopoSoccer.COUNTRIES[leftOption], DopoSoccer.COUNTRIES[rightOption])) main.showPage("Game");
+                if (main.startGame(DopoSoccer.COUNTRIES[leftOption], DopoSoccer.COUNTRIES[rightOption], getMachineType())) main.showPage("Game");
             }
         });
 
@@ -151,15 +157,80 @@ public class SelectionPanel extends JPanel {
     }
 
     /*
+    This method adapts the page to the chosen modality: against a machine the right
+    player shows the machine profile selector and the profiles can not be swapped
+    @param mode DopoSoccer.PVSP_MODE or DopoSoccer.PVSM_MODE
+    */
+    public void setPlayersMode(int mode){
+        boolean vsMachine = mode == DopoSoccer.PVSM_MODE;
+        ((CardLayout) rightNameHolder.getLayout()).show(rightNameHolder, vsMachine ? MACHINE_CARD : HUMAN_CARD);
+        swapButton.setEnabled(!vsMachine);
+        swapButton.setCursor(new Cursor(vsMachine ? Cursor.DEFAULT_CURSOR : Cursor.HAND_CURSOR));
+    }
+
+    /*
+    This method returns the machine profile chosen in the selector
+    @return Machine.DUMB, Machine.OFENSIVE, Machine.DEFENSIVE or Machine.EXPERT
+    */
+    public int getMachineType(){
+        return machineProfile.getSelectedIndex() + 1;       // PROFILE_NAMES esta en el mismo orden que los tipos
+    }
+
+    private static final String HUMAN_CARD = "human";
+    private static final String MACHINE_CARD = "machine";
+
+    /*
+    This method creates the area below the right arrows, that shows either
+    the profile name (vs player) or the machine profile selector (vs machine)
+    @return the panel that switches between both
+    */
+    private JPanel createRightNameHolder(){
+        styleNameLabel(rightName);
+
+        machineProfile.setFont(rightName.getFont());
+        machineProfile.setBackground(Color.WHITE);
+        machineProfile.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        machineProfile.setFocusable(false);
+        machineProfile.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        machineProfile.setToolTipText("Perfil de la máquina");
+        if (machineProfile.getRenderer() instanceof JLabel) ((JLabel) machineProfile.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        int labelHeight = rightName.getFontMetrics(rightName.getFont()).getHeight() + 6;       // casi la misma altura que la etiqueta, sin recortar el texto del combo
+        machineProfile.setPreferredSize(new Dimension(machineProfile.getPreferredSize().width + GAME_SIZE.width / 30, labelHeight));
+
+        rightNameHolder = new JPanel(new CardLayout());
+        rightNameHolder.setOpaque(false);
+        rightNameHolder.add(keepCentered(rightName), HUMAN_CARD);
+        rightNameHolder.add(keepCentered(machineProfile), MACHINE_CARD);
+        return rightNameHolder;
+    }
+
+    // Envuelve el componente para que CardLayout no lo estire y se vea con su tamaño natural
+    private JPanel keepCentered(JComponent component){
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        wrapper.setOpaque(false);
+        wrapper.add(component);
+        return wrapper;
+    }
+
+    private void styleNameLabel(JLabel name){
+        name.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 35));
+        name.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.BLACK, 2),
+                BorderFactory.createEmptyBorder(0, GAME_SIZE.width / 30, 0, GAME_SIZE.width / 30)));
+        name.setOpaque(true);
+        name.setBackground(Color.WHITE);
+    }
+
+    /*
     This method creates a column with a character circle, its arrows and the player name
     @param character the round button that shows the character
     @param characterName the text shown inside the circle
     @param previous the button to select the previous character
     @param next the button to select the next character
-    @param name the label with the profile name shown below the arrows
+    @param name the component shown below the arrows (profile name or machine selector)
     @return the panel that contains the whole column
     */
-    private JPanel createCharacterColumn(RoundButton character, String characterName, CustomButton previous, CustomButton next, JLabel name){
+    private JPanel createCharacterColumn(RoundButton character, String characterName, CustomButton previous, CustomButton next, JComponent name){
         int side = GAME_SIZE.height / 4;
         Dimension fixed = new Dimension(side, side);      // diámetro fijo del círculo
         character.setPreferredSize(fixed);
@@ -173,13 +244,6 @@ public class SelectionPanel extends JPanel {
         arrows.setOpaque(false);
         arrows.add(previous);
         arrows.add(next);
-
-        name.setFont(new Font("Arial", Font.BOLD, GAME_SIZE.height / 35));
-        name.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.BLACK, 2),
-                BorderFactory.createEmptyBorder(0, GAME_SIZE.width / 30, 0, GAME_SIZE.width / 30)));
-        name.setOpaque(true);
-        name.setBackground(Color.WHITE);
 
         return stackCentered(GAME_SIZE.height / 40, character, arrows, name);
     }

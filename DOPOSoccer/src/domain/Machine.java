@@ -7,6 +7,7 @@ public class Machine extends Player {
     public static final int OFENSIVE = 2;
     public static final int DEFENSIVE = 3;
     public static final int EXPERT = 4;
+    public static final String[] PROFILE_NAMES = {"Torpe", "Ofensiva", "Defensiva", "Experta"};   
 
     public static final int POSSIBLE_MOVES = 5;
     

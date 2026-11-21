@@ -95,7 +95,7 @@ public class MainPanel extends JPanel{
         showPage("Home menu");
     }
 
-    public boolean startGame(String leftCountry, String rightCountry) {
+    public boolean startGame(String leftCountry, String rightCountry, int machineType) {
         try {
             if(DopoSoccer.PVSP_MODE == playersMode){
                 game.newGame(matchMode, String.valueOf(confingMode), GAME_SIZE);   // el dominio recibe la condicion como String y la valida
@@ -105,7 +105,7 @@ public class MainPanel extends JPanel{
             else if(DopoSoccer.PVSM_MODE == playersMode){
                 game.newGame(matchMode, String.valueOf(confingMode), GAME_SIZE);   
                 game.addHuman(Match.LEFT_PLAYER, leftCountry, game.getProfile(Match.LEFT_PLAYER));
-                game.addMachine(Match.RIGHT_PLAYER, rightCountry, game.getProfile(Match.RIGHT_PLAYER), Machine.EXPERT); // Machine dumb temporal
+                game.addMachine(Match.RIGHT_PLAYER, rightCountry, game.getProfile(Match.RIGHT_PLAYER), machineType);   // perfil elegido en la seleccion de personaje
             }else  return false;
             
             gamePage.setCountries(leftCountry, rightCountry);
@@ -135,6 +135,7 @@ public class MainPanel extends JPanel{
 
     public void setPlayersMode(int mode){
         this.playersMode = mode;
+        selectionPage.setPlayersMode(mode);     // muestra el selector de maquina y bloquea el swap en PvsM
     }
 
     public void setConfigMode(int configuration){
