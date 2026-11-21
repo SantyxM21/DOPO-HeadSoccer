@@ -509,9 +509,13 @@ public class GamePanel extends JPanel{
 
     public void drawBall(Graphics g){
         int diameter = game.getBallDiameter();
-        int x = game.getBallX();
-        int y = game.getBallY();
+        drawBallAt(g, game.getBallX(), game.getBallY(), diameter);
+        for (int i = 0; i < game.getFakeBallCount(); i++){         // los falsos se ven igual que el real
+            drawBallAt(g, game.getFakeBallX(i), game.getFakeBallY(i), diameter);
+        }
+    }
 
+    private void drawBallAt(Graphics g, int x, int y, int diameter){
         if (BALL_IMAGE != null) {
             g.drawImage(ballImage(diameter), x, y, this);
         } else {

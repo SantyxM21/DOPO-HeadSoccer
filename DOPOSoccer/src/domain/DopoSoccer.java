@@ -189,6 +189,19 @@ public class DopoSoccer {
         return match.getBall().getDiameter();
     }
 
+    // Balones falsos del tiro Ilusion, se dibujan igual que el real
+    public int getFakeBallCount(){
+        return match.getFakeBalls().size();
+    }
+
+    public int getFakeBallX(int index){
+        return match.getFakeBalls().get(index).getXPosition();
+    }
+
+    public int getFakeBallY(int index){
+        return match.getFakeBalls().get(index).getYPosition();
+    }
+
     // ==================== CANCHA ====================
 
     public int getGroundY(){

@@ -1,6 +1,8 @@
 package domain;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Match {
     public static final int LEFT_PLAYER = 1;
@@ -23,6 +25,7 @@ public abstract class Match {
     private Effect rightEffect;
     private Field field;
     private Ball ball;
+    private List<FakeBall> fakeBalls = new ArrayList<>();  // solo se dibujan, no chocan con los jugadores ni marcan goles
 
     private boolean isFinished;
     private int winnerSide = 0;
@@ -56,6 +59,7 @@ public abstract class Match {
         rightPlayer.applyGravity();
         playersCollision();
         ball.move();
+        updateFakeBalls(seconds);
 
         ballCollision(leftPlayer);
         ballCollision(rightPlayer);
@@ -124,9 +128,10 @@ public abstract class Match {
 
     // Las maquinas patean por aqui para que tambien se revise el aturdimiento del rival
     public void kick(Player player){
-        if (isFinished) return;
+        if (isFinished || ball.hasPower()) return;
         Player rival = rivalOf(player);
         player.kick(ball, rival, directionOf(player));
+        if (ball.hasPower()) releaseFakeBalls(player);         // la patada salio como tiro de poder
         checkStun(rival);
     }
 
@@ -202,6 +207,7 @@ public abstract class Match {
     private void touchBall(Player player){
         if(!ball.hasPower() && player.hasAura()){                                       // Si el jugador tiene aura aplica el poder
             player.powerShoot(ball, directionOf(player));
+            releaseFakeBalls(player);
         }
         else if(ball.getChargedBy() != player && ball.hasPower()){  // Si golpea al rival y el balon tiene poder
             powerPunch(player);                                     // entonces empuja al jugador impactado
@@ -278,6 +284,26 @@ public abstract class Match {
         resetPlayer(rightPlayer, RIGHT_PLAYER);
 
         ball.kickOff();
+        fakeBalls.clear();
+    }
+
+    // ==================== BALONES FALSOS ====================
+
+    private void releaseFakeBalls(Player shooter){
+        fakeBalls = ball.getChargedPower().createFakes(ball, shooter, directionOf(shooter), field);
+    }
+
+    private void updateFakeBalls(double seconds){
+        for (FakeBall fake : fakeBalls){
+            fake.move();
+            fake.keepInsideField();
+            fake.update(seconds);
+        }
+        fakeBalls.removeIf(FakeBall::isFinished);
+    }
+
+    public List<FakeBall> getFakeBalls(){
+        return new ArrayList<>(fakeBalls);
     }
 
     private void resetPlayer(Player player, int side){

@@ -1,5 +1,8 @@
 package domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Power {
     public static final double SHOT_SPEED = 5;
 
@@ -59,5 +62,11 @@ public abstract class Power {
         double initialY = centerPlayer.getY();
 
         return new Vector2D(initialX, initialY);
+    }
+
+    // Balones falsos que acompañan al tiro
+    // por defecto el tiro sale sin balones falsos
+    public List<FakeBall> createFakes(Ball real, Player shooter, int direction, Field field){
+        return new ArrayList<>();
     }
 }

@@ -3,7 +3,7 @@ package domain;
 public class Ball extends CircularEntity{
     public static final int BASE_DIAMETER = 40;
     public static final double WALL_FRICTION = 0.8;
-    public static final double AIR_FRICTION = 0.999;
+    public static final double AIR_FRICTION = 0.9999;
     public static final double FLOOR_FRICTION = 0.75;
     public static final double MIN_ROLLING_SPEED = 0.7;
 
