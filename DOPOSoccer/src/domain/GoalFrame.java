@@ -1,6 +1,8 @@
 package domain;
 
-public class GoalFrame {
+import java.io.Serializable;
+
+public class GoalFrame implements Serializable{
     private final double xPosition;
     private final double yPosition;
     private final int width;

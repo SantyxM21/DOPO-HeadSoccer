@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Stats {
+public class Stats implements Serializable{
     public static final int SPEED_STAT = 0;
     public static final int JUMP_STAT = 1;
     public static final int KICK_STAT = 2;

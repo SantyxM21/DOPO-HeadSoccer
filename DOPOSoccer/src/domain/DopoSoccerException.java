@@ -14,6 +14,12 @@ public class DopoSoccerException extends Exception {
     public static final String INVALID_TIME = "El tiempo debe ser positivo";
     public static final String INVALID_MACHINE = "No existe ese tipo de maquina";
 
+    public static final String INVALID_DOPO_EXTENSION = "La extension del archivo debe ser .dopo";
+    public static final String FILE_NOT_FOUND = "No se encuentra el archivo.";
+    public static final String NOT_SERIALIZABLE = "No se permite guardar el archivo porque hay elementos invalidos.";
+    public static final String ERROR_WHILE_WRITING = "Ocurrio un error mientras se escribia el archivo.";
+    public static final String GENERAL_ERROR = "Se ha presentado un error general.";
+
     public DopoSoccerException(String ms){
         super(ms);
     }

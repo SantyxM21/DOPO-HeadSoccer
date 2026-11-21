@@ -1,9 +1,10 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Power {
+public abstract class Power implements Serializable{
     public static final double SHOT_SPEED = 5;
 
     protected String name;

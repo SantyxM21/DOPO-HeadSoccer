@@ -1,5 +1,7 @@
 package domain;
 
+import java.io.Serializable;
+
 public class Ball extends CircularEntity{
     public static final int BASE_DIAMETER = 40;
     public static final double WALL_FRICTION = 0.8;

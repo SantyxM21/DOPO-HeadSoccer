@@ -1,6 +1,8 @@
 package domain;
 
-public abstract class Effect {
+import java.io.Serializable;
+
+public abstract class Effect implements Serializable{
     protected double duration;
     protected double timeLeft;
 

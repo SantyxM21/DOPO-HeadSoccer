@@ -1,6 +1,8 @@
 package domain;
 
-public abstract class CircularEntity {
+import java.io.Serializable;
+
+public abstract class CircularEntity implements Serializable{
     public static final double GRAVITY = 0.15;
 
     protected final Field field;

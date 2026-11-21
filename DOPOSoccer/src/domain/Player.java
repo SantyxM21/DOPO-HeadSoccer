@@ -1,6 +1,8 @@
 package domain;
 
-public abstract class Player extends CircularEntity {
+import java.io.Serializable;
+
+public abstract class Player extends CircularEntity{
     public static final int PLAYER_SIZE = 80;
     public static final double SPEED = 3.5;
     public static final double JUMP_FORCE = -4.8;  // negativo ya que Y disminuye hacia arriba

@@ -1,6 +1,8 @@
 package domain;
 
-public abstract class Character_ {
+import java.io.Serializable;
+
+public abstract class Character_ implements Serializable{
     protected String name; //el pais
     protected Power power; //el tiro unico de cada uno
      

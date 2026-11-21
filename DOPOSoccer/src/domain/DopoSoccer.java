@@ -2,6 +2,11 @@ package domain;
 
 import java.awt.Dimension;
 
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Scanner;
+
 /**
  *
  *
@@ -9,7 +14,7 @@ import java.awt.Dimension;
  * @author César Santiago Malaver Garnica
  * @version 05/11/2026
  */
-public class DopoSoccer {
+public class DopoSoccer implements Serializable{
 
     public static final int TIME_MODE = 1;
     public static final int GOALS_MODE = 2;
@@ -223,4 +228,41 @@ public class DopoSoccer {
     public int getGoalFrameHeight(){
         return match.getField().getGoalFrame(Match.LEFT_PLAYER).getHeight();
     }
+
+
+    //==================== PERSISTENCIA ================================
+
+    /**
+     * Saves a file with a game with extension .dopo
+     * @param file The dopo soccer game that will be saved
+     * @param game The dopo soccer game saved
+     * @throws DopoSoccerException INVALID_EXTENSION_DAT, FILE_NOT_FOUND, NOT_SERIALIZABLE, ERROR_WHILE_WRITING, GENERAL_ERROR
+     */
+    public static void saveAs(File file, DopoSoccer game) throws DopoSoccerException{
+        if (!file.getName().endsWith(".dopo")) throw new DopoSoccerException(DopoSoccerException.INVALID_DOPO_EXTENSION);
+        ObjectOutputStream toSave = null;
+
+        try{
+            toSave = new ObjectOutputStream(new FileOutputStream(file));
+            toSave.writeObject(game);
+        } catch (FileNotFoundException e){
+            throw new DopoSoccerException(DopoSoccerException.FILE_NOT_FOUND);
+        } catch (NotSerializableException e){
+            throw new DopoSoccerException(DopoSoccerException.NOT_SERIALIZABLE);
+        } catch (IOException e){
+            throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_WRITING);
+        } finally {
+            if (toSave != null) {
+                try{
+                    toSave.close();
+                } catch (IOException e){
+                    throw new DopoSoccerException(DopoSoccerException.GENERAL_ERROR);
+                }
+            }
+        }
+    }
+
+
+
+
 }

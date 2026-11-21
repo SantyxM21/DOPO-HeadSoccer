@@ -1,10 +1,11 @@
 package domain;
 
 import java.awt.Dimension;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Match {
+public abstract class Match implements Serializable{
     public static final int LEFT_PLAYER = 1;
     public static final int RIGHT_PLAYER = 2;
     private static final double START_X_RATIO = 0.2;

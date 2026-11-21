@@ -1,8 +1,9 @@
 package domain;
 
 import java.awt.Dimension;
+import java.io.Serializable;
 
-public class Field {
+public class Field implements Serializable{
     public static final double GROUND_MARGIN = 0.15; //Margen que se le va a dejar al pasto
     private static final double REFERENCE_HEIGHT = 720; //Altura base
     private static final double GOAL_WIDTH_RANGE = 0.1; //Por definir

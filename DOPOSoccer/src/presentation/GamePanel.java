@@ -3,6 +3,7 @@ package presentation;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.*;
 
 import domain.DopoSoccer;
 import domain.DopoSoccerException;
@@ -131,7 +132,17 @@ public class GamePanel extends JPanel{
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                MainPanel.funcUnderConstruction("Guardar partida: la funcionalidad se encuentra en construccion");
+                try{
+                    JFileChooser selector = new JFileChooser();
+                    int result = selector.showSaveDialog(null);
+
+                    if (result == JFileChooser.APPROVE_OPTION) {
+                        File fileToSave = selector.getSelectedFile();
+                        DopoSoccer.saveAs(fileToSave, game);
+                    }
+                } catch(DopoSoccerException ex){
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
             }
         });
     }
