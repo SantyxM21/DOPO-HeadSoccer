@@ -19,6 +19,9 @@ public class DopoSoccerException extends Exception {
     public static final String NOT_SERIALIZABLE = "No se permite guardar el archivo porque hay elementos invalidos.";
     public static final String ERROR_WHILE_WRITING = "Ocurrio un error mientras se escribia el archivo.";
     public static final String GENERAL_ERROR = "Se ha presentado un error general.";
+    public static final String INCOMPATIBLE_VERSION = "El archivo corresponde a otra version.";
+    public static final String CLASS_NOT_FOUND = "Una clase no existe dentro del archivo.";
+    public static final String ERROR_WHILE_READING = "Ocurrio un error mientras se leia el archivo.";
 
     public DopoSoccerException(String ms){
         super(ms);

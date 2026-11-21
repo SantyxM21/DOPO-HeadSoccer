@@ -6,6 +6,7 @@ import domain.Machine;
 import domain.Match;
 import java.awt.*;
 import javax.swing.*;
+import java.io.File;
 
 
 /**
@@ -83,16 +84,7 @@ public class MainPanel extends JPanel{
         GAME_SIZE = sizeFor(divisor);
         this.setPreferredSize(GAME_SIZE);
 
-        gamePage.stopGameLoop();            
-        this.removeAll();                   // Quita todos los componentes de este container/panel
-        homePage = new HomePanel();
-        loadingPage = new LoadingPanel();
-        modePage = new ModePanel();
-        selectionPage = new SelectionPanel();
-        charactersPage = new CharactersInfoPanel();
-        gamePage = new GamePanel(game);
-        this.prepareView();
-        this.prepareController();
+        rebuildPages();
 
         Window window = SwingUtilities.getWindowAncestor(this);     // Devuelve el JFrame que contiene este panel
         if (window != null) {
@@ -167,5 +159,33 @@ public class MainPanel extends JPanel{
 
     public void swapProfiles(){
         game.swapProfiles();
+    }
+
+    private void rebuildPages(){
+        gamePage.stopGameLoop();
+        this.removeAll();            // Quita todos los componentes de este container/panel
+        homePage = new HomePanel();
+        loadingPage = new LoadingPanel();
+        modePage = new ModePanel();
+        selectionPage = new SelectionPanel();
+        charactersPage = new CharactersInfoPanel();
+        gamePage = new GamePanel(game);
+        this.prepareView();
+        this.prepareController();
+        this.revalidate();
+        this.repaint();
+    }
+
+    public void openGame(File file) throws DopoSoccerException{
+        DopoSoccer gameOpened = DopoSoccer.open(file);
+        this.game = gameOpened;
+        rebuildPages();
+
+        if (game.hasMatch()){
+            gamePage.setCountries(game.getCharacter(Match.LEFT_PLAYER), game.getCharacter(Match.RIGHT_PLAYER));
+            showPage("Game");
+
+        }
+        else showPage("Selection Menu");
     }
 }

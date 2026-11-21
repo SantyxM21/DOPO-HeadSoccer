@@ -13,7 +13,7 @@ public class HomePanel extends JPanel{
 
     private RoundButton timeButton;
     private RoundButton goalsButton;
-    private RoundButton importGameButton;
+    private RoundButton openGameButton;
     private CustomButton backButton;
     private final Image configBackground = DopoSoccerGUI.loadImage("/resources/fondo_popup.png");
 
@@ -27,7 +27,7 @@ public class HomePanel extends JPanel{
         this.GAME_SIZE = MainPanel.GAME_SIZE;
         timeButton = new RoundButton();
         goalsButton = new RoundButton();
-        importGameButton = new RoundButton();
+        openGameButton = new RoundButton();
         backButton = CustomButton.createBackButton();
         playButton = new CustomButton("Jugar");
         cancelButton = new CustomButton("Cancelar");
@@ -49,20 +49,20 @@ public class HomePanel extends JPanel{
         buttons.add(createModeButton("Goles", goalsButton, "/resources/ball.png"));
 
         int side = GAME_SIZE.height / 6;                                                // más pequeño que los botones de modo
-        importGameButton.setPreferredSize(new Dimension(side, side));
+        openGameButton.setPreferredSize(new Dimension(side, side));
         Image openIcon = DopoSoccerGUI.loadImage("/resources/open_file.png");
         if (openIcon != null) {
             int iconSide = (int)(side * 0.6);                                          // el icono cabe dentro del círculo
-            importGameButton.setIcon(new ImageIcon(openIcon.getScaledInstance(iconSide, iconSide, Image.SCALE_SMOOTH)));
+            openGameButton.setIcon(new ImageIcon(openIcon.getScaledInstance(iconSide, iconSide, Image.SCALE_SMOOTH)));
         } else {
-            importGameButton.setText("Abrir");                                         // si no carga el icono, se muestra el texto
-            importGameButton.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 30));
+            openGameButton.setText("Abrir");                                         // si no carga el icono, se muestra el texto
+            openGameButton.setFont(new Font("Arial", Font.PLAIN, GAME_SIZE.height / 30));
         }
-        importGameButton.setToolTipText("Abrir partida");
+        openGameButton.setToolTipText("Abrir partida");
 
         JPanel importWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));      // evita que BorderLayout lo estire
         importWrapper.setOpaque(false);
-        importWrapper.add(importGameButton);
+        importWrapper.add(openGameButton);
 
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setOpaque(false);
@@ -123,22 +123,20 @@ public class HomePanel extends JPanel{
             }
         });
 
-        importGameButton.addActionListener(new ActionListener() {
+        openGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 JFileChooser selector = new JFileChooser();
-                
-                int result = selector.showSaveDialog(null);
+                int result = selector.showOpenDialog(null);
 
-                //0 indica que selecciono guardar/abrir
-                if (result == 0){
-                    File fileToSave = selector.getSelectedFile();
-                    MainPanel.funcUnderConstruction("La funcionalidad se encuentra en construccion\n" +
-                        "Nombre del archivo: " + fileToSave.getName());
-                }           
-            }
+                if (result == JFileChooser.APPROVE_OPTION){
+                    try{main.openGame(selector.getSelectedFile());} 
+                    catch(DopoSoccerException ex){ JOptionPane.showMessageDialog(null, ex.getMessage());}  
+                }
+            }    
         });
     }
+    
 
     private void popUpConfig(String ms){
         JDialog dialog = new JDialog();

@@ -180,6 +180,9 @@ public class DopoSoccer implements Serializable{
         return match.hasEffect(side);
     }
 
+    public String getCharacter(int side){
+        return match.getPlayer(side).getSelectedCharacter().getName();
+    }
     // ==================== BALÓN ====================
 
     public int getBallX(){
@@ -253,11 +256,36 @@ public class DopoSoccer implements Serializable{
             throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_WRITING);
         } finally {
             if (toSave != null) {
-                try{
-                    toSave.close();
-                } catch (IOException e){
-                    throw new DopoSoccerException(DopoSoccerException.GENERAL_ERROR);
-                }
+                try{toSave.close();} 
+                catch (IOException e){throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_WRITING);}
+            }
+        }
+    }
+
+    /**
+     * Open a .dopo file that contains a game
+     * @param file The file of the dopo soccer game that will be opened
+     * @return The dopo soccer game opened
+     * @throws DopoSoccerExceptionINVALID_EXTENSION_DAT, FILE_NOT_FOUND, INCOMPATIBLE_VERSION, CLASS_NOT_FOUND, ERROR_WHILE_READING
+     */
+    public static DopoSoccer open(File file) throws DopoSoccerException{
+        if (!file.getName().endsWith(".dopo")) throw new DopoSoccerException(DopoSoccerException.INVALID_DOPO_EXTENSION);
+        ObjectInputStream toOpen = null;
+        try{
+            toOpen = new ObjectInputStream( new FileInputStream(file));
+            return (DopoSoccer) toOpen.readObject();
+        } catch(FileNotFoundException e){
+            throw new DopoSoccerException(DopoSoccerException.FILE_NOT_FOUND);
+        } catch(InvalidClassException e){
+            throw new DopoSoccerException(DopoSoccerException.INCOMPATIBLE_VERSION);
+        } catch(ClassNotFoundException e){
+            throw new DopoSoccerException(DopoSoccerException.CLASS_NOT_FOUND);
+        } catch(IOException e){
+            throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_READING);
+        } finally{
+            if (toOpen != null){
+                try{toOpen.close();}
+                catch(IOException e) {throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_READING);}
             }
         }
     }
