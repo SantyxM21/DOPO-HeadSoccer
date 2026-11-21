@@ -2,7 +2,6 @@ package domain;
 
 public class Machine extends Player {
 
-    // TODO: los controles del segundo jugar aun funcionan cuando la maquina controla
     public static final int DUMB = 1;
     public static final int OFENSIVE = 2;
     public static final int DEFENSIVE = 3;
@@ -13,6 +12,12 @@ public class Machine extends Player {
     
     public Machine(Character_ ch, double x, double y, Field field, Profile profile, int machineType) throws DopoSoccerException{
         super(ch, x, y, field, profile);
+    }
+
+    // La maquina decide sola en act, asi que ignora las teclas del jugador de su lado
+    @Override
+    public boolean isKeyboardControlled(){
+        return false;
     }
 
     protected void attack(Match match){

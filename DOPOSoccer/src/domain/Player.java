@@ -1,7 +1,5 @@
 package domain;
 
-import java.io.Serializable;
-
 public abstract class Player extends CircularEntity{
     public static final int PLAYER_SIZE = 80;
     public static final double SPEED = 3.5;
@@ -201,6 +199,10 @@ public abstract class Player extends CircularEntity{
     }
 
     public void act(Match match, double seconds){
+    }
+
+    public boolean isKeyboardControlled(){
+        return true;
     }
 
     //Llamada cada frame

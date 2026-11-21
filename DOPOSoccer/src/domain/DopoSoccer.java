@@ -1,11 +1,7 @@
 package domain;
 
 import java.awt.Dimension;
-
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Scanner;
 
 /**
  *
@@ -67,19 +63,23 @@ public class DopoSoccer implements Serializable{
     // ==================== ACCIONES DEL JUGADOR ====================
 
     public void move(int player, int direction){
-        if(!match.isFinished()) match.getPlayer(player).move(direction);
+        if(acceptsKeys(player)) match.getPlayer(player).move(direction);
     }
 
     public void jump(int player){
-        if(!match.isFinished()) match.getPlayer(player).jump();
+        if(acceptsKeys(player)) match.getPlayer(player).jump();
     }
 
     public void kick(int player){
-        match.kick(player);
+        if(acceptsKeys(player)) match.kick(player);
     }
 
     public void activatePower(int player){
-        if(!match.isFinished()) match.getPlayer(player).powerActivation();
+        if(acceptsKeys(player)) match.getPlayer(player).powerActivation();
+    }
+
+    private boolean acceptsKeys(int player){
+        return !match.isFinished() && match.getPlayer(player).isKeyboardControlled();
     }
 
     // ==================== PERFILES ====================
