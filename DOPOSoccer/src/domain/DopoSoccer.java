@@ -249,15 +249,15 @@ public class DopoSoccer implements Serializable{
             toSave = new ObjectOutputStream(new FileOutputStream(file));
             toSave.writeObject(game);
         } catch (FileNotFoundException e){
-            throw new DopoSoccerException(DopoSoccerException.FILE_NOT_FOUND);
+            throw new DopoSoccerException(DopoSoccerException.FILE_NOT_FOUND, e);
         } catch (NotSerializableException e){
-            throw new DopoSoccerException(DopoSoccerException.NOT_SERIALIZABLE);
+            throw new DopoSoccerException(DopoSoccerException.NOT_SERIALIZABLE, e);
         } catch (IOException e){
-            throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_WRITING);
+            throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_WRITING, e);
         } finally {
             if (toSave != null) {
                 try{toSave.close();} 
-                catch (IOException e){throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_WRITING);}
+                catch (IOException e){throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_WRITING, e);}
             }
         }
     }
@@ -275,17 +275,17 @@ public class DopoSoccer implements Serializable{
             toOpen = new ObjectInputStream( new FileInputStream(file));
             return (DopoSoccer) toOpen.readObject();
         } catch(FileNotFoundException e){
-            throw new DopoSoccerException(DopoSoccerException.FILE_NOT_FOUND);
+            throw new DopoSoccerException(DopoSoccerException.FILE_NOT_FOUND, e);
         } catch(InvalidClassException e){
-            throw new DopoSoccerException(DopoSoccerException.INCOMPATIBLE_VERSION);
+            throw new DopoSoccerException(DopoSoccerException.INCOMPATIBLE_VERSION, e);
         } catch(ClassNotFoundException e){
-            throw new DopoSoccerException(DopoSoccerException.CLASS_NOT_FOUND);
+            throw new DopoSoccerException(DopoSoccerException.CLASS_NOT_FOUND, e);
         } catch(IOException e){
-            throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_READING);
+            throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_READING, e);
         } finally{
             if (toOpen != null){
                 try{toOpen.close();}
-                catch(IOException e) {throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_READING);}
+                catch(IOException e) {throw new DopoSoccerException(DopoSoccerException.ERROR_WHILE_READING, e);}
             }
         }
     }
@@ -293,4 +293,4 @@ public class DopoSoccer implements Serializable{
 
 
 
-}
+}

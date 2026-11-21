@@ -2,11 +2,11 @@ package presentation;
 
 import domain.DopoSoccer;
 import domain.DopoSoccerException;
-import domain.Machine;
+import domain.Log;
 import domain.Match;
 import java.awt.*;
-import javax.swing.*;
 import java.io.File;
+import javax.swing.*;
 
 
 /**
@@ -111,6 +111,7 @@ public class MainPanel extends JPanel{
             gamePage.setCountries(leftCountry, rightCountry);
             return true;
         } catch (DopoSoccerException e) {
+            Log.record(e);
             JOptionPane.showMessageDialog(null, e.getMessage());
             return false;
         }

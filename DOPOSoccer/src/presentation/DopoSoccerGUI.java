@@ -1,5 +1,7 @@
 package presentation;
 
+import domain.DopoSoccerException;
+import domain.Log;
 import java.awt.*;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -37,6 +39,7 @@ public class DopoSoccerGUI extends JFrame{
         try {
             return ImageIO.read(DopoSoccerGUI.class.getResource(path));
         } catch (IOException | IllegalArgumentException e) {
+            Log.record(new DopoSoccerException(DopoSoccerException.IMAGE_NOT_FOUND + " " + path, e));   
             return null;
         }
     }

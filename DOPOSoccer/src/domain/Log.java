@@ -9,7 +9,7 @@ import java.util.logging.SimpleFormatter;
  * 
  */
 public class Log{
-    public static String name="NeoSeries";
+    public static String name="DopoSoccer";
     
     public static void record(Exception e){
         try{
