@@ -7,6 +7,7 @@ import java.io.*;
 
 import domain.DopoSoccer;
 import domain.DopoSoccerException;
+import domain.Log;
 import domain.Match;
 import domain.Player;
 
@@ -141,6 +142,7 @@ public class GamePanel extends JPanel{
                         DopoSoccer.saveAs(fileToSave, game);
                     }
                 } catch(DopoSoccerException ex){
+                    Log.record(ex);                                     
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
             }

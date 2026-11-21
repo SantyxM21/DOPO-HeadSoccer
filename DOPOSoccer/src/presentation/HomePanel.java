@@ -2,9 +2,9 @@ package presentation;
 
 import domain.DopoSoccer;
 import domain.DopoSoccerException;
+import domain.Log;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import javax.swing.*;
 
 public class HomePanel extends JPanel{
@@ -131,7 +131,10 @@ public class HomePanel extends JPanel{
 
                 if (result == JFileChooser.APPROVE_OPTION){
                     try{main.openGame(selector.getSelectedFile());} 
-                    catch(DopoSoccerException ex){ JOptionPane.showMessageDialog(null, ex.getMessage());}  
+                    catch(DopoSoccerException ex){
+                        Log.record(ex);                                
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
                 }
             }    
         });
