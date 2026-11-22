@@ -23,25 +23,44 @@ public abstract class Machine extends Player {
         return false;
     }
 
+    /*
+    This method tells how far in front of the machine the ball is
+    @param match the match
+    @return positive if the ball is between the machine and the rival goal, negative if it is behind
+    */
+    protected double ballAhead(Match match){
+        return (match.getBall().center().getX() - center().getX()) * match.directionOf(this);
+    }
+
+    /*
+    This method tells how far the machine is from the wall behind its own goal (porteria)
+    @param match the match
+    @return the horizontal distance to its own wall
+    */
+    protected double distanceToOwnWall(Match match){
+        double x = center().getX();
+        if (match.directionOf(this) > 0) return x;      // ataca a la derecha, su arco esta a la izquierda
+        return field.getWidth() - x;
+    }
+
     protected void attack(Match match){
         Ball ball = match.getBall();
-        Vector2D ballCenter = ball.center();
         double ballRadius = ball.radius();
-        double xBall = ballCenter.getX();
-        double yBall = ballCenter.getY();
+        double yBall = ball.center().getY();
+        double ahead = ballAhead(match);
+        int forward = match.directionOf(this);
 
-        double mchX = center().getX();
         double mchY = center().getY();
         double mchRadius = radius();
 
-        if (xBall  < mchX-ballRadius*1.6){
-            move(-1);
+        if (ahead > ballRadius*1.6){                    // el balon esta lejos adelante, va por el
+            move(forward);
         }
-        else if (xBall > mchX-ballRadius*0.9){
-            move(1);
+        else if (ahead < ballRadius*0.9){               // el balon esta muy cerca o detras, se acomoda detras de el
+            move(-forward);
         }
 
-        if (yBall < mchY-ballRadius && yBall > mchY-mchRadius*2.1 && xBall < mchX+mchRadius && xBall > mchX-mchRadius*1.1){
+        if (yBall < mchY-ballRadius && yBall > mchY-mchRadius*2.1 && ahead > -mchRadius && ahead < mchRadius*1.1){
             jump();
         }
 
@@ -52,27 +71,26 @@ public abstract class Machine extends Player {
 
     protected void defend(Match match){
         Ball ball = match.getBall();
-        Vector2D ballCenter = ball.center();
         double ballRadius = ball.radius();
-        double xBall = ballCenter.getX();
-        double yBall = ballCenter.getY();
+        double yBall = ball.center().getY();
+        double ahead = ballAhead(match);
+        int forward = match.directionOf(this);
 
-        double mchX = center().getX();
         double mchY = center().getY();
         double mchRadius = radius();
 
-        if (xBall > mchX-mchRadius-ballRadius){
-            move(1);
+        if (ahead < mchRadius+ballRadius){                                                  // el balon lo paso, vuelve a su arco
+            move(-forward);
         }
-        else if (xBall  < mchX-ballRadius*1.6 && mchX > field.getWidth()*0.80 ){
-            move(-1);
+        else if (ahead > ballRadius*1.6 && distanceToOwnWall(match) < field.getWidth()*0.20){   // sale un poco del arco, sin alejarse mucho
+            move(forward);
         }
 
-        if (yBall < mchY-ballRadius && yBall > mchY-mchRadius*2.8 && xBall < mchX+mchRadius*1.5 && xBall > mchX-mchRadius*1.8){
+        if (yBall < mchY-ballRadius && yBall > mchY-mchRadius*2.8 && ahead > -mchRadius*1.5 && ahead < mchRadius*1.8){
             jump();
         }
 
-        if(yBall < mchY+mchRadius && yBall > mchY-mchRadius && xBall < mchX-mchRadius && xBall > mchX-mchRadius-ballRadius*1.1 && !hasAura()){
+        if(yBall < mchY+mchRadius && yBall > mchY-mchRadius && ahead > mchRadius && ahead < mchRadius+ballRadius*1.1 && !hasAura()){
             match.kick(this);
         }
         if (!hasAura()){

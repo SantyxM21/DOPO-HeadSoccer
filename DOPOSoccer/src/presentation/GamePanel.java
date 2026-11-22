@@ -281,7 +281,7 @@ public class GamePanel extends JPanel{
 
     @Override
     // Este metodo es llamado por setVisible(true) o tambien por repaint(), y muchos mas.
-    public void paint(Graphics g){                  
+    public void paintComponent(Graphics g){                  
         image = createImage(getWidth(),getHeight());     // Crea un lienzo vacio de height*width
         graphics = image.getGraphics();                  // Obtiene acceso para pintar en el lienzo (pincel)
         draw(graphics);                                  // Le da el pincel a todos los que quiera dibujar en el lienzo 

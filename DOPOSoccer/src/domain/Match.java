@@ -141,7 +141,32 @@ public abstract class Match implements Serializable{
         return leftPlayer;
     }
 
-    private int directionOf(Player player){
+    /*
+    This method tells on which side a player of this match plays
+    @param player the player
+    @return LEFT_PLAYER or RIGHT_PLAYER
+    */
+    public int sideOf(Player player){
+        if (player == leftPlayer) return LEFT_PLAYER;
+        return RIGHT_PLAYER;
+    }
+
+    /*
+    This method gives the side of the rival of the given side
+    @param side LEFT_PLAYER or RIGHT_PLAYER
+    @return the other side
+    */
+    public static int rivalSide(int side){
+        if (side == LEFT_PLAYER) return RIGHT_PLAYER;
+        return LEFT_PLAYER;
+    }
+
+    /*
+    This method tells to which direction a player attacks 
+    @param player the player
+    @return 1 if it attacks to the right (left player), -1 if it attacks to the left (right player)
+    */
+    public int directionOf(Player player){
         if (player == leftPlayer) return 1;
         return -1;
     }

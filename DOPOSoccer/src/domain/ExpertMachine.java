@@ -24,9 +24,11 @@ public class ExpertMachine extends Machine{
     private boolean shouldDefend(Match match){
         Ball ball = match.getBall();
         boolean rivalPowerShot = ball.hasPower() && ball.getChargedBy() != this;
-        boolean ballInMyHalf = ball.center().getX() > field.getWidth() / 2.0;
-        int myGoals = match.getPlayerGoals(Match.RIGHT_PLAYER);
-        int rivalGoals = match.getPlayerGoals(Match.LEFT_PLAYER);
+        int mySide = match.sideOf(this);
+        double fromMiddle = (ball.center().getX() - field.getWidth() / 2.0) * match.directionOf(this);   // negativo si esta en su mitad
+        boolean ballInMyHalf = fromMiddle < 0;
+        int myGoals = match.getPlayerGoals(mySide);
+        int rivalGoals = match.getPlayerGoals(Match.rivalSide(mySide));
 
         if (rivalPowerShot) return true;            // si viene un poder va a cubrir el arco
         if (myGoals < rivalGoals) return false;     // va perdiendo entonces ataca
