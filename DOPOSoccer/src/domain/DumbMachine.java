@@ -6,8 +6,8 @@ public class DumbMachine extends Machine {
     private int currentMove = 0;                            // 0 no hace nada
     private double timeToDecide = 0;
 
-    public DumbMachine(Character_ ch, double x, double y, Field field, Profile profile, int machineType) throws DopoSoccerException{
-        super(ch, x, y, field, profile, machineType);
+    public DumbMachine(Character_ ch, double x, double y, Field field, Profile profile) throws DopoSoccerException{
+        super(ch, x, y, field, profile);
     }
 
     @Override

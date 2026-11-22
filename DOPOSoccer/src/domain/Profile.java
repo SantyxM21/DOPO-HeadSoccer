@@ -10,7 +10,7 @@ public class Profile implements Serializable{
 
     public Profile(String profileNumber){
         this.name = "Profile #" + profileNumber;
-        this.points = 1000000000;
+        this.points = 0;
         this.stats = new Stats();
     }
 

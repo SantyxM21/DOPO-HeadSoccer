@@ -6,8 +6,8 @@ public class ExpertMachine extends Machine{
     private boolean defending = false;
     private double timeToDecide = 0;
 
-    public ExpertMachine(Character_ ch, double x, double y, Field field, Profile profile, int machineType) throws DopoSoccerException{
-        super(ch, x, y, field, profile, machineType);
+    public ExpertMachine(Character_ ch, double x, double y, Field field, Profile profile) throws DopoSoccerException{
+        super(ch, x, y, field, profile);
     }
 
     @Override

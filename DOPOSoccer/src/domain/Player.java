@@ -12,7 +12,7 @@ public abstract class Player extends CircularEntity{
     public static final double KICK_DAMAGE = 10;     
 
     public static final double MAX_POWER_BAR = 100.0;
-    public static final double POWER_BAR_CHARGE_SECONDS = 5.0;
+    public static final double POWER_BAR_CHARGE_SECONDS = 10.0;
 
     private final int groundY;
     private double speed;

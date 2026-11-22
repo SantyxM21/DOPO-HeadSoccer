@@ -89,10 +89,10 @@ public abstract class Match implements Serializable{
 
     public void addMachine(int side, String character, Profile profile, int machineType) throws DopoSoccerException{
         Machine newMachine;
-        if(machineType == Machine.DUMB) newMachine = new DumbMachine(Character_.create(character), startX(side), startY(), field, profile, machineType);
-        else if(machineType == Machine.OFENSIVE) newMachine = new OfensiveMachine(Character_.create(character), startX(side), startY(), field, profile, machineType);
-        else if(machineType == Machine.DEFENSIVE) newMachine = new DefensiveMachine(Character_.create(character), startX(side), startY(), field, profile, machineType);
-        else if(machineType == Machine.EXPERT) newMachine = new ExpertMachine(Character_.create(character), startX(side), startY(), field, profile, machineType);
+        if(machineType == Machine.DUMB) newMachine = new DumbMachine(Character_.create(character), startX(side), startY(), field, profile);
+        else if(machineType == Machine.OFENSIVE) newMachine = new OfensiveMachine(Character_.create(character), startX(side), startY(), field, profile);
+        else if(machineType == Machine.DEFENSIVE) newMachine = new DefensiveMachine(Character_.create(character), startX(side), startY(), field, profile);
+        else if(machineType == Machine.EXPERT) newMachine = new ExpertMachine(Character_.create(character), startX(side), startY(), field, profile);
         else throw new DopoSoccerException(DopoSoccerException.INVALID_MACHINE);
 
         if(side == LEFT_PLAYER) leftPlayer = newMachine;

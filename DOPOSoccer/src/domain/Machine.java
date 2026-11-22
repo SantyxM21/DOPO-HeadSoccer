@@ -1,6 +1,6 @@
 package domain;
 
-public class Machine extends Player {
+public abstract class Machine extends Player {
 
     public static final int DUMB = 1;
     public static final int OFENSIVE = 2;
@@ -10,9 +10,12 @@ public class Machine extends Player {
 
     public static final int POSSIBLE_MOVES = 5;
     
-    public Machine(Character_ ch, double x, double y, Field field, Profile profile, int machineType) throws DopoSoccerException{
+    protected Machine(Character_ ch, double x, double y, Field field, Profile profile) throws DopoSoccerException{
         super(ch, x, y, field, profile);
     }
+
+    @Override
+    public abstract void act(Match match, double seconds);
 
     // La maquina decide sola en act, asi que ignora las teclas del jugador de su lado
     @Override
