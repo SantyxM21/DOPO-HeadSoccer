@@ -22,8 +22,6 @@ public abstract class Match implements Serializable{
 
     private Player leftPlayer;
     private Player rightPlayer;
-    private Effect leftEffect;
-    private Effect rightEffect;
     private Field field;
     private Ball ball;
     private List<FakeBall> fakeBalls = new ArrayList<>();  // solo se dibujan, no chocan con los jugadores ni marcan goles
@@ -51,10 +49,8 @@ public abstract class Match implements Serializable{
         leftPlayer.act(this, seconds);          // las maquinas deciden antes de la fisica y se les pasa match para que puedan obtener info de la partida
         rightPlayer.act(this, seconds);
 
-        leftPlayer.update(seconds);
+        leftPlayer.update(seconds);             // carga la barra de poder y avanza su efecto
         rightPlayer.update(seconds);
-        updateEffect(leftPlayer, seconds);
-        updateEffect(rightPlayer, seconds);
 
         leftPlayer.applyGravity();
         rightPlayer.applyGravity();
@@ -162,7 +158,7 @@ public abstract class Match implements Serializable{
     }
 
     /*
-    This method tells to which direction a player attacks 
+    This method tells to which direction a player attacks
     @param player the player
     @return 1 if it attacks to the right (left player), -1 if it attacks to the left (right player)
     */
@@ -245,45 +241,17 @@ public abstract class Match implements Serializable{
         Power power = ball.getChargedPower();
         ball.clearCharge();
 
-        applyEffect(victim, power.hit(victim, shooter), -directionOf(victim)); //empuja hacia su arco
+        victim.applyEffect(power.hit(victim, shooter), -directionOf(victim));  //empuja hacia su arco
         checkStun(victim);                                      // si el tiro lo deja sin vida, el aturdimiento reemplaza al efecto del poder
     }
 
     /* Si la vida del jugador llego a cero por los golpes del rival, queda aturdido */
     private void checkStun(Player victim){
-        if (victim.getHealth() == 0) applyEffect(victim, new StunEffect(), 0);
-    }
-
-    public void applyEffect(Player target, Effect effect, int direction){
-        if (effectOf(target) != null) removeEffect(target);     // el nuevo efecto reemplaza al anterior
-        setEffect(target, effect);
-        effect.applyEffect(target, direction, field);
-    }
-
-    private void updateEffect(Player target, double seconds){
-        Effect effect = effectOf(target);
-        if (effect == null) return;
-        effect.update(target, seconds);
-        if (effect.isFinished()) removeEffect(target);
-    }
-
-    private void removeEffect(Player target){
-        effectOf(target).end(target);                           // cada efecto sabe como devolver al jugador a la normalidad
-        setEffect(target, null);
-    }
-
-    private Effect effectOf(Player player){
-        if (player == leftPlayer) return leftEffect;
-        return rightEffect;
-    }
-
-    private void setEffect(Player player, Effect effect){
-        if (player == leftPlayer) leftEffect = effect;
-        else rightEffect = effect;
+        if (victim.getHealth() == 0) victim.applyEffect(new StunEffect(), 0);
     }
 
     public boolean hasEffect(int side){
-        return effectOf(getPlayer(side)) != null;
+        return getPlayer(side).hasEffect();
     }
 
     // ==================== GOLES Y SAQUE ====================
@@ -336,7 +304,7 @@ public abstract class Match implements Serializable{
         player.setXPosition(startX(side));
         player.setYPosition(startY());
         player.setVelocity(new Vector2D(0, 0));
-        if (effectOf(player) != null) removeEffect(player);
+        player.removeEffect();
     }
 
     // ==================== FIN DE LA PARTIDA ====================

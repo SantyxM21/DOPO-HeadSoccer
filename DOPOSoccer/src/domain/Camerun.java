@@ -1,8 +1,9 @@
 package domain;
 
 public class Camerun extends Character_{
+    public static final String NAME = "Camerún";
     
     public Camerun() {
-        super("Camerún", new Lightning());
+        super(NAME, new Lightning());
     }
 }

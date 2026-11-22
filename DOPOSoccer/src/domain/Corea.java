@@ -1,8 +1,9 @@
 package domain;
 
 public class Corea extends Character_ {
+    public static final String NAME = "Corea del Sur";
     
     public Corea(){
-        super("Corea del Sur", new BlueAura());
+        super(NAME, new BlueAura());
     }
 }

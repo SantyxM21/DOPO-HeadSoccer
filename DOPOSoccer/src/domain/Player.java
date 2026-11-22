@@ -32,6 +32,8 @@ public abstract class Player extends CircularEntity{
 
     protected boolean aura;
 
+    private Effect effect;          // efecto que tiene encima en este momento (null si ninguno)
+
 
     public Player(Character_ character, double x, double y, Field field, Profile profile) throws DopoSoccerException{
         super(x, y, field, PLAYER_SIZE);
@@ -208,6 +210,43 @@ public abstract class Player extends CircularEntity{
     //Llamada cada frame
     public void update(double seconds){
         powerBar = Math.min(MAX_POWER_BAR, powerBar + MAX_POWER_BAR / POWER_BAR_CHARGE_SECONDS * seconds); //rapidez de carga
+        updateEffect(seconds);
+    }
+
+    // ==================== EFECTOS ====================
+
+    /*
+    This method puts an effect on the player, replacing the one it had
+    @param newEffect the effect to apply
+    @param direction the direction of the push (1 right, -1 left, 0 none)
+    */
+    public void applyEffect(Effect newEffect, int direction){
+        removeEffect();                                 // el nuevo efecto reemplaza al anterior
+        effect = newEffect;
+        effect.applyEffect(this, direction, field);
+    }
+
+    /* This method advances the current effect and removes it when its time is over */
+    private void updateEffect(double seconds){
+        if (effect == null) return;
+        effect.update(this, seconds);
+        if (effect.isFinished()) removeEffect();
+    }
+
+    /* This method ends the current effect, if any, returning the player to normal */
+    public void removeEffect(){
+        if (effect == null) return;
+        Effect ended = effect;
+        effect = null;
+        ended.end(this);                                // cada efecto sabe como devolver al jugador a la normalidad
+    }
+
+    public boolean hasEffect(){
+        return effect != null;
+    }
+
+    public Effect getEffect(){
+        return effect;
     }
 
     //Hacer el tiro especial

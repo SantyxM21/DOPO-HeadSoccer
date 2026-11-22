@@ -1,9 +1,10 @@
 package domain;
 
 public class USA extends Character_{
+    public static final String NAME = "Estados Unidos";
 
     public USA(){
-        super("Estados Unidos", new Ilusion());
+        super(NAME, new Ilusion());
     }
     
 }

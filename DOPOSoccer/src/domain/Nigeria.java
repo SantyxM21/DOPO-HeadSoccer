@@ -1,8 +1,9 @@
 package domain;
 
 public class Nigeria extends Character_ {
+    public static final String NAME = "Nigeria";
 
     public Nigeria(){
-        super("Nigeria", new Tornado());
+        super(NAME, new Tornado());
     }
 }

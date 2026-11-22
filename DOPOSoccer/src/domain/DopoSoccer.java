@@ -18,7 +18,7 @@ public class DopoSoccer implements Serializable{
     public static final int PVSP_MODE = 1;
     public static final int PVSM_MODE = 2;
 
-    public static final String[] COUNTRIES = {"Corea del Sur", "Camerún", "Nigeria", "Estados Unidos"};
+    public static final String[] COUNTRIES = {Corea.NAME, Camerun.NAME, Nigeria.NAME, USA.NAME};   // el nombre lo define cada personaje
 
     private Profile leftProfile;
     private Profile rightProfile;
@@ -293,4 +293,4 @@ public class DopoSoccer implements Serializable{
 
 
 
-}
+}
