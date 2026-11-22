@@ -127,9 +127,15 @@ public abstract class Match implements Serializable{
     public void kick(Player player){
         if (isFinished || ball.hasPower()) return;
         Player rival = rivalOf(player);
-        player.kick(ball, rival, directionOf(player));
-        if (ball.hasPower()) releaseFakeBalls(player);         // la patada salio como tiro de poder
+        int direction = directionOf(player);
+        if (player.hasAura() && player.reachesBall(ball, direction)) shootPower(player);   // con aura la patada sale como tiro de poder
+        else player.kick(ball, rival, direction);
         checkStun(rival);
+    }
+
+    private void shootPower(Player shooter){
+        shooter.powerShoot(ball, directionOf(shooter));
+        releaseFakeBalls(shooter);
     }
 
     private Player rivalOf(Player player){
@@ -228,8 +234,7 @@ public abstract class Match implements Serializable{
 
     private void touchBall(Player player){
         if(!ball.hasPower() && player.hasAura()){                                       // Si el jugador tiene aura aplica el poder
-            player.powerShoot(ball, directionOf(player));
-            releaseFakeBalls(player);
+            shootPower(player);
         }
         else if(ball.getChargedBy() != player && ball.hasPower()){  // Si golpea al rival y el balon tiene poder
             powerPunch(player);                                     // entonces empuja al jugador impactado

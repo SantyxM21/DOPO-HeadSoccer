@@ -65,18 +65,25 @@ public abstract class Player extends CircularEntity{
     }
 
     public void kick(Ball ball, Player rival, int direction){
-        if (kickForce == 0) return;                                     
+        if (kickForce == 0) return;
 
         if (inKickRange(ball, direction)){                              // si la patada toca el balon, solo impulsa el balon
-            if (aura) powerShoot(ball, direction);
-            else{
-                ball.clearCharge(); // evita que quede un balón cargado "flotando" si el rival lo patea
-                ball.setVelocity(new Vector2D(direction * xKickSpeed * kickForce, -yKickSpeed * kickForce));
-            }
+            ball.clearCharge(); // evita que quede un balón cargado "flotando" si el rival lo patea
+            ball.setVelocity(new Vector2D(direction * xKickSpeed * kickForce, -yKickSpeed * kickForce));
         }
         else if (inKickRange(rival, direction) && rival.getHealth() > 0){   // a un rival aturdido no se le hace mas daño
             rival.takeDamage(KICK_DAMAGE * getKickMultiplier());
         }
+    }
+
+    /*
+    This method tells if the player can kick the ball right now
+    @param ball the ball
+    @param direction the direction the player kicks to (1 right, -1 left)
+    @return true if the player can kick and the ball is within reach of its foot
+    */
+    public boolean reachesBall(Ball ball, int direction){
+        return kickForce != 0 && inKickRange(ball, direction);
     }
 
     /*
