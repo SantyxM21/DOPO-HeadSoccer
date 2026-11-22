@@ -174,24 +174,35 @@ public abstract class Player extends CircularEntity{
         return speed;
     }
 
-    public void setSpeed(double speed){
-        this.speed = speed;
-    }
-
     public double getJumpForce(){
         return jumpForce;
-    }
-
-    public void setJumpForce(double jumpForce){
-        this.jumpForce = jumpForce;
     }
 
     public double getKickForce(){
         return kickForce;
     }
 
-    public void setKickForce(double kickForce){
-        this.kickForce = kickForce;
+    // ==================== ESTADOS QUE CAUSAN LOS EFECTOS ====================
+    // Los efectos cambian al jugador solo con estos metodos, restoreValues() lo devuelve a la normalidad
+
+    /* This method leaves the player unable to move, jump or kick */
+    public void immobilize(){
+        speed = 0;
+        jumpForce = 0;
+        kickForce = 0;
+    }
+
+    /*
+    This method makes the player move slower
+    @param factor the part of its current speed it keeps (0.5 is half)
+    */
+    public void slowDown(double factor){
+        speed *= factor;
+    }
+
+    /* This method leaves the player unable to jump */
+    public void blockJump(){
+        jumpForce = 0;
     }
 
     public void resetForNewMatch(){
