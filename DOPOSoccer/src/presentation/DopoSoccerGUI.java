@@ -35,6 +35,11 @@ public class DopoSoccerGUI extends JFrame{
         this.setVisible(true);  //Inicio h
     }
 
+    /**
+     * Loads an image from the specified path.
+     * @param path the path to the image file
+     * @return the loaded image or null if not found
+     */
     public static Image loadImage(String path){
         try {
             return ImageIO.read(DopoSoccerGUI.class.getResource(path));
@@ -44,24 +49,47 @@ public class DopoSoccerGUI extends JFrame{
         }
     }
 
+    /**
+     * Loads a flag image for the specified country and scales it to the given height.
+     * @param country the country code or name
+     * @param height the desired height of the flag image
+     * @return an ImageIcon of the flag or null if not found
+     */
     public static ImageIcon flagIcon(String country, int height){
         Image flag = loadImage("/resources/" + country + ".png");
         if (flag == null) return null;
         return new ImageIcon(flag.getScaledInstance(-1, height, Image.SCALE_SMOOTH));   // ancho -1 mantiene la proporcion
     }
 
+    /**
+     * Displays a flag image for the specified country in the given label.
+     * @param label the label where the flag will be displayed
+     * @param country the country code or name
+     * @param height the desired height of the flag image
+     */
     public static void showFlag(JLabel label, String country, int height){
         ImageIcon icon = flagIcon(country, height);
         label.setIcon(icon);
         label.setText(icon == null ? country : null);      // texto solo si no hay bandera
     }
 
+    /**
+     * Displays a flag image for the specified country in the given button.
+     * @param button the button where the flag will be displayed
+     * @param country the country code or name
+     * @param height the desired height of the flag image
+     */
     public static void showFlag(AbstractButton button, String country, int height){
         ImageIcon icon = flagIcon(country, height);
         button.setIcon(icon);
         button.setText(icon == null ? country : null);     // texto solo si no hay bandera
     }
 
+    /**
+     * Creates a logo label with the specified height rate.
+     * @param heightRate the rate for determining the logo height
+     * @return a JLabel containing the logo
+     */
     public static JLabel createLogo(int heightRate){
         JLabel logo = new JLabel();
         logo.setHorizontalAlignment(SwingConstants.CENTER);
