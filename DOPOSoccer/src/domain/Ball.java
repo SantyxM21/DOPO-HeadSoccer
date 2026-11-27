@@ -88,6 +88,11 @@ public class Ball extends CircularEntity{
         else velocity.setY(velocity.getY() * -FLOOR_FRICTION); //un golpe muy fuerte rebota
     }
 
+    /**
+     * Moves the ball by the given displacement, without changing its velocity.
+     * @param dx the horizontal displacement in pixels (positive moves the ball to the right)
+     * @param dythe vertical displacement in pixels (positive moves the ball down)
+     */
     public void translate(double dx, double dy){
         xPosition += dx;
         yPosition += dy;
